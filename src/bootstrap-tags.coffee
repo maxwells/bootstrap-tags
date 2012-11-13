@@ -38,25 +38,29 @@ jQuery ->
       color = (if tagAnchor.css('color') == "rgb(255, 255, 255)" then "#bbb" else "#fff")
       tagAnchor.css color:color 
 
+    # Key handlers
+
     @keyDownHandler = (e) =>
       k = (if e.keyCode? then e.keyCode else e.which)
-      if k == 13
-        tag = e.target.value
-        if @suggestedIndex != -1
-          tag = @suggestionList[@suggestedIndex]
-        @addTag tag
-        e.target.value = ''
-        @renderTags @tags
-      else if k == 46 or k == 8
-        if e.target.value == ''
-          @removeLastTag()
-      else if k == 40 #down
-        numSuggestions = @suggestionList.length
-        @suggestedIndex = (if @suggestedIndex < numSuggestions-1 then @suggestedIndex+1 else numSuggestions-1)
-        @selectSuggested @suggestedIndex
-      else if k == 38 #up
-        @suggestedIndex = (if @suggestedIndex > 0 then @suggestedIndex-1 else 0)
-        @selectSuggested @suggestedIndex
+      switch k
+        when 13 # enter
+          tag = e.target.value
+          if @suggestedIndex != -1
+            tag = @suggestionList[@suggestedIndex]
+          @addTag tag
+          e.target.value = ''
+          @renderTags @tags
+        when 46, 8 # delete
+          if e.target.value == ''
+            @removeLastTag()
+        when 40 # down
+          numSuggestions = @suggestionList.length
+          @suggestedIndex = (if @suggestedIndex < numSuggestions-1 then @suggestedIndex+1 else numSuggestions-1)
+          @selectSuggested @suggestedIndex
+        when 38 # up
+          @suggestedIndex = (if @suggestedIndex > 0 then @suggestedIndex-1 else 0)
+          @selectSuggested @suggestedIndex
+        else
 
     @keyUpHandler = (e) =>
       k = (if e.keyCode? then e.keyCode else e.which)
@@ -68,17 +72,24 @@ jQuery ->
           if suggestion.substring(0, e.target.value.length) == e.target.value and e.target.value.length > 0
             @$suggestionList.append '<li class="tags-suggestion">'+suggestion+'</li>'
             @suggestionList.push suggestion
-
-    # auto suggest methods
-
-
+        $('.tags-suggestion', @$element).mouseover @selectSuggestedMouseOver
+   
     # display methods
-    @selectSuggested = (i) =>
+    @selectSuggestedMouseOver = (e) =>
+      $('.tags-suggestion').removeClass('tags-suggestion-highlighted')
+      $(e.target).addClass('tags-suggestion-highlighted')
+      $(e.target).mouseout @selectSuggestedMousedOut
+      @suggestedIndex = $('.tags-suggestion', @$element).index($(e.target))
+
+    @selectSuggestedMousedOut = (e) =>
+      $(e.target).removeClass('tags-suggestion-highlighted')
+
+    @selectSuggested = (i) => # shows the provided index of suggestion list for this element as highlighted (exclusion of others)
       $('.tags-suggestion').removeClass('tags-suggestion-highlighted')
       tagElement = $('.tags-suggestion', @$element).eq(i)
       tagElement.addClass 'tags-suggestion-highlighted'
 
-    @positionInput = =>
+    @adjustInputPosition = =>
       tagElement = $('.tag', @$element).last()
       tagPosition = tagElement.position()
       pLeft = if tagPosition? then tagPosition.left + tagElement.width() else 0
@@ -99,7 +110,7 @@ jQuery ->
         $('a', tag).on "mouseover", @toggleCloseColor
         $('a', tag).on "mouseout", @toggleCloseColor
         el.append tag
-      @positionInput()
+      @adjustInputPosition()
 
     @formatTag = (i, tag) ->
       markup = "<div id='tag_"+i+"' class='tag'><span id='label_tag_"+i+"' class='label label-inverse'>"+tag+"<a id='close_tag_"+i+"'> X</a></span></div>"
