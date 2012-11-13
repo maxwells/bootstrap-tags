@@ -1,1 +1,25 @@
 /* bootstrap-tags styles */
+
+#tag {
+	width: 200px;
+	height: 26px;
+}
+.tag-data {
+	display:none;
+}
+.tags-input {
+	width:100%;
+	height:100%;
+	margin:0;
+	padding:0;
+}
+.tags {
+	width:inherit;
+	height:inherit;
+	position:absolute;
+	padding:0;
+	margin:0;
+}
+.tag {
+	float:left;
+}
