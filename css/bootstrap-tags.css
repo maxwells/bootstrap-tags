@@ -3,6 +3,9 @@
 #tag {
 	width: 200px;
 	height: 26px;
+	left:2px;
+	top:2px;
+	position:relative;
 }
 .tag-data {
 	display:none;
@@ -21,5 +24,9 @@
 	margin:0;
 }
 .tag {
+	margin-left:1px;
 	float:left;
+}
+.tag a {
+	color: #fff;
 }
