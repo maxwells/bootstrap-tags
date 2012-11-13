@@ -33,3 +33,21 @@
 	color: #fff;
 	cursor:pointer;
 }
+ul.tags-suggestion-list {
+	width:100%;
+	height:auto;
+	list-style:none;
+	margin:0;
+	padding:0;
+	position:absolute;
+	z-index:2;
+}
+li.tags-suggestion {
+	height:auto;
+	width:100%;
+	background-color:#333;
+	color:#fff;
+}
+li.tags-suggestion-highlighted {
+	background-color:#777;
+}

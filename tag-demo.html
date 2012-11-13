@@ -10,11 +10,11 @@
   </head>
   <body>
   		<div id="one" class="tag-list"><div class="tag-data">tag1,tag2,tag3,tag4</div><div class="tags"></div></div>
-  		<div id="two" class="tag-list"><div class="tag-data">tag1,tag2,tag3,tag4</div><div class="tags"></div></div>
+  		<div id="two" class="tag-list"><div class="tag-data">tag5,tag6,tag7,tag8</div><div class="tags"></div></div>
     <script>
 		$(function() {	
-			$('#one').tags();
-			$('#two').tags();
+			$('#one').tags( { suggestions : ["here", "are", "some", "suggestions"] } );
+			$('#two').tags( { suggestions : ["there", "were", "some", "suggested", "terms", "super", "secret", "stuff"] } );
 
 		});
     </script>
