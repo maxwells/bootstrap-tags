@@ -2,27 +2,44 @@
 # Max Lahey
 # Monday, November 12, 2012
 
-# Reference jQuery
-$ = jQuery
+jQuery ->
+  $.tags = (element, options) ->
+   # default plugin settings
+    @defaults = {}
 
-$.fn.extend
+    # jQuery version of DOM element attached to the plugin
+    @$element = $ element
 
-  tags: (options) ->
-    # Default settings
-    settings =
-      option1: true
-      option2: false
-      debug: false
+    ## private methods
+    # set the current state
+    setState = (@state) =>
 
-    # Merge default settings with options.
-    settings = $.extend settings, options
+    # get the arrow Css
+    getArrowCss = =>
 
-    # Simple logger.
-    log = (msg) ->
-      console?.log msg if settings.debug
+    ## public methods
+    # get particular plugin setting
+    @getSetting = (settingKey) ->
+      @settings[settingKey]
 
-    # _Insert magic here._
-    return @each ()->
-      alert "Preparing magic show."
-      # You can use your settings in here now.
-      #log "Option 1 value: #{settings.option1}"
+    # call one of the plugin setting functions
+    @callSettingFunction = (functionName) ->
+      @settings[functionName](element, @$tags[0])
+
+    # get miniTip content
+    @getContent = ->
+      content
+
+    @init = ->
+      alert "init"
+
+    @init()
+
+    this
+
+  $.fn.tags = (options) ->
+    return this.each ->
+      tags = new $.tags this, options
+      #if undefined == ($ this).data('minTip')
+      #  miniTip = new $.miniTip this, options
+      #  ($ this).data 'minTip', miniTip

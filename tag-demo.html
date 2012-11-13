@@ -5,12 +5,13 @@
     </title>
     <script src='lib/jquery-1.8.2.min.js'></script>
     <script src='lib/bootstrap-tags.js'></script>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap-tags.css" />
   </head>
   <body>
-  	<div id="tag"></div>
+  	<input id="tag" value="tag1,tag2"></div>
     <script>
 		$(function() {	
-			$('#tag').tags({debug:true});
+			$('#tag').tags();
 		});
     </script>
   </body>
