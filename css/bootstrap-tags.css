@@ -1,7 +1,7 @@
 /* bootstrap-tags styles */
 
-#tag {
-	width: 200px;
+.tag-list {
+	width: 280px;
 	height: 26px;
 	left:2px;
 	top:2px;
@@ -15,18 +15,21 @@
 	height:100%;
 	margin:0;
 	padding:0;
+	font-size:12px;
+	border: 3px dashed #aaa;
 }
 .tags {
 	width:inherit;
-	height:inherit;
+	height:0;
 	position:absolute;
 	padding:0;
 	margin:0;
 }
 .tag {
-	margin-left:1px;
+	padding: 1px;
 	float:left;
 }
 .tag a {
 	color: #fff;
+	cursor:pointer;
 }

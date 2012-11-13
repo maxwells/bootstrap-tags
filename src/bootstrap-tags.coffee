@@ -11,8 +11,8 @@ jQuery ->
 
     @removeTagClicked = (e) =>
       if e.target.tagName == "A"
-        $(e.target.parentNode).remove()
         @removeTag e.target.previousSibling.textContent
+        $(e.target.parentNode).remove()
 
     @removeLastTag = =>
       el = $('.tag', @$element).last()
@@ -29,6 +29,11 @@ jQuery ->
       $('.tag-data', @$element).html @tags.join(',')
       @renderTags @tags
 
+    @toggleCloseAlpha = (e) ->
+      tagAnchor = $ e.target
+      color = (if tagAnchor.css('color') == "rgb(255, 255, 255)" then "#bbb" else "#fff")
+      tagAnchor.css color:color 
+
     @renderTags = (tags) =>
       el = $('.tags',@$element)
       el.html('')
@@ -36,6 +41,8 @@ jQuery ->
         tag = $(@formatTag i, tag)
         # tag.on "click", @alert
         $('a', tag).on "click", @removeTagClicked
+        $('a', tag).on "mouseover", @toggleCloseAlpha
+        $('a', tag).on "mouseout", @toggleCloseAlpha
         el.append tag
       @positionInput()
 
@@ -57,9 +64,11 @@ jQuery ->
       $('.tags-input', @$element).css
         paddingLeft : pLeft
         paddingTop  : pTop
+      pBottom = if tagPosition? then tagPosition.top + tagElement.outerHeight() else 20  
+      @$element.css height : pBottom
 
     @formatTag = (i, tag) ->
-      markup = "<div id='tag_"+i+"' class='tag'><span id='label_tag_"+i+"' class='label label-info'>"+tag+"<a id='close_tag_"+i+"'> X</a></span></div>"
+      markup = "<div id='tag_"+i+"' class='tag'><span id='label_tag_"+i+"' class='label label-inverse'>"+tag+"<a id='close_tag_"+i+"'> X</a></span></div>"
 
     @setListeners = ->
       #@$element.on "click", @alert
