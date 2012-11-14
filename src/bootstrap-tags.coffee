@@ -6,37 +6,39 @@
 # 1) make suggestions list scrollable
 # 2) popovers for tag data
 # 3) ajax for tags, suggestions, and restrictions
+# 4) restyle
+# 5) backbone implementation
 
 jQuery ->
   $.tags = (element, options) ->
 
-    @defaults = {}
-
     @suggestions = options.suggestions
     @restrictTo = (if options.restrictTo? then options.restrictTo.concat @suggestions else false)
 
+    # tagsArray and tagData store same data, but one is as list and one is as comma joined list (ie. string)
     @tagsArray = []
     @tagData = ""
 
+    # hang on to so we know what we are
     @$element = $ element
 
     # add/remove methods
-    @removeTagClicked = (e) =>
+    @removeTagClicked = (e) => # clicked remove tag anchor
       if e.target.tagName == "A"
         @removeTag e.target.previousSibling.textContent
         $(e.target.parentNode).remove()
 
-    @removeLastTag = =>
+    @removeLastTag = => # pressed delete on empty string in input.
       el = $('.tag', @$element).last()
       el.remove()
       @removeTag @tagsArray[@tagsArray.length-1]
 
-    @removeTag = (tag) =>
+    @removeTag = (tag) => # removes tags from both structures and calls render
       @tagsArray.splice(@tagsArray.indexOf(tag), 1)
       @tagData = @tagsArray.join(',')
       @renderTags @tagsArray
 
-    @addTag = (tag) =>
+    @addTag = (tag) => # adds specified tag to both structures
       if (@restrictTo == false or @restrictTo.indexOf(tag) != -1) and @tagData.indexOf(tag) < 0
         @tagsArray.push tag
         @tagData = @tagsArray.join(',')
@@ -52,26 +54,32 @@ jQuery ->
     @keyDownHandler = (e) =>
       k = (if e.keyCode? then e.keyCode else e.which)
       switch k
-        when 13 # enter
+        when 13 # enter (submit tag or selected suggestion)
           tag = e.target.value
           if @suggestedIndex != -1
             tag = @suggestionList[@suggestedIndex]
           @addTag tag
           e.target.value = ''
           @renderTags @tagsArray
+          @hideSuggestions()
         when 46, 8 # delete
           if e.target.value == ''
             @removeLastTag()
+            @hideSuggestions()
         when 40 # down
           if @input.val() == '' and (@suggestedIndex == -1 || !@suggestedIndex?)
             @makeSuggestions e, true
           numSuggestions = @suggestionList.length
           @suggestedIndex = (if @suggestedIndex < numSuggestions-1 then @suggestedIndex+1 else numSuggestions-1)
           @selectSuggested @suggestedIndex
+          #@showSuggestions()
         when 38 # up
           @suggestedIndex = (if @suggestedIndex > 0 then @suggestedIndex-1 else 0)
           @selectSuggested @suggestedIndex
+          #@showSuggestions()
         else
+          #if e.keyCode? and @input.val()?
+            #@showSuggestions()
 
     # makeSuggestions creates auto suggestions that match the value in the input
     # if overrideLengthCheck is set to true, then if the input value is empty (''), return all possible suggestions
@@ -86,8 +94,10 @@ jQuery ->
           @suggestionList.push suggestion
       $('.tags-suggestion', @$element).mouseover @selectSuggestedMouseOver
       $('.tags-suggestion', @$element).click @suggestedClicked
+      if @suggestionList.length > 0
+        @showSuggestions()
 
-    @suggestedClicked = (e) =>
+    @suggestedClicked = (e) => # clicked on a suggestion
       tag = e.target.textContent
       if @suggestedIndex != -1
         tag = @suggestionList[@suggestedIndex]
@@ -95,6 +105,7 @@ jQuery ->
       @input.val ''
       @makeSuggestions e, false
       @input.focus() # return focus to input so user can continue typing
+      @hideSuggestions()
 
     @keyUpHandler = (e) =>
       k = (if e.keyCode? then e.keyCode else e.which)
@@ -102,6 +113,12 @@ jQuery ->
         @makeSuggestions e, false
 
     # display methods
+    @hideSuggestions = =>
+      $('.tags-suggestion-list', @$element).css display: "none"
+
+    @showSuggestions = =>
+      $('.tags-suggestion-list', @$element).css display: "block"
+
     @selectSuggestedMouseOver = (e) =>
       $('.tags-suggestion').removeClass('tags-suggestion-highlighted')
       $(e.target).addClass('tags-suggestion-highlighted')
@@ -140,7 +157,7 @@ jQuery ->
       @adjustInputPosition()
 
     @formatTag = (i, tag) ->
-      "<div class='tag'><span class='label label-inverse'>"+tag+"<a> X</a></span></div>"
+      "<div class='tag'><span class='label btn-primary'>"+tag+"<a> X</a></span></div>"
 
     @init = ->
       @tagData = $('.tag-data', @$element).html()
