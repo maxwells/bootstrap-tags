@@ -2,6 +2,11 @@
 # Max Lahey
 # Monday, November 12, 2012
 
+# todos
+# 1) make suggestions list scrollable
+# 2) popovers for tag data
+# 3) ajax for tags, suggestions, and restrictions
+
 jQuery ->
   $.tags = (element, options) ->
 
@@ -9,6 +14,9 @@ jQuery ->
 
     @suggestions = options.suggestions
     @restrictTo = (if options.restrictTo? then options.restrictTo.concat @suggestions else false)
+
+    @tagsArray = []
+    @tagData = ""
 
     @$element = $ element
 
@@ -21,18 +29,18 @@ jQuery ->
     @removeLastTag = =>
       el = $('.tag', @$element).last()
       el.remove()
-      @removeTag @tags[@tags.length-1]
+      @removeTag @tagsArray[@tagsArray.length-1]
 
     @removeTag = (tag) =>
-      @tags.splice(@tags.indexOf(tag), 1)
-      $('.tag-data', @$element).html @tags.join(',')
-      @renderTags @tags
+      @tagsArray.splice(@tagsArray.indexOf(tag), 1)
+      @tagData = @tagsArray.join(',')
+      @renderTags @tagsArray
 
     @addTag = (tag) =>
-      if (@restrictTo == false or @restrictTo.indexOf(tag) != -1) and $('.tag-data', @$element).html().indexOf(tag) < 0
-        @tags.push tag
-        $('.tag-data', @$element).html @tags.join(',')
-        @renderTags @tags
+      if (@restrictTo == false or @restrictTo.indexOf(tag) != -1) and @tagData.indexOf(tag) < 0
+        @tagsArray.push tag
+        @tagData = @tagsArray.join(',')
+        @renderTags @tagsArray
 
     # toggles remove button color for a tag when moused over or out
     @toggleCloseColor = (e) ->
@@ -41,7 +49,6 @@ jQuery ->
       tagAnchor.css color:color 
 
     # Key handlers
-
     @keyDownHandler = (e) =>
       k = (if e.keyCode? then e.keyCode else e.which)
       switch k
@@ -51,7 +58,7 @@ jQuery ->
             tag = @suggestionList[@suggestedIndex]
           @addTag tag
           e.target.value = ''
-          @renderTags @tags
+          @renderTags @tagsArray
         when 46, 8 # delete
           if e.target.value == ''
             @removeLastTag()
@@ -66,14 +73,15 @@ jQuery ->
           @selectSuggested @suggestedIndex
         else
 
+    # makeSuggestions creates auto suggestions that match the value in the input
+    # if overrideLengthCheck is set to true, then if the input value is empty (''), return all possible suggestions
     @makeSuggestions = (e, overrideLengthCheck) =>
       val = (if e.target.value? then e.target.value else e.target.textContent)
       @suggestedIndex = -1
       @$suggestionList.html ''
       @suggestionList = []
       $.each @suggestions, (i, suggestion) =>
-        current = $('.tag-data', @$element).html()
-        if current.indexOf(suggestion) < 0 and suggestion.substring(0, val.length) == val and (val.length > 0 or overrideLengthCheck)
+        if @tagData.indexOf(suggestion) < 0 and suggestion.substring(0, val.length) == val and (val.length > 0 or overrideLengthCheck)
           @$suggestionList.append '<li class="tags-suggestion">'+suggestion+'</li>'
           @suggestionList.push suggestion
       $('.tags-suggestion', @$element).mouseover @selectSuggestedMouseOver
@@ -86,6 +94,7 @@ jQuery ->
       @addTag tag
       @input.val ''
       @makeSuggestions e, false
+      @input.focus() # return focus to input so user can continue typing
 
     @keyUpHandler = (e) =>
       k = (if e.keyCode? then e.keyCode else e.which)
@@ -120,29 +129,29 @@ jQuery ->
       @$element.css height : pBottom
 
     @renderTags = (tags) =>
-      el = $('.tags',@$element)
-      el.html('')
+      tagList = $('.tags',@$element)
+      tagList.html('')
       $.each tags, (i, tag) =>
         tag = $(@formatTag i, tag)
-        # tag.on "click", @alert
-        $('a', tag).on "click", @removeTagClicked
-        $('a', tag).on "mouseover", @toggleCloseColor
-        $('a', tag).on "mouseout", @toggleCloseColor
-        el.append tag
+        $('a', tag).click @removeTagClicked
+        $('a', tag).mouseover @toggleCloseColor
+        $('a', tag).mouseout @toggleCloseColor
+        tagList.append tag
       @adjustInputPosition()
 
     @formatTag = (i, tag) ->
-      markup = "<div id='tag_"+i+"' class='tag'><span id='label_tag_"+i+"' class='label label-inverse'>"+tag+"<a id='close_tag_"+i+"'> X</a></span></div>"
+      "<div class='tag'><span class='label label-inverse'>"+tag+"<a> X</a></span></div>"
 
     @init = ->
-      @tags = $('.tag-data', @$element).html().split ','
+      @tagData = $('.tag-data', @$element).html()
+      @tagsArray = @tagData.split ','
       @input = $ "<input class='tags-input'>"
+      @input.keydown @keyDownHandler
+      @input.keyup @keyUpHandler
       @$element.append @input
       @$suggestionList = $ '<ul class="tags-suggestion-list"></ul>'
       @$element.append @$suggestionList
-      @renderTags @tags
-      @input.keydown @keyDownHandler
-      @input.keyup @keyUpHandler
+      @renderTags @tagsArray
       
     @init()
 
