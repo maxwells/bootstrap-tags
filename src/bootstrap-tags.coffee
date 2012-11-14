@@ -72,7 +72,8 @@ jQuery ->
       @$suggestionList.html ''
       @suggestionList = []
       $.each @suggestions, (i, suggestion) =>
-        if suggestion.substring(0, val.length) == val and (val.length > 0 or overrideLengthCheck)
+        current = $('.tag-data', @$element).html()
+        if current.indexOf(suggestion) < 0 and suggestion.substring(0, val.length) == val and (val.length > 0 or overrideLengthCheck)
           @$suggestionList.append '<li class="tags-suggestion">'+suggestion+'</li>'
           @suggestionList.push suggestion
       $('.tags-suggestion', @$element).mouseover @selectSuggestedMouseOver
