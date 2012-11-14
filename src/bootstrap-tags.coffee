@@ -8,6 +8,7 @@ jQuery ->
     @defaults = {}
 
     @suggestions = options.suggestions
+    @restrictTo = (if options.restrictTo? then options.restrictTo.concat @suggestions else false)
 
     @$element = $ element
 
@@ -28,9 +29,10 @@ jQuery ->
       @renderTags @tags
 
     @addTag = (tag) =>
-      @tags.push tag
-      $('.tag-data', @$element).html @tags.join(',')
-      @renderTags @tags
+      if (@restrictTo == false or @restrictTo.indexOf(tag) != -1) and $('.tag-data', @$element).html().indexOf(tag) < 0
+        @tags.push tag
+        $('.tag-data', @$element).html @tags.join(',')
+        @renderTags @tags
 
     # toggles remove button color for a tag when moused over or out
     @toggleCloseColor = (e) ->
@@ -54,6 +56,8 @@ jQuery ->
           if e.target.value == ''
             @removeLastTag()
         when 40 # down
+          if @input.val() == '' and (@suggestedIndex == -1 || !@suggestedIndex?)
+            @makeSuggestions e, true
           numSuggestions = @suggestionList.length
           @suggestedIndex = (if @suggestedIndex < numSuggestions-1 then @suggestedIndex+1 else numSuggestions-1)
           @selectSuggested @suggestedIndex
@@ -62,18 +66,31 @@ jQuery ->
           @selectSuggested @suggestedIndex
         else
 
+    @makeSuggestions = (e, overrideLengthCheck) =>
+      val = (if e.target.value? then e.target.value else e.target.textContent)
+      @suggestedIndex = -1
+      @$suggestionList.html ''
+      @suggestionList = []
+      $.each @suggestions, (i, suggestion) =>
+        if suggestion.substring(0, val.length) == val and (val.length > 0 or overrideLengthCheck)
+          @$suggestionList.append '<li class="tags-suggestion">'+suggestion+'</li>'
+          @suggestionList.push suggestion
+      $('.tags-suggestion', @$element).mouseover @selectSuggestedMouseOver
+      $('.tags-suggestion', @$element).click @suggestedClicked
+
+    @suggestedClicked = (e) =>
+      tag = e.target.textContent
+      if @suggestedIndex != -1
+        tag = @suggestionList[@suggestedIndex]
+      @addTag tag
+      @input.val ''
+      @makeSuggestions e, false
+
     @keyUpHandler = (e) =>
       k = (if e.keyCode? then e.keyCode else e.which)
-      if k != 40 and k != 38
-        @suggestedIndex = -1
-        @$suggestionList.html ''
-        @suggestionList = []
-        $.each @suggestions, (i, suggestion) =>
-          if suggestion.substring(0, e.target.value.length) == e.target.value and e.target.value.length > 0
-            @$suggestionList.append '<li class="tags-suggestion">'+suggestion+'</li>'
-            @suggestionList.push suggestion
-        $('.tags-suggestion', @$element).mouseover @selectSuggestedMouseOver
-   
+      if (k != 40 and k != 38)
+        @makeSuggestions e, false
+
     # display methods
     @selectSuggestedMouseOver = (e) =>
       $('.tags-suggestion').removeClass('tags-suggestion-highlighted')
@@ -89,6 +106,7 @@ jQuery ->
       tagElement = $('.tags-suggestion', @$element).eq(i)
       tagElement.addClass 'tags-suggestion-highlighted'
 
+    # adjust padding on input so that what user types shows up next to last tag (or on new line if insufficient space)
     @adjustInputPosition = =>
       tagElement = $('.tag', @$element).last()
       tagPosition = tagElement.position()
@@ -117,16 +135,17 @@ jQuery ->
 
     @init = ->
       @tags = $('.tag-data', @$element).html().split ','
-      input = @$element.append "<input class='tags-input'>"
+      @input = $ "<input class='tags-input'>"
+      @$element.append @input
       @$suggestionList = $ '<ul class="tags-suggestion-list"></ul>'
       @$element.append @$suggestionList
       @renderTags @tags
-      input.keydown @keyDownHandler
-      input.keyup @keyUpHandler
+      @input.keydown @keyDownHandler
+      @input.keyup @keyUpHandler
       
     @init()
 
-    this
+    @
 
   $.fn.tags = (options) ->
     return this.each ->
