@@ -39,7 +39,7 @@ jQuery ->
       @renderTags @tagsArray
 
     @addTag = (tag) => # adds specified tag to both structures
-      if (@restrictTo == false or @restrictTo.indexOf(tag) != -1) and @tagData.indexOf(tag) < 0
+      if (@restrictTo == false or @restrictTo.indexOf(tag) != -1) and @tagsArray.indexOf(tag) < 0
         @tagsArray.push tag
         @tagData = @tagsArray.join(',')
         @renderTags @tagsArray
@@ -65,6 +65,7 @@ jQuery ->
         when 46, 8 # delete
           if e.target.value == ''
             @removeLastTag()
+          if e.target.value.length == 1 # is one (which will be deleted)
             @hideSuggestions()
         when 40 # down
           if @input.val() == '' and (@suggestedIndex == -1 || !@suggestedIndex?)
@@ -72,11 +73,15 @@ jQuery ->
           numSuggestions = @suggestionList.length
           @suggestedIndex = (if @suggestedIndex < numSuggestions-1 then @suggestedIndex+1 else numSuggestions-1)
           @selectSuggested @suggestedIndex
+          @scrollSuggested @suggestedIndex
           #@showSuggestions()
         when 38 # up
           @suggestedIndex = (if @suggestedIndex > 0 then @suggestedIndex-1 else 0)
           @selectSuggested @suggestedIndex
+          @scrollSuggested @suggestedIndex
           #@showSuggestions()
+        when 9, 27 # tab, escape
+          @hideSuggestions()
         else
           #if e.keyCode? and @input.val()?
             #@showSuggestions()
@@ -109,7 +114,7 @@ jQuery ->
 
     @keyUpHandler = (e) =>
       k = (if e.keyCode? then e.keyCode else e.which)
-      if (k != 40 and k != 38)
+      if (k != 40 and k != 38 and k != 27)
         @makeSuggestions e, false
 
     # display methods
@@ -132,6 +137,13 @@ jQuery ->
       $('.tags-suggestion').removeClass('tags-suggestion-highlighted')
       tagElement = $('.tags-suggestion', @$element).eq(i)
       tagElement.addClass 'tags-suggestion-highlighted'
+
+    @scrollSuggested = (i) =>
+      tagElement = $('.tags-suggestion', @$element).eq i
+      topElement = $('.tags-suggestion', @$element).eq 0
+      pos = tagElement.position()
+      $('.tags-suggestion-list', @$element).scrollTop tagElement.position().top - topElement.position().top
+
 
     # adjust padding on input so that what user types shows up next to last tag (or on new line if insufficient space)
     @adjustInputPosition = =>
@@ -159,6 +171,12 @@ jQuery ->
     @formatTag = (i, tag) ->
       "<div class='tag'><span class='label btn-primary'>"+tag+"<a> X</a></span></div>"
 
+    @addDocumentListeners = =>
+      $(document).mouseup (e) =>
+        container = $('.tags-suggestion-list', @$element)
+        if container.has(e.target).length == 0
+          @hideSuggestions()
+
     @init = ->
       @tagData = $('.tag-data', @$element).html()
       @tagsArray = @tagData.split ','
@@ -169,6 +187,7 @@ jQuery ->
       @$suggestionList = $ '<ul class="tags-suggestion-list"></ul>'
       @$element.append @$suggestionList
       @renderTags @tagsArray
+      @addDocumentListeners()
       
     @init()
 

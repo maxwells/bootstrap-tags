@@ -44,7 +44,6 @@ ul.tags-suggestion-list {
 	position: absolute;
 	top: 100%;
 	left: 0;
-	z-index: 1000;
 	display: none;
 	min-width: 160px;
 	padding: 5px 0;
@@ -61,6 +60,8 @@ ul.tags-suggestion-list {
 	-webkit-background-clip: padding-box;
 	-moz-background-clip: padding;
 	background-clip: padding-box;
+	max-height:160px;
+	overflow: scroll;
 }
 li.tags-suggestion {
 	padding:3px 20px;
