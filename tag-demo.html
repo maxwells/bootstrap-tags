@@ -11,12 +11,12 @@
   <body>
   	<div class="container">
   		<h3>Bootstrap Tags Demo</h3>
-
+  		<form><fieldset>
   		The following tag-list is unfiltered, with the suggestions "here", "are", "some", "suggestions"
   		<div id="one" class="tag-list"><div class="tag-data">tag1,tag2,tag3,tag4</div><div class="tags"></div></div>
   		The second tag-list has a number of suggested terms and a couple restricted terms ("restrict", "to", "these").
   <br />By default, all suggested terms are allowed, so if a user deletes one, it can be repopulated
-  		<div id="two" class="tag-list"><div class="tag-data">tag5,tag6,tag7,tag8</div><div class="tags"></div></div>
+  		<div id="two" class="tag-list"><div class="tag-data">tag5,tag6,tag7,tag8</div><div class="tags"></div></div></fieldset></form>
 	    <script>
 			$(function() {	
 				$('#one').tags( { suggestions : ["here", "are", "some", "suggestions"] } );

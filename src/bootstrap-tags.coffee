@@ -24,9 +24,9 @@ jQuery ->
 
     # add/remove methods
     @removeTagClicked = (e) => # clicked remove tag anchor
-      if e.target.tagName == "A"
-        @removeTag e.target.previousSibling.textContent
-        $(e.target.parentNode).remove()
+      if e.currentTarget.tagName == "A"
+        @removeTag e.currentTarget.previousSibling.textContent
+        $(e.currentTarget.parentNode).remove()
 
     @removeLastTag = => # pressed delete on empty string in input.
       el = $('.tag', @$element).last()
@@ -46,9 +46,10 @@ jQuery ->
 
     # toggles remove button color for a tag when moused over or out
     @toggleCloseColor = (e) ->
-      tagAnchor = $ e.target
-      color = (if tagAnchor.css('color') == "rgb(255, 255, 255)" then "#bbb" else "#fff")
-      tagAnchor.css color:color 
+      tagAnchor = $ e.currentTarget
+      opacity = tagAnchor.css('opacity')
+      opacity = (if opacity < 0.8 then 1.0 else 0.6)
+      tagAnchor.css opacity:opacity 
 
     # Key handlers
     @keyDownHandler = (e) =>
@@ -169,7 +170,7 @@ jQuery ->
       @adjustInputPosition()
 
     @formatTag = (i, tag) ->
-      "<div class='tag'><span class='label btn-primary'>"+tag+"<a> X</a></span></div>"
+      "<div class='tag'><span class='label btn-info'>"+tag+"<a> <i class='icon-remove-sign icon-white'></i></a></span></div>"
 
     @addDocumentListeners = =>
       $(document).mouseup (e) =>
@@ -180,11 +181,11 @@ jQuery ->
     @init = ->
       @tagData = $('.tag-data', @$element).html()
       @tagsArray = @tagData.split ','
-      @input = $ "<input class='tags-input'>"
+      @input = $ "<input type='text' class='tags-input'>"
       @input.keydown @keyDownHandler
       @input.keyup @keyUpHandler
       @$element.append @input
-      @$suggestionList = $ '<ul class="tags-suggestion-list"></ul>'
+      @$suggestionList = $ '<ul class="tags-suggestion-list dropdown-menu"></ul>'
       @$element.append @$suggestionList
       @renderTags @tagsArray
       @addDocumentListeners()

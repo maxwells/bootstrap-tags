@@ -12,11 +12,10 @@
 }
 .tags-input {
 	width:100%;
-	height:100%;
+	height:100% !important; 
 	margin:0;
-	padding:0;
+	padding-bottom:0 !important;
 	font-size:12px;
-	// border: 3px dashed #aaa;
 }
 .tags {
 	width:inherit;
@@ -30,18 +29,18 @@
 	float:left;
 }
 .tag a {
-	color: #fff;
+	color: #bbb;
 	cursor:pointer;
+	opacity: .5;
 }
 ul.tags-suggestion-list {
 	width:100%;
 	height:auto;
 	list-style:none;
 	margin:0;
-	padding:0;
 	position:absolute;
 	z-index:2;
-	position: absolute;
+	/*position: absolute;
 	top: 100%;
 	left: 0;
 	display: none;
@@ -59,7 +58,7 @@ ul.tags-suggestion-list {
 	box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 	-webkit-background-clip: padding-box;
 	-moz-background-clip: padding;
-	background-clip: padding-box;
+	background-clip: padding-box;*/
 	max-height:160px;
 	overflow: scroll;
 }
