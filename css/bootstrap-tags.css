@@ -15,7 +15,7 @@
 	height:100% !important; 
 	margin:0;
 	padding-bottom:0 !important;
-	font-size:12px;
+	font-size:12px !important;
 }
 .tags {
 	width:inherit;
@@ -26,7 +26,7 @@
 }
 .tag {
 	padding: 1px 3px;
-	margin:0px 1px;
+	margin:1px;
 	float:left;
 }
 .tag a {

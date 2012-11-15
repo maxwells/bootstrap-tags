@@ -4,7 +4,7 @@
 
 # todos
 # [√] make suggestions list scrollable
-# [ ] popovers for tag data
+# [√] popovers for tag data
 # [ ] ajax for tags, suggestions, and restrictions
 # [√] restyle
 # [ ] backbone implementation
@@ -148,12 +148,12 @@ jQuery ->
     @adjustInputPosition = =>
       tagElement = $('.tag', @$element).last()
       tagPosition = tagElement.position()
-      pLeft = if tagPosition? then tagPosition.left + tagElement.width() else 0
+      pLeft = if tagPosition? then tagPosition.left + tagElement.outerWidth(true) else 0
       pTop = if tagPosition? then tagPosition.top else 0
       $('.tags-input', @$element).css
         paddingLeft : pLeft
         paddingTop  : pTop
-      pBottom = if tagPosition? then tagPosition.top + tagElement.outerHeight() else 20  
+      pBottom = if tagPosition? then tagPosition.top + tagElement.outerHeight(true) else 22  
       @$element.css height : pBottom
 
     @renderTags = (tags) =>
@@ -172,7 +172,7 @@ jQuery ->
       @adjustInputPosition()
 
     @formatTag = (i, tag) ->
-      "<div class='tag label btn-info' rel='popover' data-placement='bottom' data-content='content' data-original-title='title'><span>"+tag+"</span><a> <i class='icon-remove-sign icon-white'></i></a></div>"
+      "<div class='tag label btn-info' rel='popover' data-placement='bottom' data-content='content' data-original-title='"+tag+"'><span>"+tag+"</span><a> <i class='icon-remove-sign icon-white'></i></a></div>"
 
     @addDocumentListeners = =>
       $(document).mouseup (e) =>
