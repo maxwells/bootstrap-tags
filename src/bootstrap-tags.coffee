@@ -12,8 +12,16 @@
 jQuery ->
   $.tags = (element, options) ->
 
-    @suggestions = options.suggestions
+    @suggestions = (if options.suggestions? then options.suggestions else [])
     @restrictTo = (if options.restrictTo? then options.restrictTo.concat @suggestions else false)
+    @displayPopovers = (if options.popovers? then options.popovers else false)
+
+    @whenAddingTag = (if options.whenAddingTag? then options.whenAddingTag else (tag) -> )
+
+    @pressedReturn = (if options.pressedReturn? then options.pressedReturn else (e) -> )
+    @pressedDelete = (if options.pressedDelete? then options.pressedDelete else (e) -> )
+    @pressedDown = (if options.pressedDown? then options.pressedDown else (e) -> )
+    @pressedUp = (if options.pressedUp? then options.pressedUp else (e) -> )
 
     # tagsArray and tagData store same data, but one is as list and one is as comma joined list (ie. string)
     @tagsArray = []
@@ -42,6 +50,7 @@ jQuery ->
       if (@restrictTo == false or @restrictTo.indexOf(tag) != -1) and @tagsArray.indexOf(tag) < 0
         @tagsArray.push tag
         @tagData = @tagsArray.join(',')
+        @whenAddingTag(tag)
         @renderTags @tagsArray
 
     # toggles remove button color for a tag when moused over or out
@@ -56,6 +65,7 @@ jQuery ->
       k = (if e.keyCode? then e.keyCode else e.which)
       switch k
         when 13 # enter (submit tag or selected suggestion)
+          @pressedReturn(e)
           tag = e.target.value
           if @suggestedIndex != -1
             tag = @suggestionList[@suggestedIndex]
@@ -64,21 +74,24 @@ jQuery ->
           @renderTags @tagsArray
           @hideSuggestions()
         when 46, 8 # delete
+          @pressedDelete(e)
           if e.target.value == ''
             @removeLastTag()
-          if e.target.value.length == 1 # is one (which will be deleted)
+          if e.target.value.length == 1 # is one (which will be deleted after JS processing)
             @hideSuggestions()
         when 40 # down
+          @pressedDown(e)
           if @input.val() == '' and (@suggestedIndex == -1 || !@suggestedIndex?)
             @makeSuggestions e, true
           numSuggestions = @suggestionList.length
           @suggestedIndex = (if @suggestedIndex < numSuggestions-1 then @suggestedIndex+1 else numSuggestions-1)
           @selectSuggested @suggestedIndex
-          @scrollSuggested @suggestedIndex
+          @scrollSuggested @suggestedIndex if @selectedIndex >= 0
         when 38 # up
+          @pressedUp(e)
           @suggestedIndex = (if @suggestedIndex > 0 then @suggestedIndex-1 else 0)
           @selectSuggested @suggestedIndex
-          @scrollSuggested @suggestedIndex
+          @scrollSuggested @suggestedIndex if @selectedIndex >= 0
         when 9, 27 # tab, escape
           @hideSuggestions()
         else
@@ -141,7 +154,9 @@ jQuery ->
       tagElement = $('.tags-suggestion', @$element).eq i
       topElement = $('.tags-suggestion', @$element).eq 0
       pos = tagElement.position()
-      $('.tags-suggestion-list', @$element).scrollTop tagElement.position().top - topElement.position().top
+      topPos = topElement.position()
+      #if pos? and topPos?
+      $('.tags-suggestion-list', @$element).scrollTop pos.top - topPos.top
 
 
     # adjust padding on input so that what user types shows up next to last tag (or on new line if insufficient space)
@@ -164,15 +179,19 @@ jQuery ->
         $('a', tag).click @removeTagClicked
         $('a', tag).mouseover @toggleCloseColor
         $('a', tag).mouseout @toggleCloseColor
-        $('span', tag).mouseover ->
-          tag.popover('show')
-        $('span', tag).mouseout ->
-          tag.popover('hide')
+        if @displayPopovers
+          $('span', tag).mouseover ->
+            tag.popover('show')
+          $('span', tag).mouseout ->
+            tag.popover('hide')
         tagList.append tag
       @adjustInputPosition()
 
     @formatTag = (i, tag) ->
-      "<div class='tag label btn-info' rel='popover' data-placement='bottom' data-content='content' data-original-title='"+tag+"'><span>"+tag+"</span><a> <i class='icon-remove-sign icon-white'></i></a></div>"
+      if @displayPopovers == true
+        "<div class='tag label btn-info' rel='popover' data-placement='bottom' data-content='content' data-original-title='"+tag+"'><span>"+tag+"</span><a> <i class='icon-remove-sign icon-white'></i></a></div>"
+      else
+        "<div class='tag label btn-info'><span>"+tag+"</span><a> <i class='icon-remove-sign icon-white'></i></a></div>"
 
     @addDocumentListeners = =>
       $(document).mouseup (e) =>

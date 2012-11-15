@@ -13,15 +13,17 @@
   	<div class="container">
   		<h3>Bootstrap Tags Demo</h3>
   		<form><fieldset>
-  		The following tag-list is unfiltered, with the suggestions "here", "are", "some", "suggestions"
+  		The following tag-list is unfiltered, with the suggestions "here", "are", "some", "suggestions". Additionally, this tag-list has popovers enabled.
   		<div id="one" class="tag-list"><div class="tag-data">tag1,tag2,tag3,tag4</div><div class="tags"></div></div>
   		The second tag-list has a number of suggested terms and a couple restricted terms ("restrict", "to", "these").
-  <br />By default, all suggested terms are allowed, so if a user deletes one, it can be repopulated
+  <br />By default, all suggested terms are allowed, so if a user deletes one, it can be repopulated. Popovers are disabled. This tag-list substitutes in a custom function (whenAddingTag) that alerts the tag if it is successfully added.
   		<div id="two" class="tag-list"><div class="tag-data">tag5,tag6,tag7,tag8</div><div class="tags"></div></div></fieldset></form>
 	    <script>
 			$(function() {	
-				$('#one').tags( { suggestions : ["here", "are", "some", "suggestions"] } );
-				$('#two').tags( { suggestions : ["there", "were", "some", "suggested", "terms", "super", "secret", "stuff"], restrictTo : ["restrict", "to", "these"] } );
+				pressedUp = function(e) { console.log('pressed up'); };
+				whenAddingTag = function (tag) { alert(tag); };
+				$('#one').tags( { suggestions : ["here", "are", "some", "suggestions"], popovers : true } );
+				$('#two').tags( { suggestions : ["there", "were", "some", "suggested", "terms", "super", "secret", "stuff"], restrictTo : ["restrict", "to", "these"], popovers : false, whenAddingTag : whenAddingTag, pressedUp : pressedUp } );
 			});
 	    </script>
 	</div>
