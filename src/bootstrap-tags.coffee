@@ -75,17 +75,13 @@ jQuery ->
           @suggestedIndex = (if @suggestedIndex < numSuggestions-1 then @suggestedIndex+1 else numSuggestions-1)
           @selectSuggested @suggestedIndex
           @scrollSuggested @suggestedIndex
-          #@showSuggestions()
         when 38 # up
           @suggestedIndex = (if @suggestedIndex > 0 then @suggestedIndex-1 else 0)
           @selectSuggested @suggestedIndex
           @scrollSuggested @suggestedIndex
-          #@showSuggestions()
         when 9, 27 # tab, escape
           @hideSuggestions()
         else
-          #if e.keyCode? and @input.val()?
-            #@showSuggestions()
 
     # makeSuggestions creates auto suggestions that match the value in the input
     # if overrideLengthCheck is set to true, then if the input value is empty (''), return all possible suggestions
@@ -102,6 +98,8 @@ jQuery ->
       $('.tags-suggestion', @$element).click @suggestedClicked
       if @suggestionList.length > 0
         @showSuggestions()
+      else
+        @hideSuggestions() # so the rounded parts on top & bottom of dropdown do not show up
 
     @suggestedClicked = (e) => # clicked on a suggestion
       tag = e.target.textContent
