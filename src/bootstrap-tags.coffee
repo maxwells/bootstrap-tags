@@ -3,11 +3,11 @@
 # Monday, November 12, 2012
 
 # todos
-# 1) make suggestions list scrollable
-# 2) popovers for tag data
-# 3) ajax for tags, suggestions, and restrictions
-# 4) restyle
-# 5) backbone implementation
+# [√] make suggestions list scrollable
+# [ ] popovers for tag data
+# [ ] ajax for tags, suggestions, and restrictions
+# [√] restyle
+# [ ] backbone implementation
 
 jQuery ->
   $.tags = (element, options) ->
@@ -164,11 +164,15 @@ jQuery ->
         $('a', tag).click @removeTagClicked
         $('a', tag).mouseover @toggleCloseColor
         $('a', tag).mouseout @toggleCloseColor
+        $('span', tag).mouseover ->
+          tag.popover('show')
+        $('span', tag).mouseout ->
+          tag.popover('hide')
         tagList.append tag
       @adjustInputPosition()
 
     @formatTag = (i, tag) ->
-      "<div class='tag'><span class='label btn-info'>"+tag+"<a> <i class='icon-remove-sign icon-white'></i></a></span></div>"
+      "<div class='tag label btn-info' rel='popover' data-placement='bottom' data-content='content' data-original-title='title'><span>"+tag+"</span><a> <i class='icon-remove-sign icon-white'></i></a></div>"
 
     @addDocumentListeners = =>
       $(document).mouseup (e) =>
