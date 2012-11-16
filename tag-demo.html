@@ -12,18 +12,33 @@
   <body>
   	<div class="container">
   		<h3>Bootstrap Tags Demo</h3>
-  		<form><fieldset>
-  		The following tag-list is unfiltered, with the suggestions "here", "are", "some", "suggestions". Additionally, this tag-list has popovers enabled.
-  		<div id="one" class="tag-list"><div class="tag-data">tag1,tag2,tag3,tag4</div><div class="tags"></div></div>
-  		The second tag-list has a number of suggested terms and a couple restricted terms ("restrict", "to", "these").
-  <br />By default, all suggested terms are allowed, so if a user deletes one, it can be repopulated. Popovers are disabled. This tag-list substitutes in a custom function (whenAddingTag) that alerts the tag if it is successfully added.
-  		<div id="two" class="tag-list"><div class="tag-data">tag5,tag6,tag7,tag8</div><div class="tags"></div></div></fieldset></form>
+  		<form>
+	  		The following tag-list is unfiltered, with the suggestions "here", "are", "some", "suggestions". Additionally, this tag-list has popovers enabled. Should you want to programmatically define what the popover content is for a given tag, the definePopover(tag) method can be overwritten
+
+	  		<div id="one" class="tag-list"><div class="tags"></div></div>
+	  		
+	  		The second tag-list has a number of suggested terms and a couple restricted terms ("restrict", "to", "these").
+	  <br />By default, all suggested terms are allowed, so if a user deletes one, it can be repopulated. Popovers are disabled. This tag-list substitutes in a custom function (whenAddingTag) that alerts the tag if it is successfully added.
+	  		
+	  		<div id="two" class="tag-list"><div class="tag-data">tag5,tag6,tag7,tag8</div><div class="tags"></div></div>
+	  		</form>
+	    
 	    <script>
 			$(function() {	
 				pressedUp = function(e) { console.log('pressed up'); };
 				whenAddingTag = function (tag) { alert(tag); };
-				$('#one').tags( { suggestions : ["here", "are", "some", "suggestions"], popovers : true } );
-				$('#two').tags( { suggestions : ["there", "were", "some", "suggested", "terms", "super", "secret", "stuff"], restrictTo : ["restrict", "to", "these"], popovers : false, whenAddingTag : whenAddingTag, pressedUp : pressedUp } );
+				$('#one').tags( {
+					suggestions : ["here", "are", "some", "suggestions"],
+					popovers : true,
+					popoverData : ["What a wonderful day", "to make some stuff", "up so that I", "can show it works"],
+					tagData: ["tag a", "tag b", "tag c", "tag d"]
+				} );
+				$('#two').tags( {
+					suggestions : ["there", "were", "some", "suggested", "terms", "super", "secret", "stuff"],
+					restrictTo : ["restrict", "to", "these"],
+					popovers : false,
+					whenAddingTag : whenAddingTag,
+					pressedUp : pressedUp } );
 			});
 	    </script>
 	</div>

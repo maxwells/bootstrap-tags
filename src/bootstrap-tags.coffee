@@ -16,19 +16,27 @@ jQuery ->
     @restrictTo = (if options.restrictTo? then options.restrictTo.concat @suggestions else false)
     @displayPopovers = (if options.popovers? then options.popovers else false)
 
+    # override-able functions
     @whenAddingTag = (if options.whenAddingTag? then options.whenAddingTag else (tag) -> )
-
+    @definePopover = (if options.definePopover then options.definePopover else (tag) -> "associated content for \""+tag+"\"" )
+    # override-able key press functions
     @pressedReturn = (if options.pressedReturn? then options.pressedReturn else (e) -> )
     @pressedDelete = (if options.pressedDelete? then options.pressedDelete else (e) -> )
     @pressedDown = (if options.pressedDown? then options.pressedDown else (e) -> )
     @pressedUp = (if options.pressedUp? then options.pressedUp else (e) -> )
 
-    # tagsArray and tagData store same data, but one is as list and one is as comma joined list (ie. string)
-    @tagsArray = []
-    @tagData = ""
-
     # hang on to so we know what we are
     @$element = $ element
+
+    # tagsArray is list of tags
+    if options.tagData?
+      @tagsArray = options.tagData
+    else
+      tagData = $('.tag-data', @$element).html()
+      @tagsArray = (if tagData? then tagData.split ',' else [])
+  
+    if @displayPopovers
+      @popoverArray = options.popoverData
 
     # add/remove methods
     @removeTagClicked = (e) => # clicked remove tag anchor
@@ -42,16 +50,34 @@ jQuery ->
       @removeTag @tagsArray[@tagsArray.length-1]
 
     @removeTag = (tag) => # removes tags from both structures and calls render
+      if @displayPopovers
+        @popoverArray.splice(@tagsArray.indexOf(tag),1)
       @tagsArray.splice(@tagsArray.indexOf(tag), 1)
-      @tagData = @tagsArray.join(',')
       @renderTags @tagsArray
 
     @addTag = (tag) => # adds specified tag to both structures
-      if (@restrictTo == false or @restrictTo.indexOf(tag) != -1) and @tagsArray.indexOf(tag) < 0
-        @tagsArray.push tag
-        @tagData = @tagsArray.join(',')
+      if (@restrictTo == false or @restrictTo.indexOf(tag) != -1) and @tagsArray.indexOf(tag) < 0 and tag.length > 0
         @whenAddingTag(tag)
+        if @displayPopovers
+          associatedContent = @definePopover(tag)
+          @popoverArray.push associatedContent
+        @tagsArray.push tag
         @renderTags @tagsArray
+
+    @addTagWithContent = (tag, content) =>
+      if (@restrictTo == false or @restrictTo.indexOf(tag) != -1) and @tagsArray.indexOf(tag) < 0 and tag.length > 0
+        @whenAddingTag(tag)
+        @tagsArray.push tag
+        @popoverArray.push content
+        @renderTags @tagsArray
+
+    @renameTag = (name, newName) =>
+      @tagsArray[@tagsArray.indexOf name] = newName
+      @renderTags @tagsArray
+
+    @setPopover = (tag, popoverContent) =>
+      @popoverArray[@tagsArray.indexOf tag] = popoverContent
+      @renderTags @tagsArray      
 
     # toggles remove button color for a tag when moused over or out
     @toggleCloseColor = (e) ->
@@ -86,12 +112,12 @@ jQuery ->
           numSuggestions = @suggestionList.length
           @suggestedIndex = (if @suggestedIndex < numSuggestions-1 then @suggestedIndex+1 else numSuggestions-1)
           @selectSuggested @suggestedIndex
-          @scrollSuggested @suggestedIndex if @selectedIndex >= 0
+          @scrollSuggested @suggestedIndex if @suggestedIndex >= 0
         when 38 # up
           @pressedUp(e)
           @suggestedIndex = (if @suggestedIndex > 0 then @suggestedIndex-1 else 0)
           @selectSuggested @suggestedIndex
-          @scrollSuggested @suggestedIndex if @selectedIndex >= 0
+          @scrollSuggested @suggestedIndex if @suggestedIndex >= 0
         when 9, 27 # tab, escape
           @hideSuggestions()
         else
@@ -104,7 +130,7 @@ jQuery ->
       @$suggestionList.html ''
       @suggestionList = []
       $.each @suggestions, (i, suggestion) =>
-        if @tagData.indexOf(suggestion) < 0 and suggestion.substring(0, val.length) == val and (val.length > 0 or overrideLengthCheck)
+        if @tagsArray.indexOf(suggestion) < 0 and suggestion.substring(0, val.length) == val and (val.length > 0 or overrideLengthCheck)
           @$suggestionList.append '<li class="tags-suggestion">'+suggestion+'</li>'
           @suggestionList.push suggestion
       $('.tags-suggestion', @$element).mouseover @selectSuggestedMouseOver
@@ -158,7 +184,6 @@ jQuery ->
       #if pos? and topPos?
       $('.tags-suggestion-list', @$element).scrollTop pos.top - topPos.top
 
-
     # adjust padding on input so that what user types shows up next to last tag (or on new line if insufficient space)
     @adjustInputPosition = =>
       tagElement = $('.tag', @$element).last()
@@ -187,9 +212,10 @@ jQuery ->
         tagList.append tag
       @adjustInputPosition()
 
-    @formatTag = (i, tag) ->
-      if @displayPopovers == true
-        "<div class='tag label btn-info' rel='popover' data-placement='bottom' data-content='content' data-original-title='"+tag+"'><span>"+tag+"</span><a> <i class='icon-remove-sign icon-white'></i></a></div>"
+    @formatTag = (i, tag) =>
+      if @displayPopovers == true # then attach popover data
+        popoverContent = @popoverArray[@tagsArray.indexOf tag]
+        "<div class='tag label btn-info' rel='popover' data-placement='bottom' data-content='"+popoverContent+"' data-original-title='"+tag+"'><span>"+tag+"</span><a> <i class='icon-remove-sign icon-white'></i></a></div>"
       else
         "<div class='tag label btn-info'><span>"+tag+"</span><a> <i class='icon-remove-sign icon-white'></i></a></div>"
 
@@ -200,15 +226,19 @@ jQuery ->
           @hideSuggestions()
 
     @init = ->
-      @tagData = $('.tag-data', @$element).html()
-      @tagsArray = @tagData.split ','
+      # build out tags from specified markup
       @input = $ "<input type='text' class='tags-input'>"
       @input.keydown @keyDownHandler
       @input.keyup @keyUpHandler
       @$element.append @input
       @$suggestionList = $ '<ul class="tags-suggestion-list dropdown-menu"></ul>'
       @$element.append @$suggestionList
+      # show it
       @renderTags @tagsArray
+
+      @renameTag "tag a", "INFINITY"
+      @addTagWithContent "Fillibuster", "central"
+      
       @addDocumentListeners()
       
     @init()
