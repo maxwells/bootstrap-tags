@@ -3,7 +3,7 @@
 Bootstrap tags is a lightweight jQuery plugin meant to extend the Twitter Bootstrap UI to include tagging. 
 
 ## Demo
-[http://jsfiddle.net/cjFZW/](http://jsfiddle.net/cjFZW/)
+[http://jsfiddle.net/cjFZW/2/](http://jsfiddle.net/cjFZW/)
 Note: for whatever reason the width and height of the text boxes in jsFiddle aren't cooporating, so please imagine that the box isn't resizing.
 
 ## Features
