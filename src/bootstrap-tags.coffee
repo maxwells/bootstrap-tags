@@ -16,6 +16,7 @@ jQuery ->
     @whenAddingTag = (if options.whenAddingTag? then options.whenAddingTag else (tag) -> )
     @definePopover = (if options.definePopover then options.definePopover else (tag) -> "associated content for \""+tag+"\"" )
     @excludes = (if options.excludes then options.excludes else -> false)
+    @tagRemoved = (if options.tagRemoved then options.tagRemoved else (tag) -> )
     # override-able key press functions
     @pressedReturn = (if options.pressedReturn? then options.pressedReturn else (e) -> )
     @pressedDelete = (if options.pressedDelete? then options.pressedDelete else (e) -> )
@@ -35,16 +36,22 @@ jQuery ->
     if @displayPopovers
       @popoverArray = options.popoverData
 
+    # returns list of tags
+    @getTags = =>
+      @tagsArray
+
     # add/remove methods
     @removeTagClicked = (e) => # clicked remove tag anchor
       if e.currentTarget.tagName == "A"
         @removeTag e.currentTarget.previousSibling.textContent
         $(e.currentTarget.parentNode).remove()
+      @
 
     @removeLastTag = => # pressed delete on empty string in input.
       el = $('.tag', @$element).last()
       el.remove()
       @removeTag @tagsArray[@tagsArray.length-1]
+      @
 
     @removeTag = (tag) => # removes specified tag 
       if @tagsArray.indexOf(tag) > -1
@@ -52,6 +59,8 @@ jQuery ->
           @popoverArray.splice(@tagsArray.indexOf(tag),1)
         @tagsArray.splice(@tagsArray.indexOf(tag), 1)
         @renderTags()
+        @tagRemoved(tag)
+      @
 
     @addTag = (tag) => # adds specified tag
       if (@restrictTo == false or @restrictTo.indexOf(tag) != -1) and @tagsArray.indexOf(tag) < 0 and tag.length > 0 and (@exclude == false || @exclude.indexOf(tag) == -1) and !@excludes(tag)
@@ -61,6 +70,7 @@ jQuery ->
           @popoverArray.push associatedContent
         @tagsArray.push tag
         @renderTags()
+      @
 
     @addTagWithContent = (tag, content) => # adds tag with associated popover content
       if (@restrictTo == false or @restrictTo.indexOf(tag) != -1) and @tagsArray.indexOf(tag) < 0 and tag.length > 0
@@ -68,14 +78,17 @@ jQuery ->
         @tagsArray.push tag
         @popoverArray.push content
         @renderTags()
+      @
 
     @renameTag = (name, newName) =>
       @tagsArray[@tagsArray.indexOf name] = newName
       @renderTags()
+      @
 
     @setPopover = (tag, popoverContent) =>
       @popoverArray[@tagsArray.indexOf tag] = popoverContent
-      @renderTags()      
+      @renderTags()     
+      @ 
 
     # toggles remove button opacity for a tag when moused over or out
     @toggleCloseColor = (e) ->
@@ -243,5 +256,7 @@ jQuery ->
     @
 
   $.fn.tags = (options) ->
-    return this.each ->
+    tags = {}
+    this.each ->
       tags = new $.tags this, options
+    tags

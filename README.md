@@ -46,6 +46,7 @@ See Implementation above for example
 If you want to override any of the following functions, pass it as an option in the jQuery initialization.
 
 - `whenAddingTag (tag:string)` : anything external you'd like to do with the tag
+- `tagRemoved (tag:string)` : find out which tag was removed by either presseing delete key or clicking the (x)
 - `definePopover (tag:string)` : must return the popover content for the tag that is being added. (eg "Content for [tag]")
 - `excludes (tag:string)` : returns true if you want the tag to be excluded, false if allowed
 - `pressedReturn (e:triggering event)` 
@@ -73,3 +74,25 @@ Example:
 		pressedUp : pressedUp,
 		tagClass : 'btn-warning' }
 	);
+
+### Controlling tags
+Some functions are chainable, and can be used to move the data around outside of the plugin.
+
+- `getTags()` - not chainable: returns a list of tags
+- `addTag(tag:string)` - chainable
+- `renameTag(tag:string, newTag:string)` - chainable
+- `removeLastTag()` - chainable
+- `removeTag(tag:string)` - chainable
+- `addTagWithContent(tag:string, popoverContent:string)` - chainable
+- `setPopover(tag:string, popoverContent:string)` - chainable
+
+Example:
+
+	var tags = $('#one').tags( {
+		suggestions : ["here", "are", "some", "suggestions"],
+		popoverData : ["What a wonderful day", "to make some stuff", "up so that I", "can show it works"],
+		tagData: ["tag a", "tag b", "tag c", "tag d"],
+		excludeList : ["excuse", "my", "vulgarity"],
+	} );
+	tags.addTag("tag e!!").removeTag("tag b").setPopover("tag c", "Changed popover content");
+	console.log(tags.getTags());

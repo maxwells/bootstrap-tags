@@ -39,13 +39,15 @@
 					// --> this will exclude anything with !
 					return (tag.indexOf("!") != -1);
 				}
-				$('#one').tags( {
+				var tags = $('#one').tags( {
 					suggestions : ["here", "are", "some", "suggestions"],
 					popoverData : ["What a wonderful day", "to make some stuff", "up so that I", "can show it works"],
 					tagData: ["tag a", "tag b", "tag c", "tag d"],
 					excludeList : ["excuse", "my", "vulgarity"],
-					excludes : excludes
+					excludes : excludes,
+					tagRemoved: function(tag) { console.log(tag) }
 				} );
+				console.log(tags.removeTag("tag a").renameTag("tag b", "new tag b").addTag("added tag").getTags());
 				$('#two').tags( {
 					suggestions : ["there", "were", "some", "suggested", "terms", "super", "secret", "stuff"],
 					restrictTo : ["restrict", "to", "these"],
