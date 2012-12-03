@@ -96,3 +96,5 @@ Example:
 	} );
 	tags.addTag("tag e!!").removeTag("tag b").setPopover("tag c", "Changed popover content");
 	console.log(tags.getTags());
+
+To reference a tags instance that you've already attached to a selector, (eg. $(selector).tags(options)) you can use $(selector).tags() or $(selector).tags(index)

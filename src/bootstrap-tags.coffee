@@ -256,7 +256,12 @@ jQuery ->
     @
 
   $.fn.tags = (options) ->
-    tags = {}
-    this.each ->
-      tags = new $.tags this, options
-    tags
+    tagsObject = {}
+    stopOn = (if typeof options == "number" then options else -1)
+    @each (i, el) ->
+      $el = $ el
+      unless $el.data('tags')?
+        $el.data 'tags', new $.tags(this, options)
+      if stopOn == i or i == 0 # return first or specified by index tags object
+        tagsObject = $el.data 'tags'
+    tagsObject

@@ -47,6 +47,8 @@
 					excludes : excludes,
 					tagRemoved: function(tag) { console.log(tag) }
 				} );
+				var alsoTags = $('#one').tags();
+				alsoTags.removeTag("tag c");
 				console.log(tags.removeTag("tag a").renameTag("tag b", "new tag b").addTag("added tag").getTags());
 				$('#two').tags( {
 					suggestions : ["there", "were", "some", "suggested", "terms", "super", "secret", "stuff"],
@@ -58,6 +60,7 @@
 					tagData  : ["alphabet", "soup", "bouncy", "castle"],
 					tagClass : 'btn-success'
 				});
+				$('#three').tags(0).addTag('testing jQuery-ness');
 				$('#four').tags( {
 					tagData  : ["alphabet", "soup", "bouncy", "castle"],
 					tagClass : 'btn-danger disabled'
