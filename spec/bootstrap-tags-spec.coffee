@@ -76,3 +76,23 @@ describe "Bootstrap Tags", ->
       @tags.renameTag('one', 'new name')
       expect(@tags.hasTag('new name')).toBeTruthy()
       expect(@tags.hasTag('one')).toBeFalsy()
+
+    it "calls before/after adding/deleting tags callbacks in the right order", ->
+      $domElement = $('body').append '<div id="tagger2" class="tag-list"><div class="tags"></div></div>'
+      initTagData = ['one', 'two', 'three']
+      beforeAddingTagCalled = false
+      afterAddingTagCalled = false
+      beforeDeletingTagCalled = false
+      afterDeletingTagCalled = false
+      beforeAddingTag = -> beforeAddingTagCalled = true
+      afterAddingTag = -> afterAddingTagCalled = true
+      beforeDeletingTag = -> beforeDeletingTagCalled = true
+      afterDeletingTag = -> afterDeletingTagCalled = true
+      tags = $('#tagger2', @$domElement).tags
+        tagData: @initTagData
+        beforeAddingTag: beforeAddingTag
+        afterAddingTag: afterAddingTag
+        beforeDeletingTag: beforeDeletingTag
+        afterDeletingTag: afterDeletingTag
+      expect(beforeAddingTag and afterAddingTag and beforeDeletingTag and afterDeletingTag).toBeTruthy()
+      $('#tagger2').remove()

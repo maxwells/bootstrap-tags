@@ -81,10 +81,40 @@
         this.tags.setPopover('one', content);
         return expect(this.tags.getTagWithContent('one').content).toEqual(content);
       });
-      return it("can rename tag", function() {
+      it("can rename tag", function() {
         this.tags.renameTag('one', 'new name');
         expect(this.tags.hasTag('new name')).toBeTruthy();
         return expect(this.tags.hasTag('one')).toBeFalsy();
+      });
+      return it("calls before/after adding/deleting tags callbacks in the right order", function() {
+        var $domElement, afterAddingTag, afterAddingTagCalled, afterDeletingTag, afterDeletingTagCalled, beforeAddingTag, beforeAddingTagCalled, beforeDeletingTag, beforeDeletingTagCalled, initTagData, tags;
+        $domElement = $('body').append('<div id="tagger2" class="tag-list"><div class="tags"></div></div>');
+        initTagData = ['one', 'two', 'three'];
+        beforeAddingTagCalled = false;
+        afterAddingTagCalled = false;
+        beforeDeletingTagCalled = false;
+        afterDeletingTagCalled = false;
+        beforeAddingTag = function() {
+          return beforeAddingTagCalled = true;
+        };
+        afterAddingTag = function() {
+          return afterAddingTagCalled = true;
+        };
+        beforeDeletingTag = function() {
+          return beforeDeletingTagCalled = true;
+        };
+        afterDeletingTag = function() {
+          return afterDeletingTagCalled = true;
+        };
+        tags = $('#tagger2', this.$domElement).tags({
+          tagData: this.initTagData,
+          beforeAddingTag: beforeAddingTag,
+          afterAddingTag: afterAddingTag,
+          beforeDeletingTag: beforeDeletingTag,
+          afterDeletingTag: afterDeletingTag
+        });
+        expect(beforeAddingTag && afterAddingTag && beforeDeletingTag && afterDeletingTag).toBeTruthy();
+        return $('#tagger2').remove();
       });
     });
   });
