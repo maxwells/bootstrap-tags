@@ -1,10 +1,9 @@
 # Boostrap Tags
 
-Bootstrap tags is a lightweight jQuery plugin meant to extend the Twitter Bootstrap UI to include tagging. 
+Bootstrap tags is a lightweight jQuery plugin meant to extend the Twitter Bootstrap UI to include tagging.
 
 ## Demo
-[http://jsfiddle.net/cjFZW/2/](http://jsfiddle.net/cjFZW/2/)
-Note: for whatever reason the width and height of the text boxes in jsFiddle aren't cooporating, so please imagine that the box isn't resizing.
+[http://maxwells.github.com/bootstrap-tags.html	](http://maxwells.github.com/bootstrap-tags.html)
 
 ## Features
 - Autosuggest (for typing or activated by pressing the down key when empty)
@@ -32,6 +31,7 @@ Note: for whatever reason the width and height of the text boxes in jsFiddle are
 
 ### Settings
 
+- `readonly`: boolean
 - `suggestions`: list of autosuggest terms
 - `restrictTo`: list of allowed tags
 - `exclude`: list of disallowed tags
@@ -45,8 +45,10 @@ See Implementation above for example
 ### Overrideable functions
 If you want to override any of the following functions, pass it as an option in the jQuery initialization.
 
-- `whenAddingTag (tag:string)` : anything external you'd like to do with the tag
-- `tagRemoved (tag:string)` : find out which tag was removed by either presseing delete key or clicking the (x)
+- `beforeAddingTag (tag:string)` : anything external you'd like to do with the tag before adding it
+- `afterAddingTag (tag:string)` : anything external you'd like to do with the tag after adding it
+- `beforeDeletingTag (tag:string)` : find out which tag is about to be deleted
+- `afterDeletingTag (tag:string)` : find out which tag was removed by either presseing delete key or clicking the (x)
 - `definePopover (tag:string)` : must return the popover content for the tag that is being added. (eg "Content for [tag]")
 - `excludes (tag:string)` : returns true if you want the tag to be excluded, false if allowed
 - `pressedReturn (e:triggering event)` 
@@ -78,7 +80,11 @@ Example:
 ### Controlling tags
 Some functions are chainable, and can be used to move the data around outside of the plugin.
 
+- `hasTag(tag:string)` - boolean; whether tag is in tag list
 - `getTags()` - not chainable: returns a list of tags
+- `getTagsWithContent()` - not chainable: returns a list of objects with a tag property and content property
+- `getTag(tag:string)` - returns tag as string
+- `getTagWithContent(tag:string)` - returns object with tag and content property (popover)
 - `addTag(tag:string)` - chainable
 - `renameTag(tag:string, newTag:string)` - chainable
 - `removeLastTag()` - chainable
@@ -98,3 +104,12 @@ Example:
 	console.log(tags.getTags());
 
 To reference a tags instance that you've already attached to a selector, (eg. $(selector).tags(options)) you can use $(selector).tags() or $(selector).tags(index)
+
+## Building
+
+	rake
+	
+	
+## Testing
+
+Open SpecRunner.html (powered by Jasmine)

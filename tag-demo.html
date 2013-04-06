@@ -1,75 +1,90 @@
 <html>
-  <head>
-    <title>
-      Tag Demo
-    </title>
-    <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js'></script>
-	<script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/js/bootstrap.min.js"></script>
-	<script src='lib/bootstrap-tags.js'></script>
-	<link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/css/bootstrap-combined.min.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="css/bootstrap-tags.css" />
-  </head>
-  <body>
-  	<div class="container">
-  		<h3>Bootstrap Tags Demo</h3>
-	  		The following tag-list is unfiltered, with the suggestions "here", "are", "some", "suggestions". It is set to exclude a few terms: "excuse", "my", "vulgarity" and anything with an exclamation point. Additionally, this tag-list has popovers enabled. Should you want to programmatically define what the popover content is for a given tag, the definePopover(tag) method can be overwritten. Tags are defined in jQuery statement. This is the default color
-
-	  		<div id="one" class="tag-list"><div class="tags"></div></div>
-	  		
-	  		The second tag-list has a number of suggested terms and a couple restricted terms ("restrict", "to", "these").
-	  <br />By default, all suggested terms are allowed, so if a user deletes one, it can be repopulated. Popovers are disabled. This tag-list substitutes in a custom function (whenAddingTag) that logs the tag to the console if it is successfully added -- a more practical use would be to fetch popover content for the tag that was added with setPopover(tag, content) in an ajax callback. Tags are defined from .tag-data div. This example overrides default display class (btn-info) with .btn-warning. NB:  As shown, the width of the containing (.tag-list) div is inherited by most children elements.
-	  		
-	  		<div id="two" class="tag-list" style="width:350px;"><div class="tag-data">tag5,tag6,tag7,tag8</div><div class="tags"></div></div>
-
-	  		Here are some other colors (pulled right from bootstrap styling, so if you change the bootstrap colors, these will all change accordingly)
-	  		<div id="three" class="tag-list"><div class="tags"></div></div>
-	  		<div id="four" class="tag-list"><div class="tags"></div></div>
-	  		<div id="five" class="tag-list"><div class="tags"></div></div>
-	    
-	    <script>
-			$(function() {	
-				pressedUp = function(e) { console.log('pressed up'); };
-				whenAddingTag = function (tag) {
-					console.log(tag);
-					// maybe fetch some content for the tag popover (can be HTML)
-				};
-				excludes = function (tag) {
-					// return false if this tagger does *not* exclude
-					// -> returns true if tagger should exclude this tag
-					// --> this will exclude anything with !
-					return (tag.indexOf("!") != -1);
-				}
-				var tags = $('#one').tags( {
-					suggestions : ["here", "are", "some", "suggestions"],
-					popoverData : ["What a wonderful day", "to make some stuff", "up so that I", "can show it works"],
-					tagData: ["tag a", "tag b", "tag c", "tag d"],
-					excludeList : ["excuse", "my", "vulgarity"],
-					excludes : excludes,
-					tagRemoved: function(tag) { console.log(tag) }
-				} );
-				var alsoTags = $('#one').tags();
-				alsoTags.removeTag("tag c");
-				console.log(tags.removeTag("tag a").renameTag("tag b", "new tag b").addTag("added tag").getTags());
-				$('#two').tags( {
-					suggestions : ["there", "were", "some", "suggested", "terms", "super", "secret", "stuff"],
-					restrictTo : ["restrict", "to", "these"],
-					whenAddingTag : whenAddingTag,
-					pressedUp : pressedUp,
-					tagClass : 'btn-warning' } );
-				$('#three').tags( {
-					tagData  : ["alphabet", "soup", "bouncy", "castle"],
-					tagClass : 'btn-success'
-				});
-				$('#three').tags(0).addTag('testing jQuery-ness');
-				$('#four').tags( {
-					tagData  : ["alphabet", "soup", "bouncy", "castle"],
-					tagClass : 'btn-danger disabled'
-				});
-				$('#five').tags( {
-					promptText : "Custom prompt..."
-				});
-			});
-	    </script>
-	</div>
-  </body>
+   <head>
+      <title>
+         Tag Demo
+      </title>
+      <script src='http://code.jquery.com/jquery-1.9.1.min.js'></script>
+      <script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/js/bootstrap.min.js"></script>
+      <script src='lib/bootstrap-tags.js'></script>
+      <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/css/bootstrap-combined.min.css" rel="stylesheet">
+      <link rel="stylesheet" type="text/css" href="css/bootstrap-tags.css" />
+   </head>
+   <body>
+      <div class="container">
+         <h3>Bootstrap Tags Demo</h3>
+         The following tag-list is unfiltered, with the suggestions "here", "are", "some", "suggestions". It is set to exclude a few terms: "excuse", "my", "vulgarity" and anything with an exclamation point. Additionally, this tag-list has popovers enabled. Should you want to programmatically define what the popover content is for a given tag, the definePopover(tag) method can be overwritten. Tags are defined in jQuery statement. This is the default color
+         <div id="one" class="tag-list">
+            <div class="tags"></div>
+         </div>
+         The second tag-list has a number of suggested terms and a couple restricted terms ("restrict", "to", "these").
+         <br />By default, all suggested terms are allowed, so if a user deletes one, it can be repopulated. Popovers are disabled. This tag-list substitutes in a custom function (whenAddingTag) that logs the tag to the console if it is successfully added -- a more practical use would be to fetch popover content for the tag that was added with setPopover(tag, content) in an ajax callback. Tags are defined from .tag-data div. This example overrides default display class (btn-info) with .btn-warning. NB:  As shown, the width of the containing (.tag-list) div is inherited by most children elements.
+         <div id="two" class="tag-list" style="width:350px;">
+            <div class="tag-data">tag5,tag6,tag7,tag8</div>
+            <div class="tags"></div>
+         </div>
+         The third tag-list is read only
+         <div id="read-only" class="tag-list">
+            <div class="tags"></div>
+         </div>
+         Here are some other colors (pulled right from bootstrap styling, so if you change the bootstrap colors, these will all change accordingly)
+         <div id="three" class="tag-list">
+            <div class="tags"></div>
+         </div>
+         <div id="four" class="tag-list">
+            <div class="tags"></div>
+         </div>
+         <div id="five" class="tag-list">
+            <div class="tags"></div>
+         </div>
+         <script>
+            $(function() {	
+            	pressedUp = function(e) { console.log('pressed up'); };
+            	beforeAddingTag = function (tag) {
+            		console.log(tag);
+            		// maybe fetch some content for the tag popover (can be HTML)
+            	};
+            	excludes = function (tag) {
+            		// return false if this tagger does *not* exclude
+            		// -> returns true if tagger should exclude this tag
+            		// --> this will exclude anything with !
+            		return (tag.indexOf("!") != -1);
+            	}
+            	var tags = $('#one').tags( {
+            		suggestions : ["here", "are", "some", "suggestions"],
+            		popoverData : ["What a wonderful day", "to make some stuff", "up so that I", "can show it works"],
+            		tagData: ["tag a", "tag b", "tag c", "tag d"],
+            		excludeList : ["excuse", "my", "vulgarity"],
+            		excludes : excludes,
+            		tagRemoved: function(tag) { console.log(tag) }
+            	} );
+            	var alsoTags = $('#one').tags();
+            	alsoTags.removeTag("tag c");
+            	console.log(tags.removeTag("tag a").renameTag("tag b", "new tag b").addTag("added tag").getTags());
+               $('#read-only').tags( {
+                  tagData: ['some', 'tags','that', 'aren\'t', 'editable'],
+                  readOnly: true
+               });
+            	$('#two').tags( {
+            		suggestions : ["there", "were", "some", "suggested", "terms", "super", "secret", "stuff"],
+            		restrictTo : ["restrict", "to", "these"],
+            		beforeAddingTag : beforeAddingTag,
+            		pressedUp : pressedUp,
+            		tagClass : 'btn-warning' } );
+            	$('#three').tags( {
+            		tagData  : ["alphabet", "soup", "bouncy", "castle"],
+            		tagClass : 'btn-success'
+            	});
+            	$('#three').tags(0).addTag('testing jQuery-ness');
+            	$('#four').tags( {
+            		tagData  : ["alphabet", "soup", "bouncy", "castle"],
+            		tagClass : 'btn-danger disabled'
+            	});
+            	$('#five').tags( {
+            		promptText : "Custom prompt..."
+            	});
+            });
+              
+         </script>
+      </div>
+   </body>
 </html>
