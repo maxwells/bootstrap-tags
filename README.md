@@ -107,7 +107,17 @@ To reference a tags instance that you've already attached to a selector, (eg. $(
 
 ## Building
 
-	rake
+For a one off,
+
+	$ rake
+
+_To build continously_, use guard. Install necessary gems with bundler
+
+	$ bundle
+	
+then start up guard
+	
+	$ guard
 	
 	
 ## Testing
