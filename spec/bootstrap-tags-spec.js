@@ -86,7 +86,7 @@
         expect(this.tags.hasTag('new name')).toBeTruthy();
         return expect(this.tags.hasTag('one')).toBeFalsy();
       });
-      return it("calls before/after adding/deleting tags callbacks in the right order", function() {
+      it("calls before/after adding/deleting tags callbacks in the right order", function() {
         var $domElement, afterAddingTag, afterAddingTagCalled, afterDeletingTag, afterDeletingTagCalled, beforeAddingTag, beforeAddingTagCalled, beforeDeletingTag, beforeDeletingTagCalled, initTagData, tags;
         $domElement = $('body').append('<div id="tagger2" class="tag-list"><div class="tags"></div></div>');
         initTagData = ['one', 'two', 'three'];
@@ -114,6 +114,22 @@
           afterDeletingTag: afterDeletingTag
         });
         expect(beforeAddingTag && afterAddingTag && beforeDeletingTag && afterDeletingTag).toBeTruthy();
+        return $('#tagger2').remove();
+      });
+      return it("can exclude tags via the excludes function option", function() {
+        var $domElement, excludesFunction, tags;
+        $domElement = $('body').append('<div id="tagger2" class="tag-list"><div class="tags"></div></div>');
+        excludesFunction = function(tag) {
+          if (tag.indexOf('foo') > -1) {
+            return false;
+          }
+          return true;
+        };
+        tags = $('#tagger2', this.$domElement).tags({
+          excludes: excludesFunction
+        });
+        tags.addTag('foo').addTag('bar').addTag('baz').addTag('foobarbaz');
+        expect(tags.getTags()).toEqual(['foo', 'foobarbaz']);
         return $('#tagger2').remove();
       });
     });

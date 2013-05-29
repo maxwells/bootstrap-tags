@@ -96,3 +96,14 @@ describe "Bootstrap Tags", ->
         afterDeletingTag: afterDeletingTag
       expect(beforeAddingTag and afterAddingTag and beforeDeletingTag and afterDeletingTag).toBeTruthy()
       $('#tagger2').remove()
+
+    it "can exclude tags via the excludes function option", ->
+      $domElement = $('body').append '<div id="tagger2" class="tag-list"><div class="tags"></div></div>'
+      excludesFunction = (tag) ->
+        return false if tag.indexOf('foo') > -1
+        true
+      tags = $('#tagger2', @$domElement).tags
+        excludes: excludesFunction
+      tags.addTag('foo').addTag('bar').addTag('baz').addTag('foobarbaz')
+      expect(tags.getTags()).toEqual ['foo', 'foobarbaz']
+      $('#tagger2').remove()
