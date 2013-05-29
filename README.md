@@ -36,6 +36,7 @@ Bootstrap tags is a lightweight jQuery plugin meant to extend the Twitter Bootst
 - `restrictTo`: list of allowed tags
 - `exclude`: list of disallowed tags
 - `displayPopovers`: boolean
+- `popoverTrigger`: string - 'click', 'hover', 'hoverShowClickHide' - indicate how popovers should be triggered
 - `tagClass`: string for what class the tag div will have for styling
 - `promptText`: placeholder string when there are no tags and nothing typed in
 - `readOnlyEmptyMessage`: string - text to be displayed if there are no tags in readonly mode

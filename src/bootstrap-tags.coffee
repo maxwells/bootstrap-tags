@@ -15,6 +15,7 @@ jQuery ->
     @restrictTo = (if options.restrictTo? then options.restrictTo.concat @suggestions else false)
     @exclude ||= false
     @displayPopovers = (if options.popovers? then true else options.popoverData?)
+    @popoverTrigger ||= 'hover'
     @tagClass ||= 'btn-info'
     @promptText ||= 'Enter tags...'
     @readOnlyEmptyMessage ||= 'No tags to display...'
@@ -291,11 +292,7 @@ jQuery ->
         $('a', tag).click @removeTagClicked
         $('a', tag).mouseover @toggleCloseColor
         $('a', tag).mouseout @toggleCloseColor
-        if @displayPopovers
-          $('span', tag).mouseover ->
-            tag.popover('show')
-          $('span', tag).mouseout ->
-            tag.popover('hide')
+        @initializePopoverFor(tag, @tagsArray[i], @popoverArray[i]) if @displayPopovers
         tagList.append tag
       @adjustInputPosition()
 
@@ -304,12 +301,28 @@ jQuery ->
       tagList.html (if @tagsArray.length == 0 then @readOnlyEmptyMessage else '')
       $.each @tagsArray, (i, tag) =>
         tag = $(@formatTagReadOnly i, tag)
-        if @displayPopovers
-          $('span', tag).mouseover ->
-            tag.popover('show')
-          $('span', tag).mouseout ->
-            tag.popover('hide')
+        @initializePopoverFor(tag, @tagsArray[i], @popoverArray[i]) if @displayPopovers
         tagList.append tag
+
+    # set up popover for a given tag to be toggled by specific action
+    # - 'click': need to click a tag to show/hide popover
+    # - 'hover': need to mouseover/out to show/hide popover
+    # - 'hoverShowClickHide': need to mouseover to show popover, mouseover another to hide others, or click document to hide others
+    @initializePopoverFor = (tag, title, content) =>
+      options =
+        title: title
+        content: content
+        placement: 'bottom'
+      if @popoverTrigger == 'hoverShowClickHide'
+        $(tag).mouseover ->
+          $(tag).popover('show')
+          $('.tag').not(tag).popover('hide')
+        $(document).click ->
+          $(tag).popover('hide')
+      else
+        options.trigger = @popoverTrigger
+      $(tag).popover options
+          
 
     # toggles remove button opacity for a tag when moused over or out
     @toggleCloseColor = (e) ->
@@ -321,15 +334,13 @@ jQuery ->
     # formatTag spits out the html for a tag (with or without it's popovers)
     @formatTag = (i, tag) =>
       if @displayPopovers == true # then attach popover data
-        popoverContent = @popoverArray[@tagsArray.indexOf tag]
-        "<div class='tag label "+@tagClass+"' rel='popover' data-placement='bottom' data-content='"+popoverContent+"' data-original-title='"+tag+"'><span>"+tag+"</span><a> <i class='icon-remove-sign icon-white'></i></a></div>"
+        "<div class='tag label "+@tagClass+"' rel='popover'><span>"+tag+"</span><a> <i class='icon-remove-sign icon-white'></i></a></div>"
       else
         "<div class='tag label "+@tagClass+"'><span>"+tag+"</span><a> <i class='icon-remove-sign icon-white'></i></a></div>"
 
     @formatTagReadOnly = (i, tag) =>
       if @displayPopovers == true # then attach popover data
-        popoverContent = @popoverArray[@tagsArray.indexOf tag]
-        "<div class='tag label "+@tagClass+"' rel='popover' data-placement='bottom' data-content='"+popoverContent+"' data-original-title='"+tag+"'><span>&nbsp;"+tag+"&nbsp;</span></div>"
+        "<div class='tag label "+@tagClass+"' rel='popover'><span>&nbsp;"+tag+"&nbsp;</span></div>"
       else
         "<div class='tag label "+@tagClass+"'><span>&nbsp;"+tag+"&nbsp;</span></div>"
 
