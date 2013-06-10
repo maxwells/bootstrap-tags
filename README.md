@@ -18,6 +18,7 @@ Bootstrap tags is a lightweight jQuery plugin meant to extend the Twitter Bootst
 ## Implementation
 	<div id="my-tag-list" class="tag-list"><div class="tags"></div></div>
 	<script>
+	```javascript
 		$(function()) {
 			$('#my-tag-list').tags({
 				tagData:["boilerplate", "tags"],
@@ -25,6 +26,7 @@ Bootstrap tags is a lightweight jQuery plugin meant to extend the Twitter Bootst
 				excludeList:["not", "these", "words"],
 			})
 		}
+	```
 	</script>
 
 ## Documentation
@@ -43,7 +45,6 @@ Bootstrap tags is a lightweight jQuery plugin meant to extend the Twitter Bootst
 
 See Implementation above for example
 
-
 ### Overrideable functions
 If you want to override any of the following functions, pass it as an option in the jQuery initialization.
 
@@ -60,24 +61,26 @@ If you want to override any of the following functions, pass it as an option in 
 
 Example:
 
-	pressedUp = function(e) { console.log('pressed up'); };
-	whenAddingTag = function (tag) {
-		console.log(tag);
-		// maybe fetch some content for the tag popover (can be HTML)
-	};
-	excludes = function (tag) {
-		// return false if this tagger does *not* exclude
-		// -> returns true if tagger should exclude this tag
-		// --> this will exclude anything with !
-		return (tag.indexOf("!") != -1);
-	};
-	$('#two').tags( {
-		suggestions : ["there", "were", "some", "suggested", "terms", "super", "secret", "stuff"],
-		restrictTo : ["restrict", "to", "these"],
-		whenAddingTag : whenAddingTag,
-		pressedUp : pressedUp,
-		tagClass : 'btn-warning' }
-	);
+```javascript
+pressedUp = function(e) { console.log('pressed up'); };
+whenAddingTag = function (tag) {
+	console.log(tag);
+	// maybe fetch some content for the tag popover (can be HTML)
+};
+excludes = function (tag) {
+	// return false if this tagger does *not* exclude
+	// -> returns true if tagger should exclude this tag
+	// --> this will exclude anything with !
+	return (tag.indexOf("!") != -1);
+};
+$('#two').tags( {
+	suggestions : ["there", "were", "some", "suggested", "terms", "super", "secret", "stuff"],
+	restrictTo : ["restrict", "to", "these"],
+	whenAddingTag : whenAddingTag,
+	pressedUp : pressedUp,
+	tagClass : 'btn-warning' }
+);
+```
 
 ### Controlling tags
 Some functions are chainable, and can be used to move the data around outside of the plugin.
@@ -96,14 +99,16 @@ Some functions are chainable, and can be used to move the data around outside of
 
 Example:
 
-	var tags = $('#one').tags( {
-		suggestions : ["here", "are", "some", "suggestions"],
-		popoverData : ["What a wonderful day", "to make some stuff", "up so that I", "can show it works"],
-		tagData: ["tag a", "tag b", "tag c", "tag d"],
-		excludeList : ["excuse", "my", "vulgarity"],
-	} );
-	tags.addTag("tag e!!").removeTag("tag b").setPopover("tag c", "Changed popover content");
-	console.log(tags.getTags());
+```javascript
+var tags = $('#one').tags( {
+	suggestions : ["here", "are", "some", "suggestions"],
+	popoverData : ["What a wonderful day", "to make some stuff", "up so that I", "can show it works"],
+	tagData: ["tag a", "tag b", "tag c", "tag d"],
+	excludeList : ["excuse", "my", "vulgarity"],
+} );
+tags.addTag("tag e!!").removeTag("tag b").setPopover("tag c", "Changed popover content");
+console.log(tags.getTags());
+```
 
 To reference a tags instance that you've already attached to a selector, (eg. $(selector).tags(options)) you can use $(selector).tags() or $(selector).tags(index)
 
