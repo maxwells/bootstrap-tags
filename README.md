@@ -18,7 +18,6 @@ Bootstrap tags is a lightweight jQuery plugin meant to extend the Twitter Bootst
 ## Implementation
 	<div id="my-tag-list" class="tag-list"><div class="tags"></div></div>
 	<script>
-	```javascript
 		$(function()) {
 			$('#my-tag-list').tags({
 				tagData:["boilerplate", "tags"],
@@ -26,7 +25,6 @@ Bootstrap tags is a lightweight jQuery plugin meant to extend the Twitter Bootst
 				excludeList:["not", "these", "words"],
 			})
 		}
-	```
 	</script>
 
 ## Documentation
