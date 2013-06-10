@@ -31,15 +31,15 @@ Bootstrap tags is a lightweight jQuery plugin meant to extend the Twitter Bootst
 
 ### Settings
 
-- `readonly`: boolean
-- `suggestions`: list of autosuggest terms
-- `restrictTo`: list of allowed tags
-- `exclude`: list of disallowed tags
-- `displayPopovers`: boolean
-- `popoverTrigger`: string - 'click', 'hover', 'hoverShowClickHide' - indicate how popovers should be triggered
-- `tagClass`: string for what class the tag div will have for styling
-- `promptText`: placeholder string when there are no tags and nothing typed in
-- `readOnlyEmptyMessage`: string - text to be displayed if there are no tags in readonly mode
+- `readonly`: `boolean`
+- `suggestions`: `Array` - autosuggest terms
+- `restrictTo`: `Array` of allowed tags (will be combined with suggestions, if provided)
+- `exclude`: `Array` of disallowed tags
+- `displayPopovers`: `Boolean`
+- `popoverTrigger`: `String` 'click', 'hover', 'hoverShowClickHide' - indicate how popovers should be triggered
+- `tagClass`: `String` for what class the tag div will have for styling
+- `promptText`: `String` placeholder string when there are no tags and nothing typed in
+- `readOnlyEmptyMessage`: `String` text to be displayed if there are no tags in readonly mode
 
 See Implementation above for example
 
