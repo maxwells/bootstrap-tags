@@ -23,8 +23,8 @@ Bootstrap tags is a lightweight jQuery plugin meant to extend the Twitter Bootst
 				tagData:["boilerplate", "tags"],
 				suggestions:["basic", "suggestions"],
 				excludeList:["not", "these", "words"],
-			})
-		}
+			});
+		});
 	</script>
 
 ## Documentation
