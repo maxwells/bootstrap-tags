@@ -69,15 +69,19 @@ class Views.Tag extends Views.Base
     super()
     $.extend @, options
 
-  destroy: ->
+  destroy: =>
     @$el.html ''
+
     # delete this or something
 
   render: (options) ->
     @$el.html @$template
       options: options
       model: @model
+    @$('.close').click @destroy
     @
+
+window.Tag = Views.Tag
 
 class Views.Tagger extends Views.Base
   template: JST["templates/tagger"]
@@ -121,23 +125,37 @@ class Views.Tagger extends Views.Base
 
   addTag: (tagName) ->
     model = @tagsCollection.addTag tagName
-    @tagViews.push(new Views.Tag(model: model))
-    # @tags.push new Tag
-    #   tag: tagTitle
-    #   labelClass: @options.labelClass
+    tagView = new Views.Tag(model: model)
+    @tagViews.push(tagView)
+    @renderTag(tagView)
     @
 
   removeTag: (tagName) ->
     models = @tagsCollection.removeTag(tagName)
+
+    indicesToDelete = []
+
+    # TODO: rewrite in un-nested form. maybe add an indexOf(tagView) method
+
     for model in models
-      for tagView in @tagViews
+      for tagView, i in @tagViews
         if tagView.model == model
+          indicesToDelete.unshift i
           tagView.destroy()
+    for index in indicesToDelete
+      @tagViews.splice index, 1
+
+    @render()
     @
+
+  renderTag: (tagView) ->
+    console.log tagView.model.name
+    @$('.tags').append tagView.render(labelClass: @options.labelClass).el
     
   renderTags: ->
-    for tag in @tagViews
-      @$('.tags').append tag.render(labelClass: @options.labelClass).el
+    console.log "rendering"
+    for tagView in @tagViews
+      @renderTag(tagView)
     @
 
   render: ->
