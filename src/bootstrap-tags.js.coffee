@@ -5,10 +5,37 @@
 
 #= require_tree ./templates
 
+class Events
+
+  on: (eventName, callback, context = window) ->
+    @callbacks ||= {}
+    @callbacks[eventName] ||= []
+    @callbacks[eventName].push
+      callback: callback
+      context: context
+
+  off: (eventName, callback) ->
+    @callbacks ||= {}
+    @callbacks[eventName] ||= []
+    indicesToDelete = []
+    for callbackObject, i in @callbacks[eventName]
+      indicesToDelete.unshift i if callback == callbackObject.callback
+    for i in indicesToDelete
+      @callbacks[eventName].splice i, 1
+
+  trigger: (eventName) ->
+    args = Array.prototype.slice.call(arguments, 1)
+    @callbacks ||= {}
+    @callbacks[eventName] ||= []
+    for callbackObject in @callbacks[eventName]
+      callbackObject.callback.apply(callbackObject.context, args)
+
+window.Events = Events
+
 ##
 # Models
 #
-class BaseModel
+class BaseModel extends Events
 
 Models = Base: BaseModel
 
@@ -46,7 +73,7 @@ class Models.TagsCollection
 # Views
 #
 
-class BaseView
+class BaseView extends Events
   tagName: 'div'
   classes: ''
 
@@ -70,8 +97,8 @@ class Views.Tag extends Views.Base
     $.extend @, options
 
   destroy: =>
-    @$el.html ''
-
+    # @$el.html ''
+    @trigger 'destroyed', @
     # delete this or something
 
   render: (options) ->
@@ -118,6 +145,8 @@ class Views.Tagger extends Views.Base
     # generate instance options from cloned defaults merged in with construction options
     $.extend @options = {}, @defaultOptions, options
 
+    @render()
+
   updateOptions: (options = {}) ->
     # merge options into instance options
     $.extend @options, options
@@ -126,9 +155,15 @@ class Views.Tagger extends Views.Base
   addTag: (tagName) ->
     model = @tagsCollection.addTag tagName
     tagView = new Views.Tag(model: model)
+    tagView.on "destroyed", @removeTagView, @
     @tagViews.push(tagView)
     @renderTag(tagView)
     @
+
+  removeTagView: (tagViewToRemove) ->
+    @$(tagViewToRemove.el).remove()
+    for tagView, i in @tagViews
+      return @tagViews.splice i, 1 if tagView == tagViewToRemove
 
   removeTag: (tagName) ->
     models = @tagsCollection.removeTag(tagName)
@@ -136,24 +171,18 @@ class Views.Tagger extends Views.Base
     indicesToDelete = []
 
     # TODO: rewrite in un-nested form. maybe add an indexOf(tagView) method
-
     for model in models
       for tagView, i in @tagViews
         if tagView.model == model
           indicesToDelete.unshift i
-          tagView.destroy()
     for index in indicesToDelete
-      @tagViews.splice index, 1
-
-    @render()
+      @removeTagView(@tagViews[index])
     @
 
   renderTag: (tagView) ->
-    console.log tagView.model.name
     @$('.tags').append tagView.render(labelClass: @options.labelClass).el
     
   renderTags: ->
-    console.log "rendering"
     for tagView in @tagViews
       @renderTag(tagView)
     @
