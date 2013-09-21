@@ -1,0 +1,6 @@
+<div class='tag'>
+  <div class='label <%= @options.labelClass %>'>
+    <%= @model.name %>
+    <button type="button" class="close bootstrap-tags-label-close" aria-hidden="true">&times;</button>
+  </div>
+</div>

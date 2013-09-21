@@ -3,15 +3,84 @@
 # Max Lahey
 # September, 2013
 
-class Tag
-  template: ->
-    "<div class='tag'>#{@tag}</div>"
+#= require_tree ./templates
+
+##
+# Models
+#
+class BaseModel
+
+Models = Base: BaseModel
+
+class Models.Tag extends Models.Base
+
+  constructor: (name) ->
+    @name = name
+
+class Models.TagsCollection
+
+  constructor: (models) ->
+    @tags = models or []
+
+  each: (fn) ->
+    for tag in @tags
+      fn(tag)
+
+  addTag: (tagName) ->
+    model = new Models.Tag(tagName)
+    @tags.push(model)
+    model
+
+  removeTag: (tagName) ->
+    newTags = []
+    removedTags = []
+    @each (tag) ->
+      if tag.name == tagName
+        removedTags.push tag
+      else
+        newTags.push tag 
+    @tags = newTags
+    removedTags
+
+##
+# Views
+#
+
+class BaseView
+  tagName: 'div'
+  classes: ''
+
+  constructor: ->
+    @$el = $("<#{@tagName} class='#{@classes}'></#{@tagName}>")
+    @el = @$el[0]
+
+  $: (selector) ->
+    @$el.find selector
+
+  $template: (o) ->
+    $(@template(o))
+
+Views = Base: BaseView
+
+class Views.Tag extends Views.Base
+  template: JST["templates/tag"]
 
   constructor: (options = {}) ->
-    for key, value of options
-      this[key] = value
+    super()
+    $.extend @, options
 
-class Tagger
+  destroy: ->
+    @$el.html ''
+    # delete this or something
+
+  render: (options) ->
+    @$el.html @$template
+      options: options
+      model: @model
+    @
+
+class Views.Tagger extends Views.Base
+  template: JST["templates/tagger"]
 
   # Default options
   defaultOptions:
@@ -25,6 +94,8 @@ class Tagger
     promptText: 'Enter tags...'
     readOnlyEmptyMessage: 'No tags to display...'
 
+    labelClass: 'label-default'
+
     beforeAddingTag: ->
     afterAddingTag: ->
     beforeDeletingTag: ->
@@ -34,33 +105,66 @@ class Tagger
     onTagRemoved: ->
 
   constructor: (element, options = {}) ->
+    super()
     @$el = $(element)
 
+    @tagsCollection = new Models.TagsCollection
+    @tagViews = []
+
     # generate instance options from cloned defaults merged in with construction options
-    @options = {}
-    for k, v of @defaultOptions
-      @options[k] = v
-    $.extend @options, options
+    $.extend @options = {}, @defaultOptions, options
 
   updateOptions: (options = {}) ->
     # merge options into instance options
     $.extend @options, options
+    @
 
-  hello: ->
-    console.log @options.text or "world"
+  addTag: (tagName) ->
+    model = @tagsCollection.addTag tagName
+    @tagViews.push(new Views.Tag(model: model))
+    # @tags.push new Tag
+    #   tag: tagTitle
+    #   labelClass: @options.labelClass
+    @
 
-window.Tagger = Tagger
+  removeTag: (tagName) ->
+    models = @tagsCollection.removeTag(tagName)
+    for model in models
+      for tagView in @tagViews
+        if tagView.model == model
+          tagView.destroy()
+    @
+    
+  renderTags: ->
+    for tag in @tagViews
+      @$('.tags').append tag.render(labelClass: @options.labelClass).el
+    @
 
+  render: ->
+    @$el.html @$template @
+    @renderTags()
+    @
+
+# TaggerCollection
+# 
+# Wraps a set of jQuery elements passed to it
+# by a selector. Each Views.Tagger method is added
+# and, when called, applies the arguments passed
+# to each Views.Tagger instance
+#
 class TaggerCollection
   constructor: (items) ->
     @items = items
 
-  for key, value of Tagger.prototype
+  for key, value of Views.Tagger.prototype
     do (key, value) =>
-      @prototype[key] = (args) ->
+      @prototype[key] = ->
         for element in @items
-          value.apply($(element).data('tags'), args)
+          value.apply($(element).data('tags'), arguments)
+        @
 
+# jQuery plugin portion
+#
 (($, window, document) ->
 
   $.fn.tags = (options) ->
@@ -68,7 +172,7 @@ class TaggerCollection
     @each (i, el) ->
       $el = $(el)
       unless $el.data('tags')?
-        $el.data 'tags', new Tagger(el, options)
+        $el.data 'tags', new Views.Tagger(el, options)
       else
         $el.data('tags').updateOptions options
     new TaggerCollection(@)
