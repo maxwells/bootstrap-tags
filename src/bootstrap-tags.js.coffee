@@ -25,7 +25,6 @@
 #
 #
 # Issues:
-# 1) adding and removing tags: should be consolidated such that removing by name or by view will use the same code and perform all callbacks
 # 2) styling...
 # 3) maybe specific types of code should be factored out into concern like modules
 # 4) 
@@ -78,12 +77,12 @@ class Models.TagsCollection
     for tag in @tags
       fn(tag)
 
-  addTag: (tagName) ->
+  create: (tagName) ->
     model = new Models.Tag(tagName)
     @tags.push(model)
     model
 
-  removeTag: (tagName) ->
+  remove: (tagName) ->
     newTags = []
     removedTags = []
     @each (tag) ->
@@ -93,6 +92,10 @@ class Models.TagsCollection
         newTags.push tag 
     @tags = newTags
     removedTags
+
+  removeModel: (model) ->
+    for tag, i in @tags
+      @tags.splice i, 1 if tag == model
 
   getTags: ->
     @each (tag) ->
@@ -128,7 +131,7 @@ class Views.Tag extends Views.Base
     $.extend @, options
 
   destroy: =>
-    @trigger 'destroyed', @
+    @trigger 'destroyed', @model
 
   render: (options) ->
     @$el.html @$template
@@ -182,12 +185,21 @@ class Views.Tagger extends Views.Base
     @
 
   addTag: (tagName) ->
-    model = @tagsCollection.addTag tagName
+    model = @tagsCollection.create tagName
     tagView = new Views.Tag(model: model)
-    tagView.on "destroyed", @removeTagView, @
+    tagView.on "destroyed", @removeTagModel, @
     @tagViews.push(tagView)
     @renderTag(tagView)
     @
+
+  removeTagModel: (model) ->
+    indicesToDelete = []
+
+    for tagView, i in @tagViews
+      indicesToDelete.unshift i if tagView.model == model
+
+    @removeTagView(@tagViews[index]) for index in indicesToDelete
+    @tagsCollection.removeModel model
 
   removeTagView: (tagViewToRemove) ->
     @$(tagViewToRemove.el).remove()
@@ -195,18 +207,10 @@ class Views.Tagger extends Views.Base
     for tagView, i in @tagViews
       return @tagViews.splice i, 1 if tagView == tagViewToRemove
 
+  # remove tag by name
   removeTag: (tagName) ->
-    models = @tagsCollection.removeTag(tagName)
-
-    indicesToDelete = []
-
-    # TODO: rewrite in un-nested form. maybe add an indexOf(tagView) method 
-    for model in models
-      for tagView, i in @tagViews
-        if tagView.model == model
-          indicesToDelete.unshift i
-    for index in indicesToDelete
-      @removeTagView(@tagViews[index])
+    models = @tagsCollection.remove(tagName)
+    @removeTagModel(model) for model in models
     @
 
   renderTag: (tagView) ->
