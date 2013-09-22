@@ -1,1 +1,4 @@
-<div class='tagger'><div class='tags'></div></div>
+<div class='tagger'>
+  <div class='tags'></div>
+  <input type='text' class='form-control tags-input input-sm'>
+</div>

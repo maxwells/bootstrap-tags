@@ -5,6 +5,31 @@
 
 #= require_tree ./templates
 
+## How are tags going to be persisted
+#
+# maybe afterAddingTag creates a callback
+# that a unique identifier would be passed back into
+# once the integrating system has the id:
+#
+# $(selector).tags().afterAddingTag(function(tag, uniqueIdCallback) {
+#   var tag = new Tag({tag: tag});
+#   tag.save({
+#     success: function(tag) {
+#       uniqueIdCallback(tag.id);
+#     }
+#   })
+# });
+#
+# and $(selector).tags().removeTag("tagName")
+#
+#
+#
+# Issues:
+# 1) adding and removing tags: should be consolidated such that removing by name or by view will use the same code and perform all callbacks
+# 2) styling...
+# 3) maybe specific types of code should be factored out into concern like modules
+# 4) 
+
 class Events
 
   on: (eventName, callback, context = window) ->
@@ -69,6 +94,10 @@ class Models.TagsCollection
     @tags = newTags
     removedTags
 
+  getTags: ->
+    @each (tag) ->
+      tag.name
+
 ##
 # Views
 #
@@ -92,14 +121,14 @@ Views = Base: BaseView
 class Views.Tag extends Views.Base
   template: JST["templates/tag"]
 
+  classes: 'tag'
+
   constructor: (options = {}) ->
     super()
     $.extend @, options
 
   destroy: =>
-    # @$el.html ''
     @trigger 'destroyed', @
-    # delete this or something
 
   render: (options) ->
     @$el.html @$template
@@ -162,6 +191,7 @@ class Views.Tagger extends Views.Base
 
   removeTagView: (tagViewToRemove) ->
     @$(tagViewToRemove.el).remove()
+    @updateTextInputPosition()
     for tagView, i in @tagViews
       return @tagViews.splice i, 1 if tagView == tagViewToRemove
 
@@ -170,7 +200,7 @@ class Views.Tagger extends Views.Base
 
     indicesToDelete = []
 
-    # TODO: rewrite in un-nested form. maybe add an indexOf(tagView) method
+    # TODO: rewrite in un-nested form. maybe add an indexOf(tagView) method 
     for model in models
       for tagView, i in @tagViews
         if tagView.model == model
@@ -181,15 +211,37 @@ class Views.Tagger extends Views.Base
 
   renderTag: (tagView) ->
     @$('.tags').append tagView.render(labelClass: @options.labelClass).el
+    @updateTextInputPosition()
     
   renderTags: ->
     for tagView in @tagViews
       @renderTag(tagView)
     @
 
+  getTags: ->
+    @tagsCollection.getTags()
+
+  updateTextInputPosition: ->
+    @$('.tags-input').css
+      'padding-left': @$('.tags').outerWidth()
+
+  keyDownHandler: (e) =>
+    k = (if e.keyCode? then e.keyCode else e.which)
+    switch k
+      when 13 # enter (submit tag or selected suggestion)
+        @addTag e.target.value
+        @$('.tags-input').val ''
+      when 46, 8 # delete
+        if e.target.value == ''
+          @removeTagView(@tagViews[@tagViews.length-1])
+
+  setupListeners: ->
+    @$('.tags-input').keydown @keyDownHandler
+
   render: ->
     @$el.html @$template @
     @renderTags()
+    @setupListeners()
     @
 
 # TaggerCollection
@@ -206,9 +258,11 @@ class TaggerCollection
   for key, value of Views.Tagger.prototype
     do (key, value) =>
       @prototype[key] = ->
+        returnVals = []
         for element in @items
-          value.apply($(element).data('tags'), arguments)
-        @
+          returnVals.push value.apply($(element).data('tags'), arguments)
+        return @ if returnVals[0] instanceof Views.Tagger
+        if @items.length > 1 then returnVals else returnVals[0]
 
 # jQuery plugin portion
 #
