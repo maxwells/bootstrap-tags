@@ -3,7 +3,10 @@
 # Max Lahey
 # September, 2013
 
+#= require events
 #= require_tree ./templates
+#= require_tree ./models
+#= require_tree ./views
 
 
 # Issues:
@@ -12,246 +15,17 @@
 # 3) maybe specific types of code should be factored out into concern like modules
 # 4) 
 
-class Events
-
-  on: (eventName, callback, context = window) ->
-    @callbacks ||= {}
-    @callbacks[eventName] ||= []
-    @callbacks[eventName].push
-      callback: callback
-      context: context
-
-  off: (eventName, callback) ->
-    @callbacks ||= {}
-    @callbacks[eventName] ||= []
-    indicesToDelete = []
-    for callbackObject, i in @callbacks[eventName]
-      indicesToDelete.unshift i if callback == callbackObject.callback
-    for i in indicesToDelete
-      @callbacks[eventName].splice i, 1
-
-  trigger: (eventName) ->
-    args = Array.prototype.slice.call(arguments, 1)
-    @callbacks ||= {}
-    @callbacks[eventName] ||= []
-    for callbackObject in @callbacks[eventName]
-      callbackObject.callback.apply(callbackObject.context, args)
-
-window.Events = Events
-
-##
-# Models
-#
-class BaseModel extends Events
-
-Models = Base: BaseModel
-
-class Models.Tag extends Models.Base
-
-  constructor: (name) ->
-    @name = name
-
-class Models.TagsCollection
-
-  constructor: (models) ->
-    @tags = models or []
-
-  each: (fn) ->
-    for tag in @tags
-      fn(tag)
-
-  create: (tagName) ->
-    model = new Models.Tag(tagName)
-    @tags.push(model)
-    model
-
-  remove: (tagName) ->
-    newTags = []
-    removedTags = []
-    @each (tag) ->
-      if tag.name == tagName
-        removedTags.push tag
-      else
-        newTags.push tag 
-    @tags = newTags
-    removedTags
-
-  removeModel: (model) ->
-    for tag, i in @tags
-      @tags.splice i, 1 if tag == model
-
-  getTags: ->
-    @each (tag) ->
-      tag.name
-
-##
-# Views
-#
-
-class BaseView extends Events
-  tagName: 'div'
-  classes: ''
-
-  constructor: ->
-    @$el = $("<#{@tagName} class='#{@classes}'></#{@tagName}>")
-    @el = @$el[0]
-
-  $: (selector) ->
-    @$el.find selector
-
-  $template: (o) ->
-    $(@template(o))
-
-Views = Base: BaseView
-
-class Views.Tag extends Views.Base
-  template: JST["templates/tag"]
-
-  classes: 'tag'
-
-  constructor: (options = {}) ->
-    super()
-    $.extend @, options
-
-  destroy: =>
-    @trigger 'destroyed', @model
-
-  render: (options) ->
-    @$el.html @$template
-      options: options
-      model: @model
-    @$('.close').click @destroy
-    @
-
-window.Tag = Views.Tag
-
-class Views.Tagger extends Views.Base
-  template: JST["templates/tagger"]
-
-  # Default options
-  defaultOptions:
-    readOnly: false
-    suggestions: []
-    restrictTo: []
-    exclude: []
-    displayPopovers: false
-    popoverTrigger: 'hover'
-    tagClass: 'btn-info'
-    promptText: 'Enter tags...'
-    readOnlyEmptyMessage: 'No tags to display...'
-
-    labelClass: 'label-default'
-
-    beforeAddingTag: ->
-    afterAddingTag: ->
-    beforeDeletingTag: ->
-    afterDeletingTag: ->
-
-    excludesTags: -> false
-    onTagRemoved: ->
-
-  constructor: (element, options = {}) ->
-    super()
-    @$el = $(element)
-
-    @tagsCollection = new Models.TagsCollection
-    @tagViews = []
-
-    # generate instance options from cloned defaults merged in with construction options
-    $.extend @options = {}, @defaultOptions, options
-
-    @render()
-
-  updateOptions: (options = {}) ->
-    # merge options into instance options
-    $.extend @options, options
-    @
-
-  addTag: (tagName) ->
-    model = @tagsCollection.create tagName
-    tagView = new Views.Tag(model: model)
-    tagView.on "destroyed", @removeTagByModel, @
-    @tagViews.push(tagView)
-    @renderTag(tagView)
-    @
-
-  # takes a Models.Tag object, removes it from the TagsCollection
-  # and removes any Views.Tag whose model matches it
-  removeTagByModel: (model) ->
-    indicesToDelete = []
-
-    for tagView, i in @tagViews
-      indicesToDelete.unshift i if tagView.model == model
-
-    @removeTagView(@tagViews[index]) for index in indicesToDelete
-    @tagsCollection.removeModel model
-
-  removeTagView: (tagViewToRemove) ->
-    @$(tagViewToRemove.el).remove()
-    @updateTextInputPosition()
-    for tagView, i in @tagViews
-      return @tagViews.splice i, 1 if tagView == tagViewToRemove
-
-  # remove tag by name
-  # --> removes all models (and views) matching that tag name
-  removeTag: (tagName) ->
-    models = @tagsCollection.remove(tagName)
-    @removeTagByModel(model) for model in models
-    @
-
-  renderTag: (tagView) ->
-    @$('.tags').append tagView.render(labelClass: @options.labelClass).el
-    @updateTextInputPosition()
-    
-  renderTags: ->
-    for tagView in @tagViews
-      @renderTag(tagView)
-    @
-
-  getTags: ->
-    @tagsCollection.getTags()
-
-  updateTextInputPosition: ->
-    @$('.tags-input').css
-      'padding-left': @$('.tags').outerWidth()
-
-  keyDownHandler: (e) =>
-    k = (if e.keyCode? then e.keyCode else e.which)
-    switch k
-      when 13 # enter (submit tag or selected suggestion)
-        @addTag e.target.value
-        @$('.tags-input').val ''
-      when 46, 8 # delete
-        if e.target.value == ''
-          @removeTagView(@tagViews[@tagViews.length-1])
-
-  setupListeners: ->
-    @$('.tags-input').keydown @keyDownHandler
-
-  render: ->
-    @$el.html @$template @
-    @renderTags()
-    @setupListeners()
-    @
-
-# TaggerCollection
-# 
-# Wraps a set of jQuery elements passed to it
-# by a selector. Each Views.Tagger method is added
-# and, when called, applies the arguments passed
-# to each Views.Tagger instance
-#
 class TaggerCollection
   constructor: (items) ->
     @items = items
 
-  for key, value of Views.Tagger.prototype
+  for key, value of Tags.Views.Tagger.prototype
     do (key, value) =>
       @prototype[key] = ->
         returnVals = []
         for element in @items
           returnVals.push value.apply($(element).data('tags'), arguments)
-        return @ if returnVals[0] instanceof Views.Tagger
+        return @ if returnVals[0] instanceof Tags.Views.Tagger
         if @items.length > 1 then returnVals else returnVals[0]
 
 # jQuery plugin portion
@@ -263,7 +37,7 @@ class TaggerCollection
     @each (i, el) ->
       $el = $(el)
       unless $el.data('tags')?
-        $el.data 'tags', new Views.Tagger(el, options)
+        $el.data 'tags', new Tags.Views.Tagger(el, options)
       else
         $el.data('tags').updateOptions options
     new TaggerCollection(@)
