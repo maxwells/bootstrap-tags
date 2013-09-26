@@ -5,26 +5,9 @@
 
 #= require_tree ./templates
 
-## How are tags going to be persisted
-#
-# maybe afterAddingTag creates a callback
-# that a unique identifier would be passed back into
-# once the integrating system has the id:
-#
-# $(selector).tags().afterAddingTag(function(tag, uniqueIdCallback) {
-#   var tag = new Tag({tag: tag});
-#   tag.save({
-#     success: function(tag) {
-#       uniqueIdCallback(tag.id);
-#     }
-#   })
-# });
-#
-# and $(selector).tags().removeTag("tagName")
-#
-#
-#
+
 # Issues:
+# 1) What is the best interface to provide for tag persistence, whether it be frameworkless, backbone, ember, angular, etc
 # 2) styling...
 # 3) maybe specific types of code should be factored out into concern like modules
 # 4) 
@@ -187,12 +170,14 @@ class Views.Tagger extends Views.Base
   addTag: (tagName) ->
     model = @tagsCollection.create tagName
     tagView = new Views.Tag(model: model)
-    tagView.on "destroyed", @removeTagModel, @
+    tagView.on "destroyed", @removeTagByModel, @
     @tagViews.push(tagView)
     @renderTag(tagView)
     @
 
-  removeTagModel: (model) ->
+  # takes a Models.Tag object, removes it from the TagsCollection
+  # and removes any Views.Tag whose model matches it
+  removeTagByModel: (model) ->
     indicesToDelete = []
 
     for tagView, i in @tagViews
@@ -208,9 +193,10 @@ class Views.Tagger extends Views.Base
       return @tagViews.splice i, 1 if tagView == tagViewToRemove
 
   # remove tag by name
+  # --> removes all models (and views) matching that tag name
   removeTag: (tagName) ->
     models = @tagsCollection.remove(tagName)
-    @removeTagModel(model) for model in models
+    @removeTagByModel(model) for model in models
     @
 
   renderTag: (tagView) ->
