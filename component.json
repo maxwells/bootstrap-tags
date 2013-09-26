@@ -1,0 +1,26 @@
+{
+  "name": "bootstrap-tags",
+  "description": "tagging library",
+  "keywords": [
+    "tags",
+    "typeahead",
+    "autocomplete"
+  ],
+  "homepage": "http://github.com/maxwells/bootstrap-tags",
+  "bugs": "https://github.com/maxwells/bootstrap-tags/issues",
+  "author": {
+    "name": "maxwells",
+    "url": "http://maxwells.github.io"
+  },
+  "dependencies": {
+    "jQuery": "latest",
+    "bootstrap": "~3.0.0",
+    "backbone": "latest",
+    "jquery": "~2.0.3"
+  },
+  "scripts": {
+    "test": "grunt test"
+  },
+  "private": true,
+  "version": "0.1.1"
+}

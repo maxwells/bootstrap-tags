@@ -1,6 +1,40 @@
 /* bootstrap-tags styles */
 
-.tag-list {
+.bootstrap-tags-label-close {
+	float:none;
+}
+
+.tags {
+	position:absolute;
+}
+
+.tags .tag {
+	display:inline-block;
+}
+
+.tags .tag .tag-label {
+	display: inline;
+	padding: .3em .6em .6em;
+	/*font-size: 75%;*/
+	font-weight: bold;
+	line-height: 1;
+	color: #fff;
+	text-align: center;
+	white-space: nowrap;
+	vertical-align: bottom;
+	border-radius: .25em;
+}
+
+.tags .tag .tag-label * {
+	display:inline;
+}
+
+.tags .tag .tag-label .close {
+	top:0.1em;
+	position:relative;
+}
+
+/*.tag-list {
 	width: 280px;
 	height: 26px;
 	left:2px;
@@ -15,7 +49,7 @@
 	height:18px !important; 
 	margin:0;
 	padding-bottom:0 !important;
-	font-size:12px !important;
+	font-size:14px !important;
 }
 .tags {
 	width:inherit;
@@ -28,6 +62,7 @@
 	padding: 1px 3px;
 	margin:1px;
 	float:left;
+	font-size:14px;
 }
 .tag a {
 	color: #bbb;
@@ -63,4 +98,4 @@ li.tags-suggestion-highlighted {
 .fixed-width {
 	width:800px;
 	margin:0 auto;
-}
+}*/
