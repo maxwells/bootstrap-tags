@@ -34,6 +34,10 @@
 	position:relative;
 }
 
+.tags-autocomplete-suggestions .tags-autocomplete-suggestion.selected {
+	color:#aaa;
+}
+
 /*.tag-list {
 	width: 280px;
 	height: 26px;

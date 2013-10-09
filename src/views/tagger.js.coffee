@@ -85,24 +85,48 @@ class Tags.Views.Tagger extends Tags.Views.Base
     @tagsCollection.getTags()
 
   updateTextInputPosition: ->
-    @$('.tags-input').css
+    @$('input').css
       'padding-left': @$('.tags').outerWidth()
 
   keyDownHandler: (e) =>
     k = (if e.keyCode? then e.keyCode else e.which)
     switch k
       when 13 # enter (submit tag or selected suggestion)
-        @addTag e.target.value
+        @addTag @autoComplete.enter() or e.target.value
+        @autoComplete.reset()
         @$('.tags-input').val ''
       when 46, 8 # delete
         if e.target.value == ''
           @removeTagView(@tagViews[@tagViews.length-1])
+      when 40
+        @autoComplete.down()
+      when 38
+        @autoComplete.up()
+      when 27
+        @autoComplete.escape()
+  
+  keyUpHandler: (e) =>
+    k = (if e.keyCode? then e.keyCode else e.which)
+    switch k
+      when 27, 13
+        break
+      when 46, 8 # delete
+        @autoComplete.delete e.target.value
+      else
+        @autoComplete.update e.target.value
 
   setupListeners: ->
     @$('.tags-input').keydown @keyDownHandler
+    @$('.tags-input').keyup @keyUpHandler
+
+  initializeAutoComplete: ->
+    @autoComplete = new Tags.Views.AutoComplete
+      suggestions: @options.suggestions
+    @$el.append @autoComplete.render().el
 
   render: ->
     @$el.html @$template @
     @renderTags()
     @setupListeners()
+    @initializeAutoComplete()
     @

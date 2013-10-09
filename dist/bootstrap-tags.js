@@ -6,6 +6,22 @@
 
 (function($) {
     this["JST"] = this["JST"] || {};
+    this["JST"]["templates/auto_complete"] = function(obj) {
+        obj || (obj = {});
+        var __t, __p = "", __e = _.escape;
+        with (obj) {
+            __p += "<div class='tags-autocomplete'>\n  <div class='tags-autocomplete-suggestions'>\n  </div>\n</div>";
+        }
+        return __p;
+    };
+    this["JST"]["templates/auto_complete_row"] = function(obj) {
+        obj || (obj = {});
+        var __t, __p = "", __e = _.escape;
+        with (obj) {
+            __p += "<div class='tags-autocomplete-suggestion'>\n  " + ((__t = title) == null ? "" : __t) + "\n</div>";
+        }
+        return __p;
+    };
     this["JST"]["templates/tag"] = function(obj) {
         obj || (obj = {});
         var __t, __p = "", __e = _.escape;
@@ -195,9 +211,16 @@
             __extends(BaseView, _super);
             BaseView.prototype.tagName = "div";
             BaseView.prototype.classes = "";
-            function BaseView() {
+            function BaseView(options) {
+                if (options == null) {
+                    options = {};
+                }
+                this.options = options;
                 this.$el = $("<" + this.tagName + " class='" + this.classes + "'></" + this.tagName + ">");
                 this.el = this.$el[0];
+                if (this.initialize != null) {
+                    this.initialize(options);
+                }
             }
             BaseView.prototype.$ = function(selector) {
                 return this.$el.find(selector);
@@ -211,6 +234,145 @@
         window.Tags.Views = {
             Base: BaseView
         };
+    }).call(this);
+    (function() {
+        var _ref, __hasProp = {}.hasOwnProperty, __extends = function(child, parent) {
+            for (var key in parent) {
+                if (__hasProp.call(parent, key)) child[key] = parent[key];
+            }
+            function ctor() {
+                this.constructor = child;
+            }
+            ctor.prototype = parent.prototype;
+            child.prototype = new ctor();
+            child.__super__ = parent.prototype;
+            return child;
+        };
+        Tags.Views.AutoComplete = function(_super) {
+            __extends(AutoComplete, _super);
+            function AutoComplete() {
+                _ref = AutoComplete.__super__.constructor.apply(this, arguments);
+                return _ref;
+            }
+            AutoComplete.prototype.template = JST["templates/auto_complete"];
+            AutoComplete.prototype.initialize = function(options) {
+                this.index = 0;
+                this.matches = [];
+                return this.suggestionViews = [];
+            };
+            AutoComplete.prototype.update = function(text, match) {
+                var suggestion, _i, _len, _ref1;
+                if (match == null) {
+                    match = true;
+                }
+                this.matches = [];
+                if (match) {
+                    _ref1 = this.options.suggestions;
+                    for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
+                        suggestion = _ref1[_i];
+                        if (suggestion.indexOf(text) > -1) {
+                            this.matches.push(suggestion);
+                        }
+                    }
+                }
+                return this.updateView();
+            };
+            AutoComplete.prototype.updateView = function() {
+                var match, view, _i, _len, _ref1;
+                this.$(".tags-autocomplete-suggestions").html("");
+                this.suggestionViews = [];
+                _ref1 = this.matches;
+                for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
+                    match = _ref1[_i];
+                    view = new Tags.Views.AutoCompleteRow({
+                        title: match
+                    });
+                    this.suggestionViews.push(view);
+                    this.$(".tags-autocomplete-suggestions").append(view.render().el);
+                }
+                return this.updateSelected();
+            };
+            AutoComplete.prototype.updateSelected = function() {
+                var view, _i, _len, _ref1;
+                if (!(this.suggestionViews.length > 0)) {
+                    return;
+                }
+                _ref1 = this.suggestionViews;
+                for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
+                    view = _ref1[_i];
+                    view.deselect();
+                }
+                if (this.index !== -1) {
+                    return this.suggestionViews[this.index].select();
+                }
+            };
+            AutoComplete.prototype.up = function() {
+                this.index = Math.max(0, this.index - 1);
+                return this.updateSelected();
+            };
+            AutoComplete.prototype.down = function() {
+                this.index = Math.min(this.matches.length - 1, this.index + 1);
+                return this.updateSelected();
+            };
+            AutoComplete.prototype.escape = function() {
+                this.index = -1;
+                return this.update("", false);
+            };
+            AutoComplete.prototype["delete"] = function(text) {
+                return this.update(text, text.length > 0);
+            };
+            AutoComplete.prototype.enter = function() {
+                if (this.index > -1) {
+                    return this.suggestionViews[this.index].getTitle();
+                }
+                return null;
+            };
+            AutoComplete.prototype.reset = function() {
+                this.index = -1;
+                return this.update("", false);
+            };
+            AutoComplete.prototype.render = function() {
+                this.$el.html(this.$template());
+                return this;
+            };
+            return AutoComplete;
+        }(Tags.Views.Base);
+    }).call(this);
+    (function() {
+        var _ref, __hasProp = {}.hasOwnProperty, __extends = function(child, parent) {
+            for (var key in parent) {
+                if (__hasProp.call(parent, key)) child[key] = parent[key];
+            }
+            function ctor() {
+                this.constructor = child;
+            }
+            ctor.prototype = parent.prototype;
+            child.prototype = new ctor();
+            child.__super__ = parent.prototype;
+            return child;
+        };
+        Tags.Views.AutoCompleteRow = function(_super) {
+            __extends(AutoCompleteRow, _super);
+            function AutoCompleteRow() {
+                _ref = AutoCompleteRow.__super__.constructor.apply(this, arguments);
+                return _ref;
+            }
+            AutoCompleteRow.prototype.template = JST["templates/auto_complete_row"];
+            AutoCompleteRow.prototype.select = function() {
+                return this.$(".tags-autocomplete-suggestion").addClass("selected");
+            };
+            AutoCompleteRow.prototype.deselect = function() {
+                return this.$(".tags-autocomplete-suggestion").removeClass("selected");
+            };
+            AutoCompleteRow.prototype.getTitle = function() {
+                return this.options.title;
+            };
+            AutoCompleteRow.prototype.render = function() {
+                this.$el.html(this.$template(this.options));
+                return this;
+            };
+            return AutoCompleteRow;
+        }(Tags.Views.Base);
     }).call(this);
     (function() {
         var __bind = function(fn, me) {
@@ -300,6 +462,7 @@
                 if (options == null) {
                     options = {};
                 }
+                this.keyUpHandler = __bind(this.keyUpHandler, this);
                 this.keyDownHandler = __bind(this.keyDownHandler, this);
                 Tagger.__super__.constructor.call(this);
                 this.$el = $(element);
@@ -382,7 +545,7 @@
                 return this.tagsCollection.getTags();
             };
             Tagger.prototype.updateTextInputPosition = function() {
-                return this.$(".tags-input").css({
+                return this.$("input").css({
                     "padding-left": this.$(".tags").outerWidth()
                 });
             };
@@ -391,7 +554,8 @@
                 k = e.keyCode != null ? e.keyCode : e.which;
                 switch (k) {
                   case 13:
-                    this.addTag(e.target.value);
+                    this.addTag(this.autoComplete.enter() || e.target.value);
+                    this.autoComplete.reset();
                     return this.$(".tags-input").val("");
 
                   case 46:
@@ -399,15 +563,49 @@
                     if (e.target.value === "") {
                         return this.removeTagView(this.tagViews[this.tagViews.length - 1]);
                     }
+                    break;
+
+                  case 40:
+                    return this.autoComplete.down();
+
+                  case 38:
+                    return this.autoComplete.up();
+
+                  case 27:
+                    return this.autoComplete.escape();
+                }
+            };
+            Tagger.prototype.keyUpHandler = function(e) {
+                var k;
+                k = e.keyCode != null ? e.keyCode : e.which;
+                switch (k) {
+                  case 27:
+                  case 13:
+                    break;
+
+                  case 46:
+                  case 8:
+                    return this.autoComplete["delete"](e.target.value);
+
+                  default:
+                    return this.autoComplete.update(e.target.value);
                 }
             };
             Tagger.prototype.setupListeners = function() {
-                return this.$(".tags-input").keydown(this.keyDownHandler);
+                this.$(".tags-input").keydown(this.keyDownHandler);
+                return this.$(".tags-input").keyup(this.keyUpHandler);
+            };
+            Tagger.prototype.initializeAutoComplete = function() {
+                this.autoComplete = new Tags.Views.AutoComplete({
+                    suggestions: this.options.suggestions
+                });
+                return this.$el.append(this.autoComplete.render().el);
             };
             Tagger.prototype.render = function() {
                 this.$el.html(this.$template(this));
                 this.renderTags();
                 this.setupListeners();
+                this.initializeAutoComplete();
                 return this;
             };
             return Tagger;

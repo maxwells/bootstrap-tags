@@ -4,13 +4,14 @@ var jsFiles = [
   ]
 var coffeeFiles = [
       'src/events.js.coffee',
+      'src/models/base.js.coffee',
       'src/models/*.js.coffee',
+      'src/views/base.js.coffee',
       'src/views/*.js.coffee',
       'src/bootstrap-tags.js.coffee'
     ];
 var templateFiles = 'src/templates/*.jst'
 
-var specJs = 'spec/*.js'
 var specCoffeeFiles = ['spec/*.coffee']
 
 module.exports = function(grunt) {
@@ -69,10 +70,10 @@ module.exports = function(grunt) {
         files: coffeeFiles,
         tasks: 'build'
       },
-      spec: {
-        files: specCoffeeFiles.concat(['dist/bootstrap-tags.js']),
-        tasks: 'test'
-      },
+      // spec: {
+      //   files: specCoffeeFiles.concat(['dist/bootstrap-tags.js']),
+      //   tasks: 'test'
+      // },
       buildTemplates: {
         files: templateFiles,
         tasks: 'build'
@@ -87,7 +88,7 @@ module.exports = function(grunt) {
       },
       spec: {
         files: {
-          specJs: specCoffeeFiles
+          'spec/bootstrap-tags-spec.js': specCoffeeFiles
         }
       }
     },

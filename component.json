@@ -13,10 +13,12 @@
     "url": "http://maxwells.github.io"
   },
   "dependencies": {
-    "jQuery": "latest",
     "bootstrap": "~3.0.0",
     "backbone": "latest",
     "jquery": "~2.0.3"
+  },
+  "devDependencies": {
+    "jasmine-jquery": "~1.5.9"
   },
   "scripts": {
     "test": "grunt test"

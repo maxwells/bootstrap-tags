@@ -17,9 +17,11 @@
       <div class="container">
          <br/>
          <div id="a"></div>
+         <div id="b"></div>
          <script>
             $(function(){
-               $('#a').tags().addTag('goodbye').addTag('hello').getTags();
+               $('#a').tags({suggestions: ["alpha", "bravo", "charlie", "delta"]}).addTag('goodbye').addTag('hello').getTags();
+               $('#b').tags({labelClass: "label-warning"}).addTag('good').addTag('job').getTags();
             });
          </script>
       </div>
