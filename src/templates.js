@@ -4,7 +4,7 @@ this["JST"]["templates/auto_complete"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<div class=\'tags-autocomplete\'>\n  <div class=\'tags-autocomplete-suggestions\'>\n  </div>\n</div>';
+__p += '<div class=\'tags-autocomplete-suggestions\'>\n</div>';
 
 }
 return __p

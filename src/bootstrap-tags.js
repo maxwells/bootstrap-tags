@@ -226,6 +226,8 @@
 
     AutoComplete.prototype.template = JST["templates/auto_complete"];
 
+    AutoComplete.prototype.classes = "tags-autocomplete";
+
     AutoComplete.prototype.initialize = function(options) {
       this.index = 0;
       this.matches = [];
@@ -266,6 +268,15 @@
       return this.updateSelected();
     };
 
+    AutoComplete.prototype.scrollToSelected = function() {
+      var position, topPosition;
+      if (this.index > -1) {
+        topPosition = this.suggestionViews[0].$el.position();
+        position = this.suggestionViews[this.index].$el.position();
+        return this.$('.tags-autocomplete-suggestions').scrollTop(position.top - topPosition.top);
+      }
+    };
+
     AutoComplete.prototype.updateSelected = function() {
       var view, _i, _len, _ref1;
       if (!(this.suggestionViews.length > 0)) {
@@ -277,8 +288,9 @@
         view.deselect();
       }
       if (this.index !== -1) {
-        return this.suggestionViews[this.index].select();
+        this.suggestionViews[this.index].select();
       }
+      return this.scrollToSelected();
     };
 
     AutoComplete.prototype.up = function() {
@@ -582,7 +594,7 @@
       this.autoComplete = new Tags.Views.AutoComplete({
         suggestions: this.options.suggestions
       });
-      return this.$el.append(this.autoComplete.render().el);
+      return this.$('.tagger').append(this.autoComplete.render().el);
     };
 
     Tagger.prototype.render = function() {

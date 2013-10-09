@@ -122,7 +122,7 @@ class Tags.Views.Tagger extends Tags.Views.Base
   initializeAutoComplete: ->
     @autoComplete = new Tags.Views.AutoComplete
       suggestions: @options.suggestions
-    @$el.append @autoComplete.render().el
+    @$('.tagger').append @autoComplete.render().el
 
   render: ->
     @$el.html @$template @

@@ -1,6 +1,8 @@
 class Tags.Views.AutoComplete extends Tags.Views.Base
   template: JST["templates/auto_complete"]
 
+  classes: "tags-autocomplete"
+
   initialize: (options) ->
     @index = 0
     @matches = []
@@ -24,10 +26,17 @@ class Tags.Views.AutoComplete extends Tags.Views.Base
       @$('.tags-autocomplete-suggestions').append(view.render().el)
     @updateSelected()
 
+  scrollToSelected: ->
+    if @index > -1
+      topPosition = @suggestionViews[0].$el.position()
+      position = @suggestionViews[@index].$el.position()
+      @$('.tags-autocomplete-suggestions').scrollTop position.top - topPosition.top
+
   updateSelected: ->
     return unless @suggestionViews.length > 0
     view.deselect() for view in @suggestionViews
     @suggestionViews[@index].select() unless @index == -1
+    @scrollToSelected()
 
   up: ->
     @index = Math.max(0, @index - 1)
