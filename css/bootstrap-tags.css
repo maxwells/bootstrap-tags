@@ -43,7 +43,7 @@
 	background-color:#fff;
 	border-radius: .25em;
 	padding: .25em 0;
-	max-height: 4em;
+	max-height: 8em;
 	overflow: scroll;
 }
 
@@ -53,6 +53,7 @@
 
 .tags-autocomplete .tags-autocomplete-suggestions .tags-autocomplete-suggestion {
 	padding: 0 1em;
+	min-width: 12em;
 }
 
 .tags-autocomplete .tags-autocomplete-suggestions .tags-autocomplete-suggestion.selected {

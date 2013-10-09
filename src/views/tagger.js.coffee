@@ -40,6 +40,10 @@ class Tags.Views.Tagger extends Tags.Views.Base
     $.extend @options, options
     @
 
+  addTagViaAutocomplete: (tagName) ->
+    @autoComplete.reset()
+    @addTag tagName
+
   addTag: (tagName) ->
     model = @tagsCollection.create tagName
     tagView = new Tags.Views.Tag(model: model)
@@ -122,6 +126,7 @@ class Tags.Views.Tagger extends Tags.Views.Base
   initializeAutoComplete: ->
     @autoComplete = new Tags.Views.AutoComplete
       suggestions: @options.suggestions
+    @autoComplete.on 'clicked', @addTagViaAutocomplete, @
     @$('.tagger').append @autoComplete.render().el
 
   render: ->

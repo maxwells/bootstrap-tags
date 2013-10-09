@@ -288,10 +288,14 @@
                     view = new Tags.Views.AutoCompleteRow({
                         title: match
                     });
+                    view.on("clicked", this.onRowClicked, this);
                     this.suggestionViews.push(view);
                     this.$(".tags-autocomplete-suggestions").append(view.render().el);
                 }
                 return this.updateSelected();
+            };
+            AutoComplete.prototype.onRowClicked = function(title) {
+                return this.trigger("clicked", title);
             };
             AutoComplete.prototype.scrollToSelected = function() {
                 var position, topPosition;
@@ -349,7 +353,11 @@
         }(Tags.Views.Base);
     }).call(this);
     (function() {
-        var _ref, __hasProp = {}.hasOwnProperty, __extends = function(child, parent) {
+        var _ref, __bind = function(fn, me) {
+            return function() {
+                return fn.apply(me, arguments);
+            };
+        }, __hasProp = {}.hasOwnProperty, __extends = function(child, parent) {
             for (var key in parent) {
                 if (__hasProp.call(parent, key)) child[key] = parent[key];
             }
@@ -364,6 +372,9 @@
         Tags.Views.AutoCompleteRow = function(_super) {
             __extends(AutoCompleteRow, _super);
             function AutoCompleteRow() {
+                this.onMouseOut = __bind(this.onMouseOut, this);
+                this.onMouseOver = __bind(this.onMouseOver, this);
+                this.onClick = __bind(this.onClick, this);
                 _ref = AutoCompleteRow.__super__.constructor.apply(this, arguments);
                 return _ref;
             }
@@ -377,8 +388,20 @@
             AutoCompleteRow.prototype.getTitle = function() {
                 return this.options.title;
             };
+            AutoCompleteRow.prototype.onClick = function(e) {
+                return this.trigger("clicked", this.options.title);
+            };
+            AutoCompleteRow.prototype.onMouseOver = function(e) {
+                return this.select();
+            };
+            AutoCompleteRow.prototype.onMouseOut = function(e) {
+                return this.deselect();
+            };
             AutoCompleteRow.prototype.render = function() {
                 this.$el.html(this.$template(this.options));
+                this.$el.click(this.onClick);
+                this.$el.mouseover(this.onMouseOver);
+                this.$el.mouseout(this.onMouseOut);
                 return this;
             };
             return AutoCompleteRow;
@@ -487,6 +510,10 @@
                 }
                 $.extend(this.options, options);
                 return this;
+            };
+            Tagger.prototype.addTagViaAutocomplete = function(tagName) {
+                this.autoComplete.reset();
+                return this.addTag(tagName);
             };
             Tagger.prototype.addTag = function(tagName) {
                 var model, tagView;
@@ -609,6 +636,7 @@
                 this.autoComplete = new Tags.Views.AutoComplete({
                     suggestions: this.options.suggestions
                 });
+                this.autoComplete.on("clicked", this.addTagViaAutocomplete, this);
                 return this.$(".tagger").append(this.autoComplete.render().el);
             };
             Tagger.prototype.render = function() {

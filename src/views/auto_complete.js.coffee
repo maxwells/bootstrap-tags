@@ -22,9 +22,13 @@ class Tags.Views.AutoComplete extends Tags.Views.Base
     for match in @matches
       view = new Tags.Views.AutoCompleteRow
         title: match
+      view.on 'clicked', @onRowClicked, @
       @suggestionViews.push view
       @$('.tags-autocomplete-suggestions').append(view.render().el)
     @updateSelected()
+
+  onRowClicked: (title) ->
+    @trigger 'clicked', title
 
   scrollToSelected: ->
     if @index > -1
