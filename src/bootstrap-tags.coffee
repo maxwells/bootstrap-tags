@@ -333,17 +333,18 @@ jQuery ->
 
     # formatTag spits out the html for a tag (with or without it's popovers)
     @formatTag = (i, tag) =>
+      tag_data = tag.replace("<",'&lt;').replace(">",'&gt;')
       if @displayPopovers == true # then attach popover data
-        "<div class='tag label "+@tagClass+"' rel='popover'><span>"+tag+"</span><a> <i class='icon-remove-sign icon-white'></i></a></div>"
+        "<div class='tag label "+@tagClass+"' rel='popover'><span>"+tag_data+"</span><a> <i class='icon-remove-sign icon-white'></i></a></div>"
       else
-        "<div class='tag label "+@tagClass+"'><span>"+tag+"</span><a> <i class='icon-remove-sign icon-white'></i></a></div>"
+        "<div class='tag label "+@tagClass+"'><span>"+tag_data+"</span><a> <i class='icon-remove-sign icon-white'></i></a></div>"
 
     @formatTagReadOnly = (i, tag) =>
+      tag_data = tag.replace("<",'&lt;').replace(">",'&gt;')
       if @displayPopovers == true # then attach popover data
-        "<div class='tag label "+@tagClass+"' rel='popover'><span>&nbsp;"+tag+"&nbsp;</span></div>"
+        "<div class='tag label "+@tagClass+"' rel='popover'><span>&nbsp;"+tag_data+"&nbsp;</span></div>"
       else
-        "<div class='tag label "+@tagClass+"'><span>&nbsp;"+tag+"&nbsp;</span></div>"
-
+        "<div class='tag label "+@tagClass+"'><span>&nbsp;"+tag_data+"&nbsp;</span></div>"
 
     @addDocumentListeners = =>
       $(document).mouseup (e) =>
