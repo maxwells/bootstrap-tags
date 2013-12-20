@@ -1,0 +1,36 @@
+{
+  "name": "bootstrap-tags",
+  "version": "1.0.0",
+  "homepage": "http://github.com/maxwells/bootstrap-tags",
+  "bugs": "https://github.com/maxwells/bootstrap-tags/issues",
+  "authors": [
+    "Max Lahey <maxwellslahey@gmail.com>"
+  ],
+  "description": "Boostrap-themed jquery tag interface",
+  "main": [
+    "lib/bootstrap-tags.js", 
+    "css/bootstrap-tags.css"
+  ],
+  "keywords": [
+    "jquery",
+    "bootstrap",
+    "bootstrap3",
+    "tagging",
+    "tags",
+    "typeahead",
+    "autocomplete"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "src",
+    "spec",
+    "*.html"
+  ],
+  "dependencies": {
+    "jquery": ">=1.9.0",
+    "bootstrap": "~2.3.2"
+  },
+  "scripts": {
+    "test": "grunt jasmine"
+  }
+}
