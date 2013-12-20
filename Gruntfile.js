@@ -90,7 +90,7 @@ module.exports = function(grunt) {
           templateOptions: {
             requireConfig: {
               paths: {
-                "jquery": "./components/jquery/jquery",
+                "jquery": "./bower_components/jquery/jquery",
               },
               deps: ['jquery']
             }

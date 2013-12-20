@@ -112,21 +112,16 @@ console.log(tags.getTags());
 
 To reference a tags instance that you've already attached to a selector, (eg. $(selector).tags(options)) you can use $(selector).tags() or $(selector).tags(index)
 
-## Building
+### Building
 
-For a one off,
+For a one off:
 
-	$ rake
+	$ grunt compile
 
-_To build continously_, use guard. Install necessary gems with bundler
-
-	$ bundle
+_To build continously_:
 	
-then start up guard
+	$ grunt watch
 	
-	$ guard
-	
-	
-## Testing
+### Testing
 
-Open SpecRunner.html (powered by Jasmine)
+	$ grunt test
