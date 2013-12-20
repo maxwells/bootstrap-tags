@@ -7,6 +7,15 @@ Bootstrap tags is a lightweight jQuery plugin meant to extend the Twitter Bootst
 ## Demo
 [http://maxwells.github.com/bootstrap-tags.html	](http://maxwells.github.com/bootstrap-tags.html)
 
+## Installation
+
+	$ bower install bootstrap-tags
+	
+or
+
+	$ git clone https://github.com/maxwells/bootstrap-tags.git
+	--> JS files are located in bootstrap-tags/dist, CSS files in bootstrap-tags/css
+
 ## Features
 - Autosuggest (for typing or activated by pressing the down key when empty)
 - Bootstrap Popovers (for extended information on a tag)
