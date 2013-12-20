@@ -82,16 +82,15 @@ module.exports = function(grunt) {
 
     jasmine: {
       test: {
-        src: 'dist/bootstrap-tags.js',
+        src: './dist/bootstrap-tags.js',
         options: {
           specs: 'spec/*spec.js',
-          keepRunner: true,
+          keepRunner: false,
           template: require('grunt-template-jasmine-requirejs'),
           templateOptions: {
             requireConfig: {
-              baseUrl: 'components',
               paths: {
-                "jquery": "jquery/jquery",
+                "jquery": "./components/jquery/jquery",
               },
               deps: ['jquery']
             }
@@ -106,7 +105,7 @@ module.exports = function(grunt) {
   grunt.registerTask('build', ['coffee', 'uglify']);
   grunt.registerTask('server', 'connect:server');
   grunt.registerTask('lint', 'jshint');
-  grunt.registerTask('test', ['coffee:spec', 'jasmine:test']);
+  grunt.registerTask('test', ['coffee:compile', 'coffee:spec', 'uglify:js', 'jasmine:test']);
   grunt.registerTask('dev', 'parallel:dev');
 
   // load tasks
