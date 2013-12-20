@@ -1,0 +1,38 @@
+{
+  "name": "bootstrap-tags",
+  "description": "Boostrap-themed jquery tag interface",
+  "keywords": [
+    "jquery",
+    "bootstrap",
+    "bootstrap3",
+    "tagging",
+    "tags",
+    "typeahead",
+    "autocomplete"
+  ],
+  "homepage": "http://github.com/maxwells/bootstrap-tags",
+  "bugs": "https://github.com/maxwells/bootstrap-tags/issues",
+  "author": {
+    "name": "maxwells",
+    "url": "http://maxwells.github.io"
+  },
+  "devDependencies": {
+    "grunt": "~0.4",
+    "grunt-contrib-watch": "~0.2",
+    "grunt-contrib-uglify": "git://github.com/jharding/grunt-contrib-uglify.git#support-enclose-option",
+    "grunt-contrib-jasmine": "~0.5.2",
+    "grunt-template-jasmine-requirejs": "0.1.8",
+    "grunt-contrib-clean": "~0.4.0",
+    "grunt-contrib-coffee": "~0.7.0",
+    "grunt-contrib-jst": "~0.5.0",
+    "semver": "~1.1.3",
+    "grunt-parallel": "0.0.2",
+    "grunt-lib-phantomjs": "~0.4.0",
+    "grunt-growl": "latest"
+  },
+  "scripts": {
+    "test": "grunt test"
+  },
+  "private": true,
+  "version": "1.0.0"
+}
