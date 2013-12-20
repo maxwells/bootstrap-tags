@@ -12,7 +12,7 @@ var specCoffeeFiles = [
 
 module.exports = function(grunt) {
   grunt.initConfig({
-    version: grunt.file.readJSON('bower.json').version,
+    version: grunt.file.readJSON('component.json').version,
 
     uglify: {
       options: {
