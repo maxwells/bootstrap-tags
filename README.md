@@ -2,6 +2,8 @@
 
 Bootstrap tags is a lightweight jQuery plugin meant to extend the Twitter Bootstrap UI to include tagging.
 
+[![Build Status](https://travis-ci.org/maxwells/bootstrap-tags.png?branch=master)](https://travis-ci.org/maxwells/bootstrap-tags)
+
 ## Demo
 [http://maxwells.github.com/bootstrap-tags.html	](http://maxwells.github.com/bootstrap-tags.html)
 
