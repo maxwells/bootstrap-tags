@@ -85,13 +85,13 @@ module.exports = function(grunt) {
         src: 'dist/bootstrap-tags.js',
         options: {
           specs: 'spec/*spec.js',
-          keepRunner: false,
+          keepRunner: true,
           template: require('grunt-template-jasmine-requirejs'),
           templateOptions: {
             requireConfig: {
-              // baseUrl: './components',
+              baseUrl: 'components',
               paths: {
-                "jquery": "components/jquery/jquery",
+                "jquery": "jquery/jquery",
               },
               deps: ['jquery']
             }
