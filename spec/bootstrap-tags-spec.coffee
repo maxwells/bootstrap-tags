@@ -89,6 +89,19 @@ describe "Bootstrap Tags", ->
       expect(@tags.hasTag('new name')).toBeTruthy()
       expect(@tags.hasTag('one')).toBeFalsy()
 
+    describe "when provided a promptText option", ->
+
+      it "applies it to the input placeholder when there are no tags", ->
+        tags = newTagger "tagger2",
+          promptText: "foo"
+        expect($("#tagger2 input").attr("placeholder")).toEqual "foo"
+
+      it "does not apply it to input placeholder when there are tags", ->
+        tags = newTagger "tagger2",
+          promptText: "foo"
+          tagData: ["one"]
+        expect($("#tagger2 input").attr("placeholder")).toEqual ""
+
     describe "when provided with a tagClass option", ->
 
       it "uses it to style tags", ->

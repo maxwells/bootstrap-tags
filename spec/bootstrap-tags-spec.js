@@ -101,6 +101,23 @@
         expect(this.tags.hasTag('new name')).toBeTruthy();
         return expect(this.tags.hasTag('one')).toBeFalsy();
       });
+      describe("when provided a promptText option", function() {
+        it("applies it to the input placeholder when there are no tags", function() {
+          var tags;
+          tags = newTagger("tagger2", {
+            promptText: "foo"
+          });
+          return expect($("#tagger2 input").attr("placeholder")).toEqual("foo");
+        });
+        return it("does not apply it to input placeholder when there are tags", function() {
+          var tags;
+          tags = newTagger("tagger2", {
+            promptText: "foo",
+            tagData: ["one"]
+          });
+          return expect($("#tagger2 input").attr("placeholder")).toEqual("");
+        });
+      });
       describe("when provided with a tagClass option", function() {
         return it("uses it to style tags", function() {
           this.tags = newTagger("tagger2", {
