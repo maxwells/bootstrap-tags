@@ -105,15 +105,14 @@
                     return _this;
                 };
                 this.removeLastTag = function() {
-                    var el;
-                    el = _this.$(".tag").last();
-                    el.remove();
                     _this.removeTag(_this.tagsArray[_this.tagsArray.length - 1]);
                     return _this;
                 };
                 this.removeTag = function(tag) {
                     if (_this.tagsArray.indexOf(tag) > -1) {
-                        _this.beforeDeletingTag(tag);
+                        if (_this.beforeDeletingTag(tag) === false) {
+                            return;
+                        }
                         _this.popoverArray.splice(_this.tagsArray.indexOf(tag), 1);
                         _this.tagsArray.splice(_this.tagsArray.indexOf(tag), 1);
                         _this.renderTags();
@@ -124,7 +123,9 @@
                 this.addTag = function(tag) {
                     var associatedContent;
                     if ((_this.restrictTo === false || _this.restrictTo.indexOf(tag) !== -1) && _this.tagsArray.indexOf(tag) < 0 && tag.length > 0 && (_this.exclude === false || _this.exclude.indexOf(tag) === -1) && !_this.excludes(tag)) {
-                        _this.beforeAddingTag(tag);
+                        if (_this.beforeAddingTag(tag) === false) {
+                            return;
+                        }
                         associatedContent = _this.definePopover(tag);
                         _this.popoverArray.push(associatedContent || null);
                         _this.tagsArray.push(tag);
@@ -135,7 +136,9 @@
                 };
                 this.addTagWithContent = function(tag, content) {
                     if ((_this.restrictTo === false || _this.restrictTo.indexOf(tag) !== -1) && _this.tagsArray.indexOf(tag) < 0 && tag.length > 0) {
-                        _this.beforeAddingTag(tag);
+                        if (_this.beforeAddingTag(tag) === false) {
+                            return;
+                        }
                         _this.tagsArray.push(tag);
                         _this.popoverArray.push(content);
                         _this.afterAddingTag(tag);

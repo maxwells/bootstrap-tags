@@ -98,8 +98,6 @@ jQuery ->
 
     # removeLastTag is called when user presses delete on empty input.
     @removeLastTag = => 
-      el = @$('.tag').last()
-      el.remove()
       @removeTag @tagsArray[@tagsArray.length-1]
       @
 
@@ -108,7 +106,7 @@ jQuery ->
     # - also an exposed method (can be called from page javascript)
     @removeTag = (tag) => # removes specified tag 
       if @tagsArray.indexOf(tag) > -1
-        @beforeDeletingTag(tag)
+        return if @beforeDeletingTag(tag) == false
         @popoverArray.splice(@tagsArray.indexOf(tag),1)
         @tagsArray.splice(@tagsArray.indexOf(tag), 1)
         @renderTags()
@@ -120,7 +118,7 @@ jQuery ->
     # - exposed: can be called from page javascript
     @addTag = (tag) => 
       if (@restrictTo == false or @restrictTo.indexOf(tag) != -1) and @tagsArray.indexOf(tag) < 0 and tag.length > 0 and (@exclude == false || @exclude.indexOf(tag) == -1) and !@excludes(tag)
-        @beforeAddingTag(tag)
+        return if @beforeAddingTag(tag) == false
         associatedContent = @definePopover(tag)
         @popoverArray.push associatedContent or null
         @tagsArray.push tag
@@ -132,7 +130,7 @@ jQuery ->
     # It is an exposed method: can be called from page javascript
     @addTagWithContent = (tag, content) =>
       if (@restrictTo == false or @restrictTo.indexOf(tag) != -1) and @tagsArray.indexOf(tag) < 0 and tag.length > 0
-        @beforeAddingTag(tag)
+        return if @beforeAddingTag(tag) == false
         @tagsArray.push tag
         @popoverArray.push content
         @afterAddingTag(tag)
