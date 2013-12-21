@@ -87,7 +87,6 @@
         var tagsWithContent;
         this.tags.addTagWithContent('new tag', 'new content');
         tagsWithContent = this.tags.getTagsWithContent();
-        console.log(tagsWithContent);
         return expect(tagsWithContent[tagsWithContent.length - 1].content).toEqual('new content');
       });
       it("can change the popover content for a tag", function() {
@@ -100,6 +99,10 @@
         this.tags.renameTag('one', 'new name');
         expect(this.tags.hasTag('new name')).toBeTruthy();
         return expect(this.tags.hasTag('one')).toBeFalsy();
+      });
+      it("can getTagWithContent", function() {
+        this.tags.addTagWithContent('new tag', 'new content');
+        return expect(this.tags.getTagWithContent('new tag').content).toEqual('new content');
       });
       describe("when defining popover for an existing tag", function() {
         return it("should set the associated content", function() {

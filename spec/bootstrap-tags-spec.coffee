@@ -76,7 +76,6 @@ describe "Bootstrap Tags", ->
     it "can add tag with popover content", ->
       @tags.addTagWithContent('new tag', 'new content')
       tagsWithContent = @tags.getTagsWithContent()
-      console.log tagsWithContent
       expect(tagsWithContent[tagsWithContent.length-1].content).toEqual 'new content'
 
     it "can change the popover content for a tag", ->
@@ -88,6 +87,10 @@ describe "Bootstrap Tags", ->
       @tags.renameTag('one', 'new name')
       expect(@tags.hasTag('new name')).toBeTruthy()
       expect(@tags.hasTag('one')).toBeFalsy()
+
+    it "can getTagWithContent", ->
+      @tags.addTagWithContent('new tag', 'new content')
+      expect(@tags.getTagWithContent('new tag').content).toEqual 'new content'
 
     describe "when defining popover for an existing tag", ->
 
