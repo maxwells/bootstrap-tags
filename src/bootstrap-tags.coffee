@@ -2,6 +2,8 @@
 # Max Lahey
 # November, 2012
 
+window.Tags ||= {}
+
 jQuery ->
   $.tags = (element, options = {}) ->
 
@@ -351,6 +353,9 @@ jQuery ->
         container = $('.tags-suggestion-list', @$element)
         if container.has(e.target).length == 0
           @hideSuggestions()
+
+    @template = (name, options) ->
+      Tags.Templates.Template(@bootstrapVersion, name, options)
 
     @init = ->
       # build out tags from specified markup

@@ -2,9 +2,7 @@ var jsFiles = [
   'src/bootstrap-tags.js'
 ];
 
-var coffeeFiles = [
-  'src/bootstrap-tags.coffee',
-];
+var coffeeFiles = 'src/**/*.coffee'
 
 var specCoffeeFiles = [
   'spec/*.coffee'
