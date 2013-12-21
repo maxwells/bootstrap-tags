@@ -145,6 +145,7 @@ _To build continously_:
 1. Add case insensitivity flag
 1. Write specs for everything that works so next step is doable
 1. Refactor into constituent parts and/or a framework; the existing code base is difficult to extend
+1. consider how initializing tags with popovers should work -> I don't like the parallel arrays.
 
 ### License
 

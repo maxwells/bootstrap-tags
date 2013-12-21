@@ -89,6 +89,15 @@ describe "Bootstrap Tags", ->
       expect(@tags.hasTag('new name')).toBeTruthy()
       expect(@tags.hasTag('one')).toBeFalsy()
 
+    describe "when defining popover for an existing tag", ->
+
+      it "should set the associated content", ->
+        tags = newTagger "tagger2",
+          definePopover: (tag) ->
+            "popover for #{tag}"
+        tags.addTag("foo")
+        expect(tags.getTagWithContent("foo").content).toEqual "popover for foo"
+
     describe "when provided a promptText option", ->
 
       it "applies it to the input placeholder when there are no tags", ->

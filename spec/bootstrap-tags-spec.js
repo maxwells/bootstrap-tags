@@ -101,6 +101,18 @@
         expect(this.tags.hasTag('new name')).toBeTruthy();
         return expect(this.tags.hasTag('one')).toBeFalsy();
       });
+      describe("when defining popover for an existing tag", function() {
+        return it("should set the associated content", function() {
+          var tags;
+          tags = newTagger("tagger2", {
+            definePopover: function(tag) {
+              return "popover for " + tag;
+            }
+          });
+          tags.addTag("foo");
+          return expect(tags.getTagWithContent("foo").content).toEqual("popover for foo");
+        });
+      });
       describe("when provided a promptText option", function() {
         it("applies it to the input placeholder when there are no tags", function() {
           var tags;
