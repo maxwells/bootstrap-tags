@@ -289,8 +289,8 @@
                     pTop = tagPosition != null ? tagPosition.top : 0;
                     pWidth = _this.$element.width() - pLeft;
                     $(".tags-input", _this.$element).css({
-                        paddingLeft: pLeft,
-                        paddingTop: pTop,
+                        paddingLeft: Math.max(pLeft, 0),
+                        paddingTop: Math.max(pTop, 0),
                         width: pWidth
                     });
                     pBottom = tagPosition != null ? tagPosition.top + tagElement.outerHeight(true) : 22;
@@ -490,7 +490,7 @@
             if (options == null) {
                 options = {};
             }
-            return "<div class='tag label " + options.tagClass + "' " + (options.isPopover ? "rel='popover'" : "") + ">    <span>" + Tags.Helpers.addPadding(options.tag, 2, options.isReadOnly) + "</span>    " + (options.isReadOnly ? "" : "<a><i class='glyphicon glyphicon-remove-circle glyphicon-white' /></a>") + "  </div>";
+            return "<div class='tag label " + options.tagClass + "' " + (options.isPopover ? "rel='popover'" : "") + ">    <span>" + Tags.Helpers.addPadding(options.tag, 2, options.isReadOnly) + "</span>    " + (options.isReadOnly ? "" : "<a><i class='glyphicon glyphicon-remove-sign glyphicon-white' /></a>") + "  </div>";
         };
     }).call(this);
     (function() {

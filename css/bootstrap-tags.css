@@ -2,9 +2,14 @@
 .bootstrap-tags.bootstrap-3 .tag-data {
   display: none; }
 .bootstrap-tags.bootstrap-3 .tags-input {
-  /*height:18px !important; */
-  /*padding-bottom:0 !important;*/
-  /*font-size:12px !important;*/ }
+  box-sizing: content-box;
+  -webkit-box-sizing: content-box;
+  width: 100%;
+  height: 18px !important;
+  margin: 0;
+  padding-bottom: 0 !important;
+  font-size: 12px !important;
+  padding-top: 0; }
 .bootstrap-tags.bootstrap-3 .tags {
   width: inherit;
   height: 0;
@@ -12,7 +17,7 @@
   padding: 0;
   margin: 0; }
 .bootstrap-tags.bootstrap-3 .tag {
-  padding: .2em .4em .3em;
+  padding: .2em .4em .4em;
   margin: .1em;
   float: left; }
 .bootstrap-tags.bootstrap-3 .tag a {
@@ -38,7 +43,7 @@
   padding: 0;
   margin: 0; }
 .bootstrap-tags.bootstrap-2 .tag {
-  padding: 1px 3px;
+  padding: .2em .3em;
   margin: 1px;
   float: left; }
 .bootstrap-tags.bootstrap-2 .tag a {
@@ -48,7 +53,8 @@
 
 .tag-list {
   width: 280px;
-  height: 26px;
+  height: auto;
+  min-height: 26px;
   left: 2px;
   top: 2px;
   position: relative; }

@@ -281,8 +281,8 @@ jQuery ->
       pTop = if tagPosition? then tagPosition.top else 0
       pWidth = @$element.width() - pLeft
       $('.tags-input', @$element).css
-        paddingLeft : pLeft
-        paddingTop  : pTop
+        paddingLeft : Math.max pLeft, 0
+        paddingTop  : Math.max pTop, 0
         width       : pWidth
       pBottom = if tagPosition? then tagPosition.top + tagElement.outerHeight(true) else 22  
       @$element.css paddingBottom : pBottom - @$element.height()
