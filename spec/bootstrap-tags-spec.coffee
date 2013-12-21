@@ -99,6 +99,21 @@ describe "Bootstrap Tags", ->
 
     describe "when provided a tagSize option", ->
 
+      it "defaults to md", ->
+        tags = newTagger "tagger2", {}
+        expect(tags.tagSize).toEqual("md")
+
+      it "applies it to tags", ->
+        tags = newTagger "tagger2",
+          tagSize: "sm"
+          tagData: ["one", "two"]
+        expect($("#tagger2 .tag").hasClass("sm")).toBeTruthy()
+
+      it "applies it to input", ->
+        tags = newTagger "tagger2",
+          tagSize: "lg"
+        expect($("#tagger2 input").hasClass("input-lg")).toBeTruthy()
+
     describe "when providing before/after adding/deleting callbacks", ->
 
       describe "when adding tags", ->

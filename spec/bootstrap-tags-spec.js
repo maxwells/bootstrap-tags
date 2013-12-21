@@ -110,7 +110,28 @@
           return expect($('#tagger2 .tag').hasClass("btn-warning")).toBeTruthy();
         });
       });
-      describe("when provided a tagSize option", function() {});
+      describe("when provided a tagSize option", function() {
+        it("defaults to md", function() {
+          var tags;
+          tags = newTagger("tagger2", {});
+          return expect(tags.tagSize).toEqual("md");
+        });
+        it("applies it to tags", function() {
+          var tags;
+          tags = newTagger("tagger2", {
+            tagSize: "sm",
+            tagData: ["one", "two"]
+          });
+          return expect($("#tagger2 .tag").hasClass("sm")).toBeTruthy();
+        });
+        return it("applies it to input", function() {
+          var tags;
+          tags = newTagger("tagger2", {
+            tagSize: "lg"
+          });
+          return expect($("#tagger2 input").hasClass("input-lg")).toBeTruthy();
+        });
+      });
       describe("when providing before/after adding/deleting callbacks", function() {
         describe("when adding tags", function() {
           it("calls beforeAddingTag before a tag is added, providing the tag as first parameter", function() {
