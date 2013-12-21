@@ -27,6 +27,7 @@
                 this.tagClass || (this.tagClass = "btn-info");
                 this.tagSize || (this.tagSize = "md");
                 this.promptText || (this.promptText = "Enter tags...");
+                this.caseInsensitive || (this.caseInsensitive = false);
                 this.readOnlyEmptyMessage || (this.readOnlyEmptyMessage = "No tags to display...");
                 this.beforeAddingTag || (this.beforeAddingTag = function(tag) {});
                 this.afterAddingTag || (this.afterAddingTag = function(tag) {});
@@ -217,19 +218,30 @@
                         return _this.makeSuggestions(e, false);
                     }
                 };
+                this.getSuggestions = function(str, overrideLengthCheck) {
+                    var _this = this;
+                    if (this.caseInsensitive) {
+                        str = str.toLowerCase();
+                    }
+                    this.suggestionList = [];
+                    $.each(this.suggestions, function(i, suggestion) {
+                        var suggestionVal;
+                        suggestionVal = _this.caseInsensitive ? suggestion.substring(0, str.length) : suggestion.substring(0, str.length).toLowerCase();
+                        if (_this.tagsArray.indexOf(suggestion) < 0 && suggestionVal === str && (str.length > 0 || overrideLengthCheck)) {
+                            return _this.suggestionList.push(suggestion);
+                        }
+                    });
+                    return this.suggestionList;
+                };
                 this.makeSuggestions = function(e, overrideLengthCheck) {
                     var val;
                     val = e.target.value != null ? e.target.value : e.target.textContent;
                     _this.suggestedIndex = -1;
                     _this.$suggestionList.html("");
-                    _this.suggestionList = [];
-                    $.each(_this.suggestions, function(i, suggestion) {
-                        if (_this.tagsArray.indexOf(suggestion) < 0 && suggestion.substring(0, val.length) === val && (val.length > 0 || overrideLengthCheck)) {
-                            _this.$suggestionList.append(_this.template("tags_suggestion", {
-                                suggestion: suggestion
-                            }));
-                            return _this.suggestionList.push(suggestion);
-                        }
+                    $.each(_this.getSuggestions(val, overrideLengthCheck), function(i, suggestion) {
+                        return _this.$suggestionList.append(_this.template("tags_suggestion", {
+                            suggestion: suggestion
+                        }));
                     });
                     _this.$(".tags-suggestion").mouseover(_this.selectSuggestedMouseOver);
                     _this.$(".tags-suggestion").click(_this.suggestedClicked);

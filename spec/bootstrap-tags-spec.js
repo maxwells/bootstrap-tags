@@ -283,7 +283,7 @@
           return $('#tagger2').remove();
         });
       });
-      return describe("when providing exclusion options", function() {
+      describe("when providing exclusion options", function() {
         it("can exclude tags via the excludes function option", function() {
           var excludesFunction, tags;
           excludesFunction = function(tag) {
@@ -307,6 +307,28 @@
           tags.addTag('a').addTag('b').addTag('c').addTag('d');
           expect(tags.getTags()).toEqual(['d']);
           return $('#tagger2').remove();
+        });
+      });
+      return describe("when auto-suggesting", function() {
+        describe("and caseInsensitive is true", function() {
+          return it("finds suggestion regardless of case", function() {
+            var tags;
+            tags = newTagger("tagger2", {
+              caseInsensitive: true,
+              suggestions: ["alpha", "bravo", "charlie"]
+            });
+            return expect(tags.getSuggestions("A", true)).toEqual(["alpha"]);
+          });
+        });
+        return describe("and caseInsensitive is false", function() {
+          return it("only finds suggestions that match case", function() {
+            var tags;
+            tags = newTagger("tagger2", {
+              suggestions: ["alpha", "bravo", "charlie"]
+            });
+            expect(tags.getSuggestions("A", true)).toEqual([]);
+            return expect(tags.getSuggestions("b", true)).toEqual(["bravo"]);
+          });
         });
       });
     });

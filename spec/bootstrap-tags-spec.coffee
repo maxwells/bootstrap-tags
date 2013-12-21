@@ -247,3 +247,21 @@ describe "Bootstrap Tags", ->
         tags.addTag('a').addTag('b').addTag('c').addTag('d')
         expect(tags.getTags()).toEqual ['d']
         $('#tagger2').remove()
+
+    describe "when auto-suggesting", ->
+
+      describe "and caseInsensitive is true", ->
+
+        it "finds suggestion regardless of case", ->
+          tags = newTagger "tagger2",
+            caseInsensitive: true
+            suggestions: ["alpha", "bravo", "charlie"]
+          expect(tags.getSuggestions("A", true)).toEqual ["alpha"]
+
+      describe "and caseInsensitive is false", ->
+
+        it "only finds suggestions that match case", ->
+          tags = newTagger "tagger2",
+            suggestions: ["alpha", "bravo", "charlie"]
+          expect(tags.getSuggestions("A", true)).toEqual []
+          expect(tags.getSuggestions("b", true)).toEqual ["bravo"]

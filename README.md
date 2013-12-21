@@ -1,4 +1,4 @@
-# Boostrap Tags
+# Bootstrap Tags
 
 Bootstrap tags is a lightweight jQuery plugin meant to extend the Twitter Bootstrap UI to include tagging. It supports Bootstrap 2.3.2 and ≥ 3.0 with the same codebase.
 
@@ -53,6 +53,7 @@ or
 - `popoverTrigger`: `String` 'click', 'hover', 'hoverShowClickHide' - indicate how popovers should be triggered
 - `tagClass`: `String` for what class the tag div will have for styling
 - `promptText`: `String` placeholder string when there are no tags and nothing typed in
+- `caseInsensitive`: `Boolean` true if you want suggestions to be trigger regardless of case
 - `readOnlyEmptyMessage`: `String` text to be displayed if there are no tags in readonly mode
 
 See Implementation above for example
@@ -141,9 +142,7 @@ _To build continously_:
 ### Todos
 
 1. Create `CONTRIBUTING` file
-1. Fix `excludes`
 1. Add case insensitivity flag
-1. Write specs for everything that works so next step is doable
 1. Refactor into constituent parts and/or a framework; the existing code base is difficult to extend
 1. consider how initializing tags with popovers should work -> I don't like the parallel arrays.
 

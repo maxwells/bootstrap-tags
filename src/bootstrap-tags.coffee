@@ -23,6 +23,7 @@ jQuery ->
     @tagClass ||= 'btn-info'
     @tagSize ||= 'md'
     @promptText ||= 'Enter tags...'
+    @caseInsensitive ||= false
     @readOnlyEmptyMessage ||= 'No tags to display...'
 
     # callbacks
@@ -51,7 +52,7 @@ jQuery ->
     else
       tagData = $('.tag-data', @$element).html()
       @tagsArray = (if tagData? then tagData.split ',' else [])
-  
+
     # initialize associated content array
     if options.popoverData
       @popoverArray = options.popoverData
@@ -196,18 +197,24 @@ jQuery ->
       if k != 40 and k != 38 and k != 27
         @makeSuggestions e, false
 
+    @getSuggestions = (str, overrideLengthCheck) ->
+      str = str.toLowerCase() if @caseInsensitive
+      @suggestionList = []
+      $.each @suggestions, (i, suggestion) =>
+        suggestionVal = if @caseInsensitive then suggestion.substring(0, str.length) else suggestion.substring(0, str.length).toLowerCase()
+        if @tagsArray.indexOf(suggestion) < 0 and suggestionVal == str and (str.length > 0 or overrideLengthCheck)
+          @suggestionList.push suggestion
+      @suggestionList
+
     # makeSuggestions creates auto suggestions that match the value in the input
     # if overrideLengthCheck is set to true, then if the input value is empty (''), return all possible suggestions
     @makeSuggestions = (e, overrideLengthCheck) =>
       val = (if e.target.value? then e.target.value else e.target.textContent)
       @suggestedIndex = -1
       @$suggestionList.html ''
-      @suggestionList = []
-      $.each @suggestions, (i, suggestion) =>
-        if @tagsArray.indexOf(suggestion) < 0 and suggestion.substring(0, val.length) == val and (val.length > 0 or overrideLengthCheck)
-          @$suggestionList.append @template 'tags_suggestion',
-            suggestion: suggestion
-          @suggestionList.push suggestion
+      $.each @getSuggestions(val, overrideLengthCheck), (i, suggestion) =>
+        @$suggestionList.append @template 'tags_suggestion',
+          suggestion: suggestion
       @$('.tags-suggestion').mouseover @selectSuggestedMouseOver
       @$('.tags-suggestion').click @suggestedClicked
       if @suggestionList.length > 0
