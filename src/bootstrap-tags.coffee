@@ -11,6 +11,8 @@ jQuery ->
     for key, value of options
       this[key] = value
 
+    @bootstrapVersion ||= "3"
+
     # set defaults if no option was set
     @readOnly ||= false
     @suggestions ||= []
@@ -41,6 +43,7 @@ jQuery ->
 
     # hang on to so we know who we are
     @$element = $ element
+    @$element.addClass("bootstrap-tags").addClass("bootstrap-#{@bootstrapVersion}")
 
     # tagsArray is list of tags -> define it based on what may or may not be in the dom element
     if options.tagData?
@@ -204,7 +207,8 @@ jQuery ->
       @suggestionList = []
       $.each @suggestions, (i, suggestion) =>
         if @tagsArray.indexOf(suggestion) < 0 and suggestion.substring(0, val.length) == val and (val.length > 0 or overrideLengthCheck)
-          @$suggestionList.append '<li class="tags-suggestion">'+suggestion+'</li>'
+          @$suggestionList.append @template 'tags_suggestion',
+            suggestion: suggestion
           @suggestionList.push suggestion
       $('.tags-suggestion', @$element).mouseover @selectSuggestedMouseOver
       $('.tags-suggestion', @$element).click @suggestedClicked
@@ -286,7 +290,7 @@ jQuery ->
 
     # renderTags renders tags...
     @renderTags = =>
-      tagList = $('.tags',@$element)
+      tagList = $('.tags', @$element)
       tagList.html('')
       @input.attr 'placeholder', (if @tagsArray.length == 0 then @promptText else '')
       $.each @tagsArray, (i, tag) =>
@@ -302,7 +306,7 @@ jQuery ->
       tagList = $('.tags',@$element)
       tagList.html (if @tagsArray.length == 0 then @readOnlyEmptyMessage else '')
       $.each @tagsArray, (i, tag) =>
-        tag = $(@formatTagReadOnly i, tag)
+        tag = $(@formatTag i, tag, true)
         @initializePopoverFor(tag, @tagsArray[i], @popoverArray[i]) if @displayPopovers
         tagList.append tag
 
@@ -334,19 +338,13 @@ jQuery ->
       tagAnchor.css opacity:opacity 
 
     # formatTag spits out the html for a tag (with or without it's popovers)
-    @formatTag = (i, tag) =>
-      tag_data = tag.replace("<",'&lt;').replace(">",'&gt;')
-      if @displayPopovers == true # then attach popover data
-        "<div class='tag label "+@tagClass+"' rel='popover'><span>"+tag_data+"</span><a> <i class='icon-remove-sign icon-white'></i></a></div>"
-      else
-        "<div class='tag label "+@tagClass+"'><span>"+tag_data+"</span><a> <i class='icon-remove-sign icon-white'></i></a></div>"
-
-    @formatTagReadOnly = (i, tag) =>
-      tag_data = tag.replace("<",'&lt;').replace(">",'&gt;')
-      if @displayPopovers == true # then attach popover data
-        "<div class='tag label "+@tagClass+"' rel='popover'><span>&nbsp;"+tag_data+"&nbsp;</span></div>"
-      else
-        "<div class='tag label "+@tagClass+"'><span>&nbsp;"+tag_data+"&nbsp;</span></div>"
+    @formatTag = (i, tag, isReadOnly = false) =>
+      escapedTag = tag.replace("<",'&lt;').replace(">",'&gt;')
+      @template "tag",
+        tag: escapedTag
+        tagClass: @tagClass
+        isPopover: @displayPopovers
+        isReadOnly: isReadOnly
 
     @addDocumentListeners = =>
       $(document).mouseup (e) =>
@@ -370,11 +368,11 @@ jQuery ->
         @renameTag = ->
         @setPopover = ->
       else
-        @input = $ "<input type='text' class='tags-input'>"
+        @input = $(@template("input"))
         @input.keydown @keyDownHandler
         @input.keyup @keyUpHandler
         @$element.append @input
-        @$suggestionList = $ '<ul class="tags-suggestion-list dropdown-menu"></ul>'
+        @$suggestionList = $(@template("suggestion_list"))
         @$element.append @$suggestionList
         # show it
         @renderTags()
