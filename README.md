@@ -1,6 +1,6 @@
 # Bootstrap Tags
 
-Bootstrap tags is a lightweight jQuery plugin meant to extend the Twitter Bootstrap UI to include tagging. It supports Bootstrap 2.3.2 and ≥ 3.0 with the same codebase.
+Bootstrap Tags is a jQuery plugin meant to extend Twitter Bootstrap to include tagging functionality. It supports Bootstrap 2.3.2 and ≥ 3.0.
 
 [![Build Status](https://travis-ci.org/maxwells/bootstrap-tags.png?branch=master)](https://travis-ci.org/maxwells/bootstrap-tags)
 
@@ -24,7 +24,7 @@ or
 - Filters (allowance of only a specified list)
 - Placeholder prompts
 - Uses bootstrap button-[type] class styling (customizing your bootstrap will change tag styles accordingly)
-- Extendable with custom functions (eg, on successful tag addition, key presses, exclusions)
+- Extensible with custom functions (eg, on successful tag addition, key presses, exclusions)
 - Not tested on many browsers yet. Uses some HTML5 stuff, so no promises
 
 ## Implementation
@@ -139,13 +139,24 @@ _To build continously_:
 
 	$ grunt test
 
+### Contributing
+
+If you spot a bug, experience browser incompatibility, or have feature requests, please submit them [here](https://github.com/maxwells/bootstrap-tags/issues).
+
+If you want to hack away to provide a new feature/bug-fix, please follow these guidelines:
+
+- Make changes to the coffeescript and sass files, not js/css. This is to ensure that the next person who comes in and edits upstream from js/css will not overwrite your changes.
+- Create a pull request for your feature branch, updating README documentation if necessary
+
 ### Todos
 
-1. Create `CONTRIBUTING` file
-1. Add case insensitivity flag
 1. Refactor into constituent parts and/or a framework; the existing code base is difficult to extend
 1. consider how initializing tags with popovers should work -> I don't like the parallel arrays.
 
 ### License
 
 This project rocks and uses the MIT-LICENSE.
+
+### Author
+
+Max Lahey
