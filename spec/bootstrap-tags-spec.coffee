@@ -7,6 +7,26 @@ describe "Bootstrap Tags", ->
   afterEach ->
     $('.tagger').remove()
 
+  it "defaults to bootstrap 3", ->
+    tags = newTagger "tagger2"
+    expect(tags.bootstrapVersion).toEqual "3"
+
+  describe "when templating", ->
+
+    it "uses appropriate version", ->
+      tags = newTagger "tagger2",
+        bootstrapVersion: "2"
+      tagsInputHtml = tags.template "input", tagSize: "sm"
+      version2Html = Tags.Templates["2"].input tagSize: "sm"
+      expect(tagsInputHtml).toEqual version2Html
+
+    it "defaults to shared when template by name is not available in a version", ->
+      tags = newTagger "tagger2",
+        bootstrapVersion: "2"
+      tagsInputHtml = tags.template "suggestion_list"
+      version2Html = Tags.Templates.shared.suggestion_list()
+      expect(tagsInputHtml).toEqual version2Html
+
   describe "when using readOnly", ->
 
     beforeEach ->

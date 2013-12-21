@@ -10,6 +10,35 @@
     afterEach(function() {
       return $('.tagger').remove();
     });
+    it("defaults to bootstrap 3", function() {
+      var tags;
+      tags = newTagger("tagger2");
+      return expect(tags.bootstrapVersion).toEqual("3");
+    });
+    describe("when templating", function() {
+      it("uses appropriate version", function() {
+        var tags, tagsInputHtml, version2Html;
+        tags = newTagger("tagger2", {
+          bootstrapVersion: "2"
+        });
+        tagsInputHtml = tags.template("input", {
+          tagSize: "sm"
+        });
+        version2Html = Tags.Templates["2"].input({
+          tagSize: "sm"
+        });
+        return expect(tagsInputHtml).toEqual(version2Html);
+      });
+      return it("defaults to shared when template by name is not available in a version", function() {
+        var tags, tagsInputHtml, version2Html;
+        tags = newTagger("tagger2", {
+          bootstrapVersion: "2"
+        });
+        tagsInputHtml = tags.template("suggestion_list");
+        version2Html = Tags.Templates.shared.suggestion_list();
+        return expect(tagsInputHtml).toEqual(version2Html);
+      });
+    });
     describe("when using readOnly", function() {
       beforeEach(function() {
         this.initTagData = ['one', 'two', 'three'];
