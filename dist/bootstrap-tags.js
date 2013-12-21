@@ -105,7 +105,7 @@
                 };
                 this.removeLastTag = function() {
                     var el;
-                    el = $(".tag", _this.$element).last();
+                    el = _this.$(".tag").last();
                     el.remove();
                     _this.removeTag(_this.tagsArray[_this.tagsArray.length - 1]);
                     return _this;
@@ -227,8 +227,8 @@
                             return _this.suggestionList.push(suggestion);
                         }
                     });
-                    $(".tags-suggestion", _this.$element).mouseover(_this.selectSuggestedMouseOver);
-                    $(".tags-suggestion", _this.$element).click(_this.suggestedClicked);
+                    _this.$(".tags-suggestion").mouseover(_this.selectSuggestedMouseOver);
+                    _this.$(".tags-suggestion").click(_this.suggestedClicked);
                     if (_this.suggestionList.length > 0) {
                         return _this.showSuggestions();
                     } else {
@@ -247,12 +247,12 @@
                     return _this.hideSuggestions();
                 };
                 this.hideSuggestions = function() {
-                    return $(".tags-suggestion-list", _this.$element).css({
+                    return _this.$(".tags-suggestion-list").css({
                         display: "none"
                     });
                 };
                 this.showSuggestions = function() {
-                    return $(".tags-suggestion-list", _this.$element).css({
+                    return _this.$(".tags-suggestion-list").css({
                         display: "block"
                     });
                 };
@@ -260,7 +260,7 @@
                     $(".tags-suggestion").removeClass("tags-suggestion-highlighted");
                     $(e.target).addClass("tags-suggestion-highlighted");
                     $(e.target).mouseout(_this.selectSuggestedMousedOut);
-                    return _this.suggestedIndex = $(".tags-suggestion", _this.$element).index($(e.target));
+                    return _this.suggestedIndex = _this.$(".tags-suggestion").index($(e.target));
                 };
                 this.selectSuggestedMousedOut = function(e) {
                     return $(e.target).removeClass("tags-suggestion-highlighted");
@@ -268,22 +268,22 @@
                 this.selectSuggested = function(i) {
                     var tagElement;
                     $(".tags-suggestion").removeClass("tags-suggestion-highlighted");
-                    tagElement = $(".tags-suggestion", _this.$element).eq(i);
+                    tagElement = _this.$(".tags-suggestion").eq(i);
                     return tagElement.addClass("tags-suggestion-highlighted");
                 };
                 this.scrollSuggested = function(i) {
                     var pos, tagElement, topElement, topPos;
-                    tagElement = $(".tags-suggestion", _this.$element).eq(i);
-                    topElement = $(".tags-suggestion", _this.$element).eq(0);
+                    tagElement = _this.$(".tags-suggestion").eq(i);
+                    topElement = _this.$(".tags-suggestion").eq(0);
                     pos = tagElement.position();
                     topPos = topElement.position();
                     if (pos != null) {
-                        return $(".tags-suggestion-list", _this.$element).scrollTop(pos.top - topPos.top);
+                        return _this.$(".tags-suggestion-list").scrollTop(pos.top - topPos.top);
                     }
                 };
                 this.adjustInputPosition = function() {
                     var pBottom, pLeft, pTop, pWidth, tagElement, tagPosition;
-                    tagElement = $(".tag", _this.$element).last();
+                    tagElement = _this.$(".tag").last();
                     tagPosition = tagElement.position();
                     pLeft = tagPosition != null ? tagPosition.left + tagElement.outerWidth(true) : 0;
                     pTop = tagPosition != null ? tagPosition.top : 0;
@@ -300,7 +300,7 @@
                 };
                 this.renderTags = function() {
                     var tagList;
-                    tagList = $(".tags", _this.$element);
+                    tagList = _this.$(".tags");
                     tagList.html("");
                     _this.input.attr("placeholder", _this.tagsArray.length === 0 ? _this.promptText : "");
                     $.each(_this.tagsArray, function(i, tag) {
@@ -317,7 +317,7 @@
                 };
                 this.renderReadOnly = function() {
                     var tagList;
-                    tagList = $(".tags", _this.$element);
+                    tagList = _this.$(".tags");
                     tagList.html(_this.tagsArray.length === 0 ? _this.readOnlyEmptyMessage : "");
                     return $.each(_this.tagsArray, function(i, tag) {
                         tag = $(_this.formatTag(i, tag, true));
@@ -371,7 +371,7 @@
                 this.addDocumentListeners = function() {
                     return $(document).mouseup(function(e) {
                         var container;
-                        container = $(".tags-suggestion-list", _this.$element);
+                        container = _this.$(".tags-suggestion-list");
                         if (container.has(e.target).length === 0) {
                             return _this.hideSuggestions();
                         }
@@ -379,6 +379,9 @@
                 };
                 this.template = function(name, options) {
                     return Tags.Templates.Template(this.getBootstrapVersion(), name, options);
+                };
+                this.$ = function(selector) {
+                    return $(selector, this.$element);
                 };
                 this.getBootstrapVersion = function() {
                     return Tags.bootstrapVersion || this.bootstrapVersion;

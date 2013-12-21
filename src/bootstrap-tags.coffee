@@ -42,7 +42,7 @@ jQuery ->
     @pressedUp ||= (e) ->
 
     # hang on to so we know who we are
-    @$element = $ element
+    @$element = $(element)
 
     # tagsArray is list of tags -> define it based on what may or may not be in the dom element
     if options.tagData?
@@ -97,7 +97,7 @@ jQuery ->
 
     # removeLastTag is called when user presses delete on empty input.
     @removeLastTag = => 
-      el = $('.tag', @$element).last()
+      el = @$('.tag').last()
       el.remove()
       @removeTag @tagsArray[@tagsArray.length-1]
       @
@@ -209,8 +209,8 @@ jQuery ->
           @$suggestionList.append @template 'tags_suggestion',
             suggestion: suggestion
           @suggestionList.push suggestion
-      $('.tags-suggestion', @$element).mouseover @selectSuggestedMouseOver
-      $('.tags-suggestion', @$element).click @suggestedClicked
+      @$('.tags-suggestion').mouseover @selectSuggestedMouseOver
+      @$('.tags-suggestion').click @suggestedClicked
       if @suggestionList.length > 0
         @showSuggestions()
       else
@@ -236,20 +236,20 @@ jQuery ->
     # - user selects a suggestion
     # - user presses escape
     @hideSuggestions = =>
-      $('.tags-suggestion-list', @$element).css display: "none"
+      @$('.tags-suggestion-list').css display: "none"
 
     # showSuggetions is called when:
     # - user types in start of a suggested tag
     # - user presses down arrow in empty text input
     @showSuggestions = =>
-      $('.tags-suggestion-list', @$element).css display: "block"
+      @$('.tags-suggestion-list').css display: "block"
 
     # selectSuggestedMouseOver triggered when user mouses over suggestion
     @selectSuggestedMouseOver = (e) =>
       $('.tags-suggestion').removeClass('tags-suggestion-highlighted')
       $(e.target).addClass('tags-suggestion-highlighted')
       $(e.target).mouseout @selectSuggestedMousedOut
-      @suggestedIndex = $('.tags-suggestion', @$element).index($(e.target))
+      @suggestedIndex = @$('.tags-suggestion').index($(e.target))
 
     # selectSuggestedMouseOver triggered when user mouses out of suggestion
     @selectSuggestedMousedOut = (e) =>
@@ -259,23 +259,22 @@ jQuery ->
     # a suggestions list (to highlight whatever the specified index is)
     @selectSuggested = (i) =>
       $('.tags-suggestion').removeClass('tags-suggestion-highlighted')
-      tagElement = $('.tags-suggestion', @$element).eq(i)
+      tagElement = @$('.tags-suggestion').eq(i)
       tagElement.addClass 'tags-suggestion-highlighted'
 
     # scrollSuggested is called from up and down arrow key presses
     # to scroll the suggestions list so that the selected index is always visible
     @scrollSuggested = (i) =>
-      tagElement = $('.tags-suggestion', @$element).eq i
-      topElement = $('.tags-suggestion', @$element).eq 0
+      tagElement = @$('.tags-suggestion').eq i
+      topElement = @$('.tags-suggestion').eq 0
       pos = tagElement.position()
       topPos = topElement.position()
-      #if pos? and topPos?
-      $('.tags-suggestion-list', @$element).scrollTop pos.top - topPos.top if pos?
+      @$('.tags-suggestion-list').scrollTop pos.top - topPos.top if pos?
 
     # adjustInputPadding adjusts padding of input so that what the
     # user types shows up next to last tag (or on new line if insufficient space)
     @adjustInputPosition = =>
-      tagElement = $('.tag', @$element).last()
+      tagElement = @$('.tag').last()
       tagPosition = tagElement.position()
       pLeft = if tagPosition? then tagPosition.left + tagElement.outerWidth(true) else 0
       pTop = if tagPosition? then tagPosition.top else 0
@@ -289,7 +288,7 @@ jQuery ->
 
     # renderTags renders tags...
     @renderTags = =>
-      tagList = $('.tags', @$element)
+      tagList = @$('.tags')
       tagList.html('')
       @input.attr 'placeholder', (if @tagsArray.length == 0 then @promptText else '')
       $.each @tagsArray, (i, tag) =>
@@ -302,7 +301,7 @@ jQuery ->
       @adjustInputPosition()
 
     @renderReadOnly = =>
-      tagList = $('.tags',@$element)
+      tagList = @$('.tags')
       tagList.html (if @tagsArray.length == 0 then @readOnlyEmptyMessage else '')
       $.each @tagsArray, (i, tag) =>
         tag = $(@formatTag i, tag, true)
@@ -347,12 +346,15 @@ jQuery ->
 
     @addDocumentListeners = =>
       $(document).mouseup (e) =>
-        container = $('.tags-suggestion-list', @$element)
+        container = @$('.tags-suggestion-list')
         if container.has(e.target).length == 0
           @hideSuggestions()
 
     @template = (name, options) ->
       Tags.Templates.Template(@getBootstrapVersion(), name, options)
+
+    @$ = (selector) ->
+      $(selector, @$element)
 
     @getBootstrapVersion = -> Tags.bootstrapVersion or @bootstrapVersion
 
