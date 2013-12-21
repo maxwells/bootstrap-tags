@@ -17,15 +17,14 @@ or
 	--> JS files are located in bootstrap-tags/dist, CSS files in bootstrap-tags/css
 
 ## Features
-- Support for Bootstrap 2.3.2 or 3+
+- Support for Bootstrap 2.3.2 and 3+
 - Autosuggest (for typing or activated by pressing the down key when empty)
 - Bootstrap Popovers (for extended information on a tag)
 - Exclusions (denial of a specified list)
 - Filters (allowance of only a specified list)
 - Placeholder prompts
 - Uses bootstrap button-[type] class styling (customizing your bootstrap will change tag styles accordingly)
-- Extensible with custom functions (eg, on successful tag addition, key presses, exclusions)
-- Not tested on many browsers yet. Uses some HTML5 stuff, so no promises
+- Extensible with custom functions (eg, before/after tag addition/deletion, key presses, exclusions)
 
 ## Implementation
 	<div id="my-tag-list" class="tag-list"><div class="tags"></div></div>
@@ -45,70 +44,53 @@ or
 
 ### Settings
 
-- `readonly`: `boolean`
-- `suggestions`: `Array` - autosuggest terms
-- `restrictTo`: `Array` of allowed tags (will be combined with suggestions, if provided)
-- `exclude`: `Array` of disallowed tags
-- `displayPopovers`: `Boolean`
-- `popoverTrigger`: `String` 'click', 'hover', 'hoverShowClickHide' - indicate how popovers should be triggered
-- `tagClass`: `String` for what class the tag div will have for styling
-- `promptText`: `String` placeholder string when there are no tags and nothing typed in
-- `caseInsensitive`: `Boolean` true if you want suggestions to be trigger regardless of case
-- `readOnlyEmptyMessage`: `String` text to be displayed if there are no tags in readonly mode
-
-See Implementation above for example
-
-### Overrideable functions
-If you want to override any of the following functions, pass it as an option in the jQuery initialization.
-
-- `beforeAddingTag (tag:string)` : anything external you'd like to do with the tag before adding it
-- `afterAddingTag (tag:string)` : anything external you'd like to do with the tag after adding it
-- `beforeDeletingTag (tag:string)` : find out which tag is about to be deleted
-- `afterDeletingTag (tag:string)` : find out which tag was removed by either presseing delete key or clicking the (x)
-- `definePopover (tag:string)` : must return the popover content for the tag that is being added. (eg "Content for [tag]")
-- `excludes (tag:string)` : returns true if you want the tag to be excluded, false if allowed
-- `pressedReturn (e:triggering event)` 
-- `pressedDelete (e:triggering event)`
-- `pressedDown (e:triggering event)`
-- `pressedUp (e:triggering event)`
-
-Example:
+The following options are supported. Pass them as a javascript object to the `tags` jQuery function:
 
 ```javascript
-pressedUp = function(e) { console.log('pressed up'); };
-whenAddingTag = function (tag) {
-	console.log(tag);
-	// maybe fetch some content for the tag popover (can be HTML)
-};
-excludes = function (tag) {
-	// return false if this tagger does *not* exclude
-	// -> returns true if tagger should exclude this tag
-	// --> this will exclude anything with !
-	return (tag.indexOf("!") != -1);
-};
-$('#two').tags( {
-	suggestions : ["there", "were", "some", "suggested", "terms", "super", "secret", "stuff"],
-	restrictTo : ["restrict", "to", "these"],
-	whenAddingTag : whenAddingTag,
-	pressedUp : pressedUp,
-	tagClass : 'btn-warning' }
-);
+$('selector').tags({
+    readOnly: true,
+    tagData: ["a", "prepopulated", "list", "of", tags],
+    beforeAddingTag: function(tag){ console.log(tag); }
+});
 ```
 
-### Controlling tags
-Some functions are chainable, and can be used to move the data around outside of the plugin.
+option | type | description | default
+-------|------|-------------|---------
+`bootstrapVersion` | `String` | specify which version of bootstrap to format generated HTML for. Acceptable values are "2", "3" | `3`
+`tagData` | `Array` | a list of tags to initialize the tagging interace with | `[]`
+`readOnly` | `boolean` | whether or not to disable user input | `false`
+`suggestions` | `Array` | a list of terms that will populate the autosuggest feature when a user types in the first character. | `[]`
+`caseInsensitive` | `Boolean` | whether or not autosuggest should ignore case sensitivity | `false`
+`restrictTo` | `Array` | a list of allowed tags (will be combined with suggestions, if provided). User inputted tags that aren't included in this list will be ignored | `[]`
+`exclude` | `Array` | a list of case insensitive disallowed tags. Supports wildcarding (eg. `['*offensive*']` will ignore any word that has `offensive` in it) | `[]`
+`popoverData` | `Array` | a list of popover data. The index of each element should match the index of corresponding tag in `tagData` array | `null`
+`popovers` | `Boolean` | whether or not to enable bootstrap popovers on tag mouseover | whether `popoverData` was provided
+`popoverTrigger` | `String` | indicates how popovers should be triggered. Acceptable values are 'click', 'hover', 'hoverShowClickHide' | `hover`
+`tagClass` | `String` | which class the tag div will have for styling | `btn-info`
+`promptText` | `String` | placeholder string when there are no tags and nothing typed in | `Enter tags…`
+`readOnlyEmptyMessage` | `String` | text to be displayed if there are no tags in readonly mode. Can be HTML | `No tags to display...`
+`beforeAddingTag` | `function(String tag)` | anything external you'd like to do with the tag before adding it. Returning false will stop tag from being added | `null`
+`afterAddingTag` | `function(String tag)` | anything external you'd like to do with the tag after adding it | `null`
+`beforeDeletingTag` | `function(String tag)` | find out which tag is about to be deleted. Returning false will stop tag from being deleted | `null`
+`afterDeletingTag` | `function(String tag)` | find out which tag was removed by either pressing delete key or clicking the (x) | `null`
+`definePopover` | `function(String tag)` | must return the popover content for the tag that is being added. (eg "Content for [tag]") | `null`
+`excludes` | `function(String tag)` | return true if you want the tag to be excluded, false if allowed | `null`
 
-- `hasTag(tag:string)` - boolean; whether tag is in tag list
-- `getTags()` - not chainable: returns a list of tags
-- `getTagsWithContent()` - not chainable: returns a list of objects with a tag property and content property
-- `getTag(tag:string)` - returns tag as string
-- `getTagWithContent(tag:string)` - returns object with tag and content property (popover)
-- `addTag(tag:string)` - chainable
-- `renameTag(tag:string, newTag:string)` - chainable
-- `removeLastTag()` - chainable
-- `removeTag(tag:string)` - chainable
-- `addTagWithContent(tag:string, popoverContent:string)` - chainable
-- `setPopover(tag:string, popoverContent:string)` - chainable
+### Controlling tags
+Some functions are chainable (returns a `Tagger` object), and can be used to move the data around outside of the plugin.
+
+function | return type | description
+`hasTag(tag:string)` | `Boolean` | whether tag is in tag list
+`getTags()` | `Array` | a list of tags currently in the interface
+`getTagsWithContent()` | `Array` | a list of javascript objects with a `tag` property and `content` property
+`getTag(tag:string)` | `String` | returns tag as string
+`getTagWithContent(tag:string)` | `Object` | returns object with `tag` and `content` property (popover)
+`addTag(tag:string)` | `Tagger` | add a tag
+`renameTag(tag:string, newTag:string)` | `Tagger` | rename one tag to another value
+`removeLastTag()` | `Tagger` | removes last tag if it exists
+`removeTag(tag:string)` | `Tagger` | removes tag specified by string if it exists
+`addTagWithContent(tag:string, popoverContent:string)` | `Tagger` | Add a tag with associated popover content
+`setPopover(tag:string, popoverContent:string)` | `Tagger` | update a tag's associated popover content, if that tag exists
 
 Example:
 
