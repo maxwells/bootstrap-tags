@@ -35,30 +35,23 @@ describe "Bootstrap Tags", ->
 
     describe "when no tags are provided", ->
 
-      beforeEach ->
-        @$domElement = $('body').append '<div id="tagger2" class="tagger"></div>'
-
       it "sets readOnlyEmptyMessage to tags body if provided", ->
-        @tags = $('#tagger2').tags
+        @tags = newTagger "tagger2",
           readOnly: true
           readOnlyEmptyMessage: "foo"
         expect($('#tagger2 .tags', @$domElement).html()).toEqual "foo"
 
       it "sets default empty message to tags body if readOnlyEmptyMessage is not provided", ->
-        @tags = $('#tagger2').tags
+        @tags = newTagger "tagger2",
           readOnly: true
         expect($('#tagger2 .tags').html()).toEqual $('#tagger2').tags().readOnlyEmptyMessage
 
   describe "when normally operating", ->
 
     beforeEach ->
-      @$domElement = $('body').append '<div id="tagger" class="tag-list"><div class="tags"></div></div>'
       @initTagData = ['one', 'two', 'three']
-      @tags = $('#tagger', @$domElement).tags
+      @tags = newTagger "tagger",
         tagData: @initTagData
-
-    afterEach ->
-      $('#tagger').remove()
 
     it "can add tag", ->
       tagLength = @tags.getTags().length
@@ -99,29 +92,21 @@ describe "Bootstrap Tags", ->
     describe "when provided with a tagClass option", ->
 
       it "uses it to style tags", ->
-        $('body').append '<div id="tagger2" class="tag-list"></div>'
-        tags = $('#tagger2').tags
+        @tags = newTagger "tagger2",
           tagClass: "btn-warning"
           tagData: ["a", "b"]
         expect($('#tagger2 .tag').hasClass("btn-warning")).toBeTruthy()
-        $('#tagger2').remove()
 
     describe "when provided a tagSize option", ->
 
     describe "when providing before/after adding/deleting callbacks", ->
-
-      beforeEach ->
-        $('body').append '<div id="tagger2" class="tag-list"></div>'
-
-      afterEach ->
-        $('#tagger2').remove()
 
       describe "when adding tags", ->
 
         it "calls beforeAddingTag before a tag is added, providing the tag as first parameter", ->
           wasCalled = false
           tagAdded = "not this"
-          tags = $('#tagger2').tags
+          tags = newTagger "tagger2",
             beforeAddingTag: (tag) ->
               wasCalled = true
               tagAdded = tag
@@ -129,7 +114,7 @@ describe "Bootstrap Tags", ->
           expect(wasCalled and tagAdded == "this").toBeTruthy()
 
         it "will not add a tag if beforeAddingTag returns false", ->
-          tags = $('#tagger2').tags
+          tags = newTagger "tagger2",
             beforeAddingTag: (tag) ->
               false
           tags.addTag "this"
@@ -138,7 +123,7 @@ describe "Bootstrap Tags", ->
         it "calls afterAddingTag after a tag is added, providing the tag as first parameter", ->
           wasCalled = false
           tagAdded = "not this"
-          tags = $('#tagger2').tags
+          tags = newTagger "tagger2",
             afterAddingTag: (tag) ->
               wasCalled = true
               tagAdded = tag
@@ -149,7 +134,7 @@ describe "Bootstrap Tags", ->
 
         it "calls beforeDeletingTag before a tag is removed, providing the tag as first parameter", ->
           wasCalled = false
-          tags = $('#tagger2').tags
+          tags = newTagger "tagger2",
             tagData: ["a", "b", "c"]
             beforeDeletingTag: (tag) ->
               wasCalled = true
@@ -158,7 +143,7 @@ describe "Bootstrap Tags", ->
           expect(wasCalled).toBeTruthy()
 
         it "will not add a tag if beforeDeletingTag returns false", ->
-          tags = $('#tagger2').tags
+          tags = newTagger "tagger2",
             tagData: ["a", "b", "c"]
             beforeDeletingTag: (tag) ->
               false
@@ -167,7 +152,7 @@ describe "Bootstrap Tags", ->
 
         it "calls afterDeletingTag after a tag is removed, providing the tag as first parameter", ->
           wasCalled = false
-          tags = $('#tagger2').tags
+          tags = newTagger "tagger2",
             tagData: ["a", "b", "c"]
             afterDeletingTag: (tag) ->
               wasCalled = true
@@ -178,8 +163,7 @@ describe "Bootstrap Tags", ->
     describe "when restricting tags using restrictTo option", ->
 
       it "will not add any tags that aren't approved", ->
-        $('body').append '<div id="tagger2" class="tag-list"></div>'
-        tags = $('#tagger2').tags
+        tags = newTagger "tagger2",
           restrictTo: ["a", "b", "c"]
         tags.addTag('foo').addTag('bar').addTag('baz').addTag('a')
         expect(tags.getTags()).toEqual ['a']
@@ -188,19 +172,17 @@ describe "Bootstrap Tags", ->
     describe "when providing exclusion options", ->
 
       it "can exclude tags via the excludes function option", ->
-        $domElement = $('body').append '<div id="tagger2" class="tag-list"><div class="tags"></div></div>'
         excludesFunction = (tag) ->
           return false if tag.indexOf('foo') > -1
           true
-        tags = $('#tagger2', @$domElement).tags
+        tags = newTagger "tagger2",
           excludes: excludesFunction
         tags.addTag('foo').addTag('bar').addTag('baz').addTag('foobarbaz')
         expect(tags.getTags()).toEqual ['foo', 'foobarbaz']
         $('#tagger2').remove()
 
       it "can exclude tags via the exclude option", ->
-        $domElement = $('body').append '<div id="tagger2" class="tag-list"><div class="tags"></div></div>'
-        tags = $('#tagger2', @$domElement).tags
+        tags = newTagger "tagger2",
           exclude: ["a", "b", "c"]
         tags.addTag('a').addTag('b').addTag('c').addTag('d')
         expect(tags.getTags()).toEqual ['d']

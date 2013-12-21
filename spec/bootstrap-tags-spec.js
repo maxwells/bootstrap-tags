@@ -39,18 +39,15 @@
         return expect(this.tags.getTags()).toEqual(this.initTagData);
       });
       return describe("when no tags are provided", function() {
-        beforeEach(function() {
-          return this.$domElement = $('body').append('<div id="tagger2" class="tagger"></div>');
-        });
         it("sets readOnlyEmptyMessage to tags body if provided", function() {
-          this.tags = $('#tagger2').tags({
+          this.tags = newTagger("tagger2", {
             readOnly: true,
             readOnlyEmptyMessage: "foo"
           });
           return expect($('#tagger2 .tags', this.$domElement).html()).toEqual("foo");
         });
         return it("sets default empty message to tags body if readOnlyEmptyMessage is not provided", function() {
-          this.tags = $('#tagger2').tags({
+          this.tags = newTagger("tagger2", {
             readOnly: true
           });
           return expect($('#tagger2 .tags').html()).toEqual($('#tagger2').tags().readOnlyEmptyMessage);
@@ -59,14 +56,10 @@
     });
     return describe("when normally operating", function() {
       beforeEach(function() {
-        this.$domElement = $('body').append('<div id="tagger" class="tag-list"><div class="tags"></div></div>');
         this.initTagData = ['one', 'two', 'three'];
-        return this.tags = $('#tagger', this.$domElement).tags({
+        return this.tags = newTagger("tagger", {
           tagData: this.initTagData
         });
-      });
-      afterEach(function() {
-        return $('#tagger').remove();
       });
       it("can add tag", function() {
         var tagLength;
@@ -110,30 +103,21 @@
       });
       describe("when provided with a tagClass option", function() {
         return it("uses it to style tags", function() {
-          var tags;
-          $('body').append('<div id="tagger2" class="tag-list"></div>');
-          tags = $('#tagger2').tags({
+          this.tags = newTagger("tagger2", {
             tagClass: "btn-warning",
             tagData: ["a", "b"]
           });
-          expect($('#tagger2 .tag').hasClass("btn-warning")).toBeTruthy();
-          return $('#tagger2').remove();
+          return expect($('#tagger2 .tag').hasClass("btn-warning")).toBeTruthy();
         });
       });
       describe("when provided a tagSize option", function() {});
       describe("when providing before/after adding/deleting callbacks", function() {
-        beforeEach(function() {
-          return $('body').append('<div id="tagger2" class="tag-list"></div>');
-        });
-        afterEach(function() {
-          return $('#tagger2').remove();
-        });
         describe("when adding tags", function() {
           it("calls beforeAddingTag before a tag is added, providing the tag as first parameter", function() {
             var tagAdded, tags, wasCalled;
             wasCalled = false;
             tagAdded = "not this";
-            tags = $('#tagger2').tags({
+            tags = newTagger("tagger2", {
               beforeAddingTag: function(tag) {
                 wasCalled = true;
                 return tagAdded = tag;
@@ -144,7 +128,7 @@
           });
           it("will not add a tag if beforeAddingTag returns false", function() {
             var tags;
-            tags = $('#tagger2').tags({
+            tags = newTagger("tagger2", {
               beforeAddingTag: function(tag) {
                 return false;
               }
@@ -156,7 +140,7 @@
             var tagAdded, tags, wasCalled;
             wasCalled = false;
             tagAdded = "not this";
-            tags = $('#tagger2').tags({
+            tags = newTagger("tagger2", {
               afterAddingTag: function(tag) {
                 wasCalled = true;
                 return tagAdded = tag;
@@ -170,7 +154,7 @@
           it("calls beforeDeletingTag before a tag is removed, providing the tag as first parameter", function() {
             var tags, wasCalled;
             wasCalled = false;
-            tags = $('#tagger2').tags({
+            tags = newTagger("tagger2", {
               tagData: ["a", "b", "c"],
               beforeDeletingTag: function(tag) {
                 wasCalled = true;
@@ -182,7 +166,7 @@
           });
           it("will not add a tag if beforeDeletingTag returns false", function() {
             var tags;
-            tags = $('#tagger2').tags({
+            tags = newTagger("tagger2", {
               tagData: ["a", "b", "c"],
               beforeDeletingTag: function(tag) {
                 return false;
@@ -194,7 +178,7 @@
           return it("calls afterDeletingTag after a tag is removed, providing the tag as first parameter", function() {
             var tags, wasCalled;
             wasCalled = false;
-            tags = $('#tagger2').tags({
+            tags = newTagger("tagger2", {
               tagData: ["a", "b", "c"],
               afterDeletingTag: function(tag) {
                 wasCalled = true;
@@ -209,8 +193,7 @@
       describe("when restricting tags using restrictTo option", function() {
         return it("will not add any tags that aren't approved", function() {
           var tags;
-          $('body').append('<div id="tagger2" class="tag-list"></div>');
-          tags = $('#tagger2').tags({
+          tags = newTagger("tagger2", {
             restrictTo: ["a", "b", "c"]
           });
           tags.addTag('foo').addTag('bar').addTag('baz').addTag('a');
@@ -220,15 +203,14 @@
       });
       return describe("when providing exclusion options", function() {
         it("can exclude tags via the excludes function option", function() {
-          var $domElement, excludesFunction, tags;
-          $domElement = $('body').append('<div id="tagger2" class="tag-list"><div class="tags"></div></div>');
+          var excludesFunction, tags;
           excludesFunction = function(tag) {
             if (tag.indexOf('foo') > -1) {
               return false;
             }
             return true;
           };
-          tags = $('#tagger2', this.$domElement).tags({
+          tags = newTagger("tagger2", {
             excludes: excludesFunction
           });
           tags.addTag('foo').addTag('bar').addTag('baz').addTag('foobarbaz');
@@ -236,9 +218,8 @@
           return $('#tagger2').remove();
         });
         return it("can exclude tags via the exclude option", function() {
-          var $domElement, tags;
-          $domElement = $('body').append('<div id="tagger2" class="tag-list"><div class="tags"></div></div>');
-          tags = $('#tagger2', this.$domElement).tags({
+          var tags;
+          tags = newTagger("tagger2", {
             exclude: ["a", "b", "c"]
           });
           tags.addTag('a').addTag('b').addTag('c').addTag('d');
