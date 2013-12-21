@@ -6,6 +6,7 @@
 
 (function($) {
     (function() {
+        window.Tags || (window.Tags = {});
         jQuery(function() {
             $.tags = function(element, options) {
                 var key, tag, tagData, value, _i, _len, _ref, _this = this;
@@ -16,6 +17,7 @@
                     value = options[key];
                     this[key] = value;
                 }
+                this.bootstrapVersion || (this.bootstrapVersion = "3");
                 this.readOnly || (this.readOnly = false);
                 this.suggestions || (this.suggestions = []);
                 this.restrictTo = options.restrictTo != null ? options.restrictTo.concat(this.suggestions) : false;
@@ -96,14 +98,14 @@
                 };
                 this.removeTagClicked = function(e) {
                     if (e.currentTarget.tagName === "A") {
-                        _this.removeTag(e.currentTarget.previousSibling.textContent);
+                        _this.removeTag($("span", e.currentTarget.parentElement).html());
                         $(e.currentTarget.parentNode).remove();
                     }
                     return _this;
                 };
                 this.removeLastTag = function() {
                     var el;
-                    el = $(".tag", _this.$element).last();
+                    el = _this.$(".tag").last();
                     el.remove();
                     _this.removeTag(_this.tagsArray[_this.tagsArray.length - 1]);
                     return _this;
@@ -219,12 +221,14 @@
                     _this.suggestionList = [];
                     $.each(_this.suggestions, function(i, suggestion) {
                         if (_this.tagsArray.indexOf(suggestion) < 0 && suggestion.substring(0, val.length) === val && (val.length > 0 || overrideLengthCheck)) {
-                            _this.$suggestionList.append('<li class="tags-suggestion">' + suggestion + "</li>");
+                            _this.$suggestionList.append(_this.template("tags_suggestion", {
+                                suggestion: suggestion
+                            }));
                             return _this.suggestionList.push(suggestion);
                         }
                     });
-                    $(".tags-suggestion", _this.$element).mouseover(_this.selectSuggestedMouseOver);
-                    $(".tags-suggestion", _this.$element).click(_this.suggestedClicked);
+                    _this.$(".tags-suggestion").mouseover(_this.selectSuggestedMouseOver);
+                    _this.$(".tags-suggestion").click(_this.suggestedClicked);
                     if (_this.suggestionList.length > 0) {
                         return _this.showSuggestions();
                     } else {
@@ -243,12 +247,12 @@
                     return _this.hideSuggestions();
                 };
                 this.hideSuggestions = function() {
-                    return $(".tags-suggestion-list", _this.$element).css({
+                    return _this.$(".tags-suggestion-list").css({
                         display: "none"
                     });
                 };
                 this.showSuggestions = function() {
-                    return $(".tags-suggestion-list", _this.$element).css({
+                    return _this.$(".tags-suggestion-list").css({
                         display: "block"
                     });
                 };
@@ -256,7 +260,7 @@
                     $(".tags-suggestion").removeClass("tags-suggestion-highlighted");
                     $(e.target).addClass("tags-suggestion-highlighted");
                     $(e.target).mouseout(_this.selectSuggestedMousedOut);
-                    return _this.suggestedIndex = $(".tags-suggestion", _this.$element).index($(e.target));
+                    return _this.suggestedIndex = _this.$(".tags-suggestion").index($(e.target));
                 };
                 this.selectSuggestedMousedOut = function(e) {
                     return $(e.target).removeClass("tags-suggestion-highlighted");
@@ -264,29 +268,29 @@
                 this.selectSuggested = function(i) {
                     var tagElement;
                     $(".tags-suggestion").removeClass("tags-suggestion-highlighted");
-                    tagElement = $(".tags-suggestion", _this.$element).eq(i);
+                    tagElement = _this.$(".tags-suggestion").eq(i);
                     return tagElement.addClass("tags-suggestion-highlighted");
                 };
                 this.scrollSuggested = function(i) {
                     var pos, tagElement, topElement, topPos;
-                    tagElement = $(".tags-suggestion", _this.$element).eq(i);
-                    topElement = $(".tags-suggestion", _this.$element).eq(0);
+                    tagElement = _this.$(".tags-suggestion").eq(i);
+                    topElement = _this.$(".tags-suggestion").eq(0);
                     pos = tagElement.position();
                     topPos = topElement.position();
                     if (pos != null) {
-                        return $(".tags-suggestion-list", _this.$element).scrollTop(pos.top - topPos.top);
+                        return _this.$(".tags-suggestion-list").scrollTop(pos.top - topPos.top);
                     }
                 };
                 this.adjustInputPosition = function() {
                     var pBottom, pLeft, pTop, pWidth, tagElement, tagPosition;
-                    tagElement = $(".tag", _this.$element).last();
+                    tagElement = _this.$(".tag").last();
                     tagPosition = tagElement.position();
                     pLeft = tagPosition != null ? tagPosition.left + tagElement.outerWidth(true) : 0;
                     pTop = tagPosition != null ? tagPosition.top : 0;
                     pWidth = _this.$element.width() - pLeft;
                     $(".tags-input", _this.$element).css({
-                        paddingLeft: pLeft,
-                        paddingTop: pTop,
+                        paddingLeft: Math.max(pLeft, 0),
+                        paddingTop: Math.max(pTop, 0),
                         width: pWidth
                     });
                     pBottom = tagPosition != null ? tagPosition.top + tagElement.outerHeight(true) : 22;
@@ -296,7 +300,7 @@
                 };
                 this.renderTags = function() {
                     var tagList;
-                    tagList = $(".tags", _this.$element);
+                    tagList = _this.$(".tags");
                     tagList.html("");
                     _this.input.attr("placeholder", _this.tagsArray.length === 0 ? _this.promptText : "");
                     $.each(_this.tagsArray, function(i, tag) {
@@ -313,10 +317,10 @@
                 };
                 this.renderReadOnly = function() {
                     var tagList;
-                    tagList = $(".tags", _this.$element);
+                    tagList = _this.$(".tags");
                     tagList.html(_this.tagsArray.length === 0 ? _this.readOnlyEmptyMessage : "");
                     return $.each(_this.tagsArray, function(i, tag) {
-                        tag = $(_this.formatTagReadOnly(i, tag));
+                        tag = $(_this.formatTag(i, tag, true));
                         if (_this.displayPopovers) {
                             _this.initializePopoverFor(tag, _this.tagsArray[i], _this.popoverArray[i]);
                         }
@@ -351,34 +355,39 @@
                         opacity: opacity
                     });
                 };
-                this.formatTag = function(i, tag) {
-                    var tag_data;
-                    tag_data = tag.replace("<", "&lt;").replace(">", "&gt;");
-                    if (_this.displayPopovers === true) {
-                        return "<div class='tag label " + _this.tagClass + "' rel='popover'><span>" + tag_data + "</span><a> <i class='icon-remove-sign icon-white'></i></a></div>";
-                    } else {
-                        return "<div class='tag label " + _this.tagClass + "'><span>" + tag_data + "</span><a> <i class='icon-remove-sign icon-white'></i></a></div>";
+                this.formatTag = function(i, tag, isReadOnly) {
+                    var escapedTag;
+                    if (isReadOnly == null) {
+                        isReadOnly = false;
                     }
-                };
-                this.formatTagReadOnly = function(i, tag) {
-                    var tag_data;
-                    tag_data = tag.replace("<", "&lt;").replace(">", "&gt;");
-                    if (_this.displayPopovers === true) {
-                        return "<div class='tag label " + _this.tagClass + "' rel='popover'><span>&nbsp;" + tag_data + "&nbsp;</span></div>";
-                    } else {
-                        return "<div class='tag label " + _this.tagClass + "'><span>&nbsp;" + tag_data + "&nbsp;</span></div>";
-                    }
+                    escapedTag = tag.replace("<", "&lt;").replace(">", "&gt;");
+                    return _this.template("tag", {
+                        tag: escapedTag,
+                        tagClass: _this.tagClass,
+                        isPopover: _this.displayPopovers,
+                        isReadOnly: isReadOnly
+                    });
                 };
                 this.addDocumentListeners = function() {
                     return $(document).mouseup(function(e) {
                         var container;
-                        container = $(".tags-suggestion-list", _this.$element);
+                        container = _this.$(".tags-suggestion-list");
                         if (container.has(e.target).length === 0) {
                             return _this.hideSuggestions();
                         }
                     });
                 };
+                this.template = function(name, options) {
+                    return Tags.Templates.Template(this.getBootstrapVersion(), name, options);
+                };
+                this.$ = function(selector) {
+                    return $(selector, this.$element);
+                };
+                this.getBootstrapVersion = function() {
+                    return Tags.bootstrapVersion || this.bootstrapVersion;
+                };
                 this.init = function() {
+                    this.$element.addClass("bootstrap-tags").addClass("bootstrap-" + this.getBootstrapVersion());
                     if (this.readOnly) {
                         this.renderReadOnly();
                         this.removeTag = function() {};
@@ -389,11 +398,11 @@
                         this.renameTag = function() {};
                         return this.setPopover = function() {};
                     } else {
-                        this.input = $("<input type='text' class='tags-input'>");
+                        this.input = $(this.template("input"));
                         this.input.keydown(this.keyDownHandler);
                         this.input.keyup(this.keyUpHandler);
                         this.$element.append(this.input);
-                        this.$suggestionList = $('<ul class="tags-suggestion-list dropdown-menu"></ul>');
+                        this.$suggestionList = $(this.template("suggestion_list"));
                         this.$element.append(this.$suggestionList);
                         this.renderTags();
                         return this.addDocumentListeners();
@@ -419,5 +428,108 @@
                 return tagsObject;
             };
         });
+    }).call(this);
+    (function() {
+        window.Tags || (window.Tags = {});
+        Tags.Helpers || (Tags.Helpers = {});
+        Tags.Helpers.addPadding = function(string, amount, doPadding) {
+            if (amount == null) {
+                amount = 1;
+            }
+            if (doPadding == null) {
+                doPadding = true;
+            }
+            if (!doPadding) {
+                return string;
+            }
+            if (amount === 0) {
+                return string;
+            }
+            return Tags.Helpers.addPadding("&nbsp" + string + "&nbsp", amount - 1);
+        };
+    }).call(this);
+    (function() {
+        var _base;
+        window.Tags || (window.Tags = {});
+        Tags.Templates || (Tags.Templates = {});
+        (_base = Tags.Templates)["2"] || (_base["2"] = {});
+        Tags.Templates["2"].input = function(options) {
+            if (options == null) {
+                options = {};
+            }
+            return "<input type='text' class='tags-input' />";
+        };
+    }).call(this);
+    (function() {
+        var _base;
+        window.Tags || (window.Tags = {});
+        Tags.Templates || (Tags.Templates = {});
+        (_base = Tags.Templates)["2"] || (_base["2"] = {});
+        Tags.Templates["2"].tag = function(options) {
+            if (options == null) {
+                options = {};
+            }
+            return "<div class='tag label " + options.tagClass + "' " + (options.isPopover ? "rel='popover'" : "") + ">    <span>" + Tags.Helpers.addPadding(options.tag, 2, options.isReadOnly) + "</span>    " + (options.isReadOnly ? "" : "<a><i class='icon-remove-sign icon-white' /></a>") + "  </div>";
+        };
+    }).call(this);
+    (function() {
+        var _base;
+        window.Tags || (window.Tags = {});
+        Tags.Templates || (Tags.Templates = {});
+        (_base = Tags.Templates)["3"] || (_base["3"] = {});
+        Tags.Templates["3"].input = function(options) {
+            if (options == null) {
+                options = {};
+            }
+            return "<input type='text' class='form-control tags-input' />";
+        };
+    }).call(this);
+    (function() {
+        var _base;
+        window.Tags || (window.Tags = {});
+        Tags.Templates || (Tags.Templates = {});
+        (_base = Tags.Templates)["3"] || (_base["3"] = {});
+        Tags.Templates["3"].tag = function(options) {
+            if (options == null) {
+                options = {};
+            }
+            return "<div class='tag label " + options.tagClass + "' " + (options.isPopover ? "rel='popover'" : "") + ">    <span>" + Tags.Helpers.addPadding(options.tag, 2, options.isReadOnly) + "</span>    " + (options.isReadOnly ? "" : "<a><i class='glyphicon glyphicon-remove-sign glyphicon-white' /></a>") + "  </div>";
+        };
+    }).call(this);
+    (function() {
+        var _base;
+        window.Tags || (window.Tags = {});
+        Tags.Templates || (Tags.Templates = {});
+        (_base = Tags.Templates).shared || (_base.shared = {});
+        Tags.Templates.shared.suggestion_list = function(options) {
+            if (options == null) {
+                options = {};
+            }
+            return '<ul class="tags-suggestion-list dropdown-menu"></ul>';
+        };
+    }).call(this);
+    (function() {
+        var _base;
+        window.Tags || (window.Tags = {});
+        Tags.Templates || (Tags.Templates = {});
+        (_base = Tags.Templates).shared || (_base.shared = {});
+        Tags.Templates.shared.tags_suggestion = function(options) {
+            if (options == null) {
+                options = {};
+            }
+            return "<li class='tags-suggestion'>" + options.suggestion + "</li>";
+        };
+    }).call(this);
+    (function() {
+        window.Tags || (window.Tags = {});
+        Tags.Templates || (Tags.Templates = {});
+        Tags.Templates.Template = function(version, templateName, options) {
+            if (Tags.Templates[version] != null) {
+                if (Tags.Templates[version][templateName] != null) {
+                    return Tags.Templates[version][templateName](options);
+                }
+            }
+            return Tags.Templates.shared[templateName](options);
+        };
     }).call(this);
 })(window.jQuery);

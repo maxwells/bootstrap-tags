@@ -2,12 +2,16 @@
 # Max Lahey
 # November, 2012
 
+window.Tags ||= {}
+
 jQuery ->
   $.tags = (element, options = {}) ->
 
     # set options for tags
     for key, value of options
       this[key] = value
+
+    @bootstrapVersion ||= "3"
 
     # set defaults if no option was set
     @readOnly ||= false
@@ -38,7 +42,7 @@ jQuery ->
     @pressedUp ||= (e) ->
 
     # hang on to so we know who we are
-    @$element = $ element
+    @$element = $(element)
 
     # tagsArray is list of tags -> define it based on what may or may not be in the dom element
     if options.tagData?
@@ -87,13 +91,13 @@ jQuery ->
     # removeTagClicked is called when user clicks remove tag anchor (x)
     @removeTagClicked = (e) => # 
       if e.currentTarget.tagName == "A"
-        @removeTag e.currentTarget.previousSibling.textContent
+        @removeTag $("span", e.currentTarget.parentElement).html()
         $(e.currentTarget.parentNode).remove()
       @
 
     # removeLastTag is called when user presses delete on empty input.
     @removeLastTag = => 
-      el = $('.tag', @$element).last()
+      el = @$('.tag').last()
       el.remove()
       @removeTag @tagsArray[@tagsArray.length-1]
       @
@@ -202,10 +206,11 @@ jQuery ->
       @suggestionList = []
       $.each @suggestions, (i, suggestion) =>
         if @tagsArray.indexOf(suggestion) < 0 and suggestion.substring(0, val.length) == val and (val.length > 0 or overrideLengthCheck)
-          @$suggestionList.append '<li class="tags-suggestion">'+suggestion+'</li>'
+          @$suggestionList.append @template 'tags_suggestion',
+            suggestion: suggestion
           @suggestionList.push suggestion
-      $('.tags-suggestion', @$element).mouseover @selectSuggestedMouseOver
-      $('.tags-suggestion', @$element).click @suggestedClicked
+      @$('.tags-suggestion').mouseover @selectSuggestedMouseOver
+      @$('.tags-suggestion').click @suggestedClicked
       if @suggestionList.length > 0
         @showSuggestions()
       else
@@ -231,20 +236,20 @@ jQuery ->
     # - user selects a suggestion
     # - user presses escape
     @hideSuggestions = =>
-      $('.tags-suggestion-list', @$element).css display: "none"
+      @$('.tags-suggestion-list').css display: "none"
 
     # showSuggetions is called when:
     # - user types in start of a suggested tag
     # - user presses down arrow in empty text input
     @showSuggestions = =>
-      $('.tags-suggestion-list', @$element).css display: "block"
+      @$('.tags-suggestion-list').css display: "block"
 
     # selectSuggestedMouseOver triggered when user mouses over suggestion
     @selectSuggestedMouseOver = (e) =>
       $('.tags-suggestion').removeClass('tags-suggestion-highlighted')
       $(e.target).addClass('tags-suggestion-highlighted')
       $(e.target).mouseout @selectSuggestedMousedOut
-      @suggestedIndex = $('.tags-suggestion', @$element).index($(e.target))
+      @suggestedIndex = @$('.tags-suggestion').index($(e.target))
 
     # selectSuggestedMouseOver triggered when user mouses out of suggestion
     @selectSuggestedMousedOut = (e) =>
@@ -254,37 +259,36 @@ jQuery ->
     # a suggestions list (to highlight whatever the specified index is)
     @selectSuggested = (i) =>
       $('.tags-suggestion').removeClass('tags-suggestion-highlighted')
-      tagElement = $('.tags-suggestion', @$element).eq(i)
+      tagElement = @$('.tags-suggestion').eq(i)
       tagElement.addClass 'tags-suggestion-highlighted'
 
     # scrollSuggested is called from up and down arrow key presses
     # to scroll the suggestions list so that the selected index is always visible
     @scrollSuggested = (i) =>
-      tagElement = $('.tags-suggestion', @$element).eq i
-      topElement = $('.tags-suggestion', @$element).eq 0
+      tagElement = @$('.tags-suggestion').eq i
+      topElement = @$('.tags-suggestion').eq 0
       pos = tagElement.position()
       topPos = topElement.position()
-      #if pos? and topPos?
-      $('.tags-suggestion-list', @$element).scrollTop pos.top - topPos.top if pos?
+      @$('.tags-suggestion-list').scrollTop pos.top - topPos.top if pos?
 
     # adjustInputPadding adjusts padding of input so that what the
     # user types shows up next to last tag (or on new line if insufficient space)
     @adjustInputPosition = =>
-      tagElement = $('.tag', @$element).last()
+      tagElement = @$('.tag').last()
       tagPosition = tagElement.position()
       pLeft = if tagPosition? then tagPosition.left + tagElement.outerWidth(true) else 0
       pTop = if tagPosition? then tagPosition.top else 0
       pWidth = @$element.width() - pLeft
       $('.tags-input', @$element).css
-        paddingLeft : pLeft
-        paddingTop  : pTop
+        paddingLeft : Math.max pLeft, 0
+        paddingTop  : Math.max pTop, 0
         width       : pWidth
       pBottom = if tagPosition? then tagPosition.top + tagElement.outerHeight(true) else 22  
       @$element.css paddingBottom : pBottom - @$element.height()
 
     # renderTags renders tags...
     @renderTags = =>
-      tagList = $('.tags',@$element)
+      tagList = @$('.tags')
       tagList.html('')
       @input.attr 'placeholder', (if @tagsArray.length == 0 then @promptText else '')
       $.each @tagsArray, (i, tag) =>
@@ -297,10 +301,10 @@ jQuery ->
       @adjustInputPosition()
 
     @renderReadOnly = =>
-      tagList = $('.tags',@$element)
+      tagList = @$('.tags')
       tagList.html (if @tagsArray.length == 0 then @readOnlyEmptyMessage else '')
       $.each @tagsArray, (i, tag) =>
-        tag = $(@formatTagReadOnly i, tag)
+        tag = $(@formatTag i, tag, true)
         @initializePopoverFor(tag, @tagsArray[i], @popoverArray[i]) if @displayPopovers
         tagList.append tag
 
@@ -332,28 +336,31 @@ jQuery ->
       tagAnchor.css opacity:opacity 
 
     # formatTag spits out the html for a tag (with or without it's popovers)
-    @formatTag = (i, tag) =>
-      tag_data = tag.replace("<",'&lt;').replace(">",'&gt;')
-      if @displayPopovers == true # then attach popover data
-        "<div class='tag label "+@tagClass+"' rel='popover'><span>"+tag_data+"</span><a> <i class='icon-remove-sign icon-white'></i></a></div>"
-      else
-        "<div class='tag label "+@tagClass+"'><span>"+tag_data+"</span><a> <i class='icon-remove-sign icon-white'></i></a></div>"
-
-    @formatTagReadOnly = (i, tag) =>
-      tag_data = tag.replace("<",'&lt;').replace(">",'&gt;')
-      if @displayPopovers == true # then attach popover data
-        "<div class='tag label "+@tagClass+"' rel='popover'><span>&nbsp;"+tag_data+"&nbsp;</span></div>"
-      else
-        "<div class='tag label "+@tagClass+"'><span>&nbsp;"+tag_data+"&nbsp;</span></div>"
+    @formatTag = (i, tag, isReadOnly = false) =>
+      escapedTag = tag.replace("<",'&lt;').replace(">",'&gt;')
+      @template "tag",
+        tag: escapedTag
+        tagClass: @tagClass
+        isPopover: @displayPopovers
+        isReadOnly: isReadOnly
 
     @addDocumentListeners = =>
       $(document).mouseup (e) =>
-        container = $('.tags-suggestion-list', @$element)
+        container = @$('.tags-suggestion-list')
         if container.has(e.target).length == 0
           @hideSuggestions()
 
+    @template = (name, options) ->
+      Tags.Templates.Template(@getBootstrapVersion(), name, options)
+
+    @$ = (selector) ->
+      $(selector, @$element)
+
+    @getBootstrapVersion = -> Tags.bootstrapVersion or @bootstrapVersion
+
     @init = ->
       # build out tags from specified markup
+      @$element.addClass("bootstrap-tags").addClass("bootstrap-#{@getBootstrapVersion()}")
       if @readOnly
         @renderReadOnly()
         # unexpose exposed functions to add & remove functions
@@ -365,11 +372,11 @@ jQuery ->
         @renameTag = ->
         @setPopover = ->
       else
-        @input = $ "<input type='text' class='tags-input'>"
+        @input = $(@template("input"))
         @input.keydown @keyDownHandler
         @input.keyup @keyUpHandler
         @$element.append @input
-        @$suggestionList = $ '<ul class="tags-suggestion-list dropdown-menu"></ul>'
+        @$suggestionList = $(@template("suggestion_list"))
         @$element.append @$suggestionList
         # show it
         @renderTags()

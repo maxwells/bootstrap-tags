@@ -1,11 +1,11 @@
 # Boostrap Tags
 
-Bootstrap tags is a lightweight jQuery plugin meant to extend the Twitter Bootstrap UI to include tagging.
+Bootstrap tags is a lightweight jQuery plugin meant to extend the Twitter Bootstrap UI to include tagging. It supports Bootstrap 2.3.2 and ≥ 3.0 with the same codebase.
 
 [![Build Status](https://travis-ci.org/maxwells/bootstrap-tags.png?branch=master)](https://travis-ci.org/maxwells/bootstrap-tags)
 
 ## Demo
-[http://maxwells.github.com/bootstrap-tags.html	](http://maxwells.github.com/bootstrap-tags.html)
+[http://maxwells.github.com/bootstrap-tags.html](http://maxwells.github.com/bootstrap-tags.html)
 
 ## Installation
 
@@ -17,6 +17,7 @@ or
 	--> JS files are located in bootstrap-tags/dist, CSS files in bootstrap-tags/css
 
 ## Features
+- Support for Bootstrap 2.3.2 or 3+
 - Autosuggest (for typing or activated by pressing the down key when empty)
 - Bootstrap Popovers (for extended information on a tag)
 - Exclusions (denial of a specified list)
@@ -30,6 +31,8 @@ or
 	<div id="my-tag-list" class="tag-list"><div class="tags"></div></div>
 	<script>
 		$(function()) {
+			// If using Bootstrap 2, be sure to include:
+			// Tags.bootstrapVersion = "2";
 			$('#my-tag-list').tags({
 				tagData:["boilerplate", "tags"],
 				suggestions:["basic", "suggestions"],
@@ -134,3 +137,13 @@ _To build continously_:
 ### Testing
 
 	$ grunt test
+
+### Todos
+
+1. Create `CONTRIBUTING` file
+1. Fix `excludes`
+1. Giant refactor into constituent parts and/or a framework; the existing code base is difficult to extend
+
+### License
+
+This project rocks and uses the MIT-LICENSE.
