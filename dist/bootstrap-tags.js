@@ -98,7 +98,7 @@
                 };
                 this.removeTagClicked = function(e) {
                     if (e.currentTarget.tagName === "A") {
-                        _this.removeTag(e.currentTarget.previousSibling.textContent);
+                        _this.removeTag($("span", e.currentTarget.parentElement).html());
                         $(e.currentTarget.parentNode).remove();
                     }
                     return _this;
