@@ -21,6 +21,7 @@ jQuery ->
     @displayPopovers = (if options.popovers? then true else options.popoverData?)
     @popoverTrigger ||= 'hover'
     @tagClass ||= 'btn-info'
+    @tagSize ||= 'md'
     @promptText ||= 'Enter tags...'
     @readOnlyEmptyMessage ||= 'No tags to display...'
 
@@ -343,6 +344,7 @@ jQuery ->
         tagClass: @tagClass
         isPopover: @displayPopovers
         isReadOnly: isReadOnly
+        tagSize: @tagSize
 
     @addDocumentListeners = =>
       $(document).mouseup (e) =>
@@ -358,9 +360,13 @@ jQuery ->
 
     @getBootstrapVersion = -> Tags.bootstrapVersion or @bootstrapVersion
 
+    @initializeDom = ->
+      @$element.append @template("tags_container")
+
     @init = ->
       # build out tags from specified markup
       @$element.addClass("bootstrap-tags").addClass("bootstrap-#{@getBootstrapVersion()}")
+      @initializeDom()
       if @readOnly
         @renderReadOnly()
         # unexpose exposed functions to add & remove functions
@@ -372,7 +378,8 @@ jQuery ->
         @renameTag = ->
         @setPopover = ->
       else
-        @input = $(@template("input"))
+        @input = $ @template "input",
+          tagSize: @tagSize
         @input.keydown @keyDownHandler
         @input.keyup @keyUpHandler
         @$element.append @input

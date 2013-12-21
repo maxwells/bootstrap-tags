@@ -25,6 +25,7 @@
                 this.displayPopovers = options.popovers != null ? true : options.popoverData != null;
                 this.popoverTrigger || (this.popoverTrigger = "hover");
                 this.tagClass || (this.tagClass = "btn-info");
+                this.tagSize || (this.tagSize = "md");
                 this.promptText || (this.promptText = "Enter tags...");
                 this.readOnlyEmptyMessage || (this.readOnlyEmptyMessage = "No tags to display...");
                 this.beforeAddingTag || (this.beforeAddingTag = function(tag) {});
@@ -365,7 +366,8 @@
                         tag: escapedTag,
                         tagClass: _this.tagClass,
                         isPopover: _this.displayPopovers,
-                        isReadOnly: isReadOnly
+                        isReadOnly: isReadOnly,
+                        tagSize: _this.tagSize
                     });
                 };
                 this.addDocumentListeners = function() {
@@ -386,8 +388,12 @@
                 this.getBootstrapVersion = function() {
                     return Tags.bootstrapVersion || this.bootstrapVersion;
                 };
+                this.initializeDom = function() {
+                    return this.$element.append(this.template("tags_container"));
+                };
                 this.init = function() {
                     this.$element.addClass("bootstrap-tags").addClass("bootstrap-" + this.getBootstrapVersion());
+                    this.initializeDom();
                     if (this.readOnly) {
                         this.renderReadOnly();
                         this.removeTag = function() {};
@@ -398,7 +404,9 @@
                         this.renameTag = function() {};
                         return this.setPopover = function() {};
                     } else {
-                        this.input = $(this.template("input"));
+                        this.input = $(this.template("input", {
+                            tagSize: this.tagSize
+                        }));
                         this.input.keydown(this.keyDownHandler);
                         this.input.keyup(this.keyUpHandler);
                         this.$element.append(this.input);
@@ -454,10 +462,23 @@
         Tags.Templates || (Tags.Templates = {});
         (_base = Tags.Templates)["2"] || (_base["2"] = {});
         Tags.Templates["2"].input = function(options) {
+            var tagSize;
             if (options == null) {
                 options = {};
             }
-            return "<input type='text' class='tags-input' />";
+            tagSize = function() {
+                switch (options.tagSize) {
+                  case "sm":
+                    return "small";
+
+                  case "md":
+                    return "medium";
+
+                  case "lg":
+                    return "large";
+                }
+            }();
+            return "<input type='text' class='tags-input input-" + tagSize + "' />";
         };
     }).call(this);
     (function() {
@@ -469,7 +490,7 @@
             if (options == null) {
                 options = {};
             }
-            return "<div class='tag label " + options.tagClass + "' " + (options.isPopover ? "rel='popover'" : "") + ">    <span>" + Tags.Helpers.addPadding(options.tag, 2, options.isReadOnly) + "</span>    " + (options.isReadOnly ? "" : "<a><i class='icon-remove-sign icon-white' /></a>") + "  </div>";
+            return "<div class='tag label " + options.tagClass + " " + options.tagSize + "' " + (options.isPopover ? "rel='popover'" : "") + ">    <span>" + Tags.Helpers.addPadding(options.tag, 2, options.isReadOnly) + "</span>    " + (options.isReadOnly ? "" : "<a><i class='remove icon-remove-sign icon-white' /></a>") + "  </div>";
         };
     }).call(this);
     (function() {
@@ -481,7 +502,7 @@
             if (options == null) {
                 options = {};
             }
-            return "<input type='text' class='form-control tags-input' />";
+            return "<input type='text' class='form-control tags-input input-" + options.tagSize + "' />";
         };
     }).call(this);
     (function() {
@@ -493,7 +514,7 @@
             if (options == null) {
                 options = {};
             }
-            return "<div class='tag label " + options.tagClass + "' " + (options.isPopover ? "rel='popover'" : "") + ">    <span>" + Tags.Helpers.addPadding(options.tag, 2, options.isReadOnly) + "</span>    " + (options.isReadOnly ? "" : "<a><i class='glyphicon glyphicon-remove-sign glyphicon-white' /></a>") + "  </div>";
+            return "<div class='tag label " + options.tagClass + " " + options.tagSize + "' " + (options.isPopover ? "rel='popover'" : "") + ">    <span>" + Tags.Helpers.addPadding(options.tag, 2, options.isReadOnly) + "</span>    " + (options.isReadOnly ? "" : "<a><i class='remove glyphicon glyphicon-remove-sign glyphicon-white' /></a>") + "  </div>";
         };
     }).call(this);
     (function() {
@@ -506,6 +527,18 @@
                 options = {};
             }
             return '<ul class="tags-suggestion-list dropdown-menu"></ul>';
+        };
+    }).call(this);
+    (function() {
+        var _base;
+        window.Tags || (window.Tags = {});
+        Tags.Templates || (Tags.Templates = {});
+        (_base = Tags.Templates).shared || (_base.shared = {});
+        Tags.Templates.shared.tags_container = function(options) {
+            if (options == null) {
+                options = {};
+            }
+            return '<div class="tags"></div>';
         };
     }).call(this);
     (function() {
