@@ -60,6 +60,10 @@ module.exports = function(grunt) {
       buildSpec: {
         files: specCoffeeFiles,
         tasks: ['build', 'jasmine:test']
+      },
+      buildCss: {
+        files: ['sass/bootstrap-tags.scss'],
+        tasks: ['sass']
       }
     },
 
@@ -97,6 +101,14 @@ module.exports = function(grunt) {
           }
         }
       }
+    },
+
+    sass: {
+      dist: {
+        files: {
+          'css/bootstrap-tags.css': 'sass/bootstrap-tags.scss'
+        }
+      }
     }
 
   });
@@ -115,4 +127,5 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-coffee');
   grunt.loadNpmTasks('grunt-contrib-jasmine');
+  grunt.loadNpmTasks('grunt-contrib-sass');
 }
