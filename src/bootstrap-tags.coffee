@@ -353,7 +353,7 @@ jQuery ->
           @hideSuggestions()
 
     @template = (name, options) ->
-      Tags.Templates.Template(@bootstrapVersion, name, options)
+      Tags.Templates.Template(Tags.bootstrapVersion or @bootstrapVersion, name, options)
 
     @init = ->
       # build out tags from specified markup

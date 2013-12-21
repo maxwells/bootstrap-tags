@@ -379,7 +379,7 @@
                     });
                 };
                 this.template = function(name, options) {
-                    return Tags.Templates.Template(this.bootstrapVersion, name, options);
+                    return Tags.Templates.Template(Tags.bootstrapVersion || this.bootstrapVersion, name, options);
                 };
                 this.init = function() {
                     if (this.readOnly) {
