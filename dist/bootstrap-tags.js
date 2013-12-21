@@ -424,6 +424,25 @@
         });
     }).call(this);
     (function() {
+        window.Tags || (window.Tags = {});
+        Tags.Helpers || (Tags.Helpers = {});
+        Tags.Helpers.addPadding = function(string, amount, doPadding) {
+            if (amount == null) {
+                amount = 1;
+            }
+            if (doPadding == null) {
+                doPadding = true;
+            }
+            if (!doPadding) {
+                return string;
+            }
+            if (amount === 0) {
+                return string;
+            }
+            return Tags.Helpers.addPadding("&nbsp" + string + "&nbsp", amount - 1);
+        };
+    }).call(this);
+    (function() {
         var _base;
         window.Tags || (window.Tags = {});
         Tags.Templates || (Tags.Templates = {});
@@ -444,7 +463,7 @@
             if (options == null) {
                 options = {};
             }
-            return "<div class='tag label " + options.tagClass + "' " + (options.isPopover ? "rel='popover'" : "") + ">    <span>" + options.tag + "</span>    " + (options.isReadOnly ? "" : "<a><i class='icon-remove-sign icon-white' /></a>") + "  </div>";
+            return "<div class='tag label " + options.tagClass + "' " + (options.isPopover ? "rel='popover'" : "") + ">    <span>" + Tags.Helpers.addPadding(options.tag, 2, options.isReadOnly) + "</span>    " + (options.isReadOnly ? "" : "<a><i class='icon-remove-sign icon-white' /></a>") + "  </div>";
         };
     }).call(this);
     (function() {
@@ -468,7 +487,7 @@
             if (options == null) {
                 options = {};
             }
-            return "<div class='tag label " + options.tagClass + "' " + (options.isPopover ? "rel='popover'" : "") + ">    <span>" + options.tag + "</span>    " + (options.isReadOnly ? "" : "<a><i class='glyphicon glyphicon-remove-circle glyphicon-white' /></a>") + "  </div>";
+            return "<div class='tag label " + options.tagClass + "' " + (options.isPopover ? "rel='popover'" : "") + ">    <span>" + Tags.Helpers.addPadding(options.tag, 2, options.isReadOnly) + "</span>    " + (options.isReadOnly ? "" : "<a><i class='glyphicon glyphicon-remove-circle glyphicon-white' /></a>") + "  </div>";
         };
     }).call(this);
     (function() {
