@@ -43,7 +43,6 @@
                 this.pressedDown || (this.pressedDown = function(e) {});
                 this.pressedUp || (this.pressedUp = function(e) {});
                 this.$element = $(element);
-                this.$element.addClass("bootstrap-tags").addClass("bootstrap-" + this.bootstrapVersion);
                 if (options.tagData != null) {
                     this.tagsArray = options.tagData;
                 } else {
@@ -379,9 +378,13 @@
                     });
                 };
                 this.template = function(name, options) {
-                    return Tags.Templates.Template(Tags.bootstrapVersion || this.bootstrapVersion, name, options);
+                    return Tags.Templates.Template(this.getBootstrapVersion(), name, options);
+                };
+                this.getBootstrapVersion = function() {
+                    return Tags.bootstrapVersion || this.bootstrapVersion;
                 };
                 this.init = function() {
+                    this.$element.addClass("bootstrap-tags").addClass("bootstrap-" + this.getBootstrapVersion());
                     if (this.readOnly) {
                         this.renderReadOnly();
                         this.removeTag = function() {};

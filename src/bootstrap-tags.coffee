@@ -43,7 +43,6 @@ jQuery ->
 
     # hang on to so we know who we are
     @$element = $ element
-    @$element.addClass("bootstrap-tags").addClass("bootstrap-#{@bootstrapVersion}")
 
     # tagsArray is list of tags -> define it based on what may or may not be in the dom element
     if options.tagData?
@@ -353,10 +352,13 @@ jQuery ->
           @hideSuggestions()
 
     @template = (name, options) ->
-      Tags.Templates.Template(Tags.bootstrapVersion or @bootstrapVersion, name, options)
+      Tags.Templates.Template(@getBootstrapVersion(), name, options)
+
+    @getBootstrapVersion = -> Tags.bootstrapVersion or @bootstrapVersion
 
     @init = ->
       # build out tags from specified markup
+      @$element.addClass("bootstrap-tags").addClass("bootstrap-#{@getBootstrapVersion()}")
       if @readOnly
         @renderReadOnly()
         # unexpose exposed functions to add & remove functions

@@ -8,9 +8,7 @@
 .bootstrap-tags.bootstrap-3 .tag-data {
   display: none; }
 .bootstrap-tags.bootstrap-3 .tags-input {
-  width: 100%;
   /*height:18px !important; */
-  margin: 0;
   /*padding-bottom:0 !important;*/
   /*font-size:12px !important;*/ }
 .bootstrap-tags.bootstrap-3 .tags {
@@ -39,12 +37,6 @@
   position: relative; }
 .bootstrap-tags.bootstrap-2 .tag-data {
   display: none; }
-.bootstrap-tags.bootstrap-2 .tags-input {
-  width: 100%;
-  height: 18px !important;
-  margin: 0;
-  padding-bottom: 0 !important;
-  font-size: 12px !important; }
 .bootstrap-tags.bootstrap-2 .tags {
   width: inherit;
   height: 0;
@@ -61,11 +53,12 @@
   opacity: .5; }
 
 ul.tags-suggestion-list {
-  width: 100%;
+  width: 300px;
   height: auto;
   list-style: none;
   margin: 0;
-  position: absolute;
+  top: inherit;
+  left: inherit;
   z-index: 2;
   max-height: 160px;
   overflow: scroll; }
