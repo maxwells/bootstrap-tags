@@ -84,7 +84,7 @@ module.exports = function(grunt) {
 
     jasmine: {
       test: {
-        src: './dist/bootstrap-tags.js',
+        src: './dist/js/bootstrap-tags.js',
         options: {
           specs: 'spec/*spec.js',
           keepRunner: false,
