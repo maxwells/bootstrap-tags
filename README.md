@@ -58,6 +58,7 @@ option | type | description | default
 -------|------|-------------|---------
 `bootstrapVersion` | `String` | specify which version of bootstrap to format generated HTML for. Acceptable values are "2", "3" | `3`
 `tagData` | `Array` | a list of tags to initialize the tagging interace with | `[]`
+`tagSize` | `String` | describes what size input to use. Acceptable values are "lg", "md", or "sm" | `md`
 `readOnly` | `boolean` | whether or not to disable user input | `false`
 `suggestions` | `Array` | a list of terms that will populate the autosuggest feature when a user types in the first character. | `[]`
 `caseInsensitive` | `Boolean` | whether or not autosuggest should ignore case sensitivity | `false`
