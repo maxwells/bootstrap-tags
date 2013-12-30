@@ -14,7 +14,7 @@ Bootstrap Tags is a jQuery plugin meant to extend Twitter Bootstrap to include t
 or
 
 	$ git clone https://github.com/maxwells/bootstrap-tags.git
-	--> JS files are located in bootstrap-tags/dist, CSS files in bootstrap-tags/css
+	--> js files are located in dist/js, CSS in dist/css
 
 ## Features
 - Support for Bootstrap 2.3.2 and 3+
@@ -129,11 +129,6 @@ If you want to hack away to provide a new feature/bug-fix, please follow these g
 
 - Make changes to the coffeescript and sass files, not js/css. This is to ensure that the next person who comes in and edits upstream from js/css will not overwrite your changes.
 - Create a pull request for your feature branch, updating README documentation if necessary
-
-### Todos
-
-1. Refactor into constituent parts and/or a framework; the existing code base is difficult to extend
-1. consider how initializing tags with popovers should work -> I don't like the parallel arrays.
 
 ### License
 
