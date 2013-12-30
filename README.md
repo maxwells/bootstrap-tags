@@ -112,7 +112,7 @@ To reference a tags instance that you've already attached to a selector, (eg. $(
 
 For a one off:
 
-	$ grunt compile
+	$ grunt build
 
 _To build continously_:
 	
