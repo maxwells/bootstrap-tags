@@ -80,6 +80,7 @@ option | type | description | default
 Some functions are chainable (returns a `Tagger` object), and can be used to move the data around outside of the plugin.
 
 function | return type | description
+---------|-------------|-------------
 `hasTag(tag:string)` | `Boolean` | whether tag is in tag list
 `getTags()` | `Array` | a list of tags currently in the interface
 `getTagsWithContent()` | `Array` | a list of javascript objects with a `tag` property and `content` property
