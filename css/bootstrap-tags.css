@@ -5,7 +5,7 @@
   color: #fff; }
 
 .bootstrap-tags.bootstrap-2 .tag.md {
-  padding: .2em .4em .4em; }
+  padding: .3em .4em .4em; }
 .bootstrap-tags.bootstrap-2 .tag.lg {
   padding: .4em .4em .5em; }
 
@@ -25,7 +25,8 @@
     padding: 0;
     height: 1.7em;
     box-sizing: content-box;
-    -webkit-box-sizing: content-box; }
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box; }
   .bootstrap-tags .tag-list {
     width: 280px;
     height: auto;
@@ -34,14 +35,14 @@
     top: 2px;
     position: relative; }
   .bootstrap-tags .tag {
-    padding: .3em .4em .4em;
-    margin: .1em;
+    padding: .4em .4em .4em;
+    margin: 0 .1em;
     float: left; }
   .bootstrap-tags .tag.sm {
+    padding: .4em .4em .5em;
     font-size: 12px; }
   .bootstrap-tags .tag.md {
-    font-size: 14px;
-    padding: .35em .4em .35em; }
+    font-size: 14px; }
   .bootstrap-tags .tag.lg {
     font-size: 18px;
     padding: .4em .4em .4em;
