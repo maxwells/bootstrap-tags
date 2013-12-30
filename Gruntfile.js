@@ -30,7 +30,7 @@ module.exports = function(grunt) {
           compress: false
         },
         src: jsFiles,
-        dest: 'dist/bootstrap-tags.js'
+        dest: 'dist/js/bootstrap-tags.js'
       },
       jsmin: {
         options: {
@@ -38,7 +38,7 @@ module.exports = function(grunt) {
           compress: true
         },
         src: jsFiles,
-        dest: 'dist/bootstrap-tags.min.js'
+        dest: 'dist/js/bootstrap-tags.min.js'
       }
     },
 
@@ -104,7 +104,7 @@ module.exports = function(grunt) {
     sass: {
       dist: {
         files: {
-          'css/bootstrap-tags.css': 'sass/bootstrap-tags.scss'
+          'dist/css/bootstrap-tags.css': 'sass/bootstrap-tags.scss'
         }
       }
     }
