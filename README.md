@@ -29,13 +29,13 @@ or
 ## Implementation
 	<div id="my-tag-list" class="tag-list"><div class="tags"></div></div>
 	<script>
-		$(function()) {
+		$(function() {
 			// If using Bootstrap 2, be sure to include:
 			// Tags.bootstrapVersion = "2";
 			$('#my-tag-list').tags({
 				tagData:["boilerplate", "tags"],
 				suggestions:["basic", "suggestions"],
-				excludeList:["not", "these", "words"],
+				excludeList:["not", "these", "words"]
 			});
 		});
 	</script>
