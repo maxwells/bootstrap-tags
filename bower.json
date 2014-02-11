@@ -8,8 +8,8 @@
   ],
   "description": "Boostrap-themed jquery tag interface",
   "main": [
-    "lib/bootstrap-tags.js",
-    "css/bootstrap-tags.css"
+    "dist/js/bootstrap-tags.js",
+    "dist/css/bootstrap-tags.css"
   ],
   "keywords": [
     "jquery",
