@@ -23,6 +23,10 @@
         <div id="medium"></div>
         <p>readOnly</p>
         <div id="readOnly"></div>
+        <hr/>
+        <p>suggestOnClick</p>
+        <div id="suggestOnClick"></div>
+
 
         <script>
           $(function(){
@@ -43,6 +47,12 @@
             $("#readOnly").tags({
               readOnly: true,
               tagData: ["juliett", "kilo"]
+            });
+            $("#suggestOnClick").tags({
+              restrictTo: ["alpha", "bravo", "charlie", "delta", "echo", "foxtrot", "golf", "hotel", "india"],
+              suggestions: ["alpha", "bravo", "charlie", "delta", "echo", "foxtrot", "golf", "hotel", "india"],
+              promptText: "Click here to add new tags",
+              suggestOnClick: true
             });
           });
         </script>
