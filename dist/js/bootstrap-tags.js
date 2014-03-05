@@ -19,6 +19,7 @@
                 }
                 this.bootstrapVersion || (this.bootstrapVersion = "3");
                 this.readOnly || (this.readOnly = false);
+                this.suggestOnClick || (this.suggestOnClick = false);
                 this.suggestions || (this.suggestions = []);
                 this.restrictTo = options.restrictTo != null ? options.restrictTo.concat(this.suggestions) : false;
                 this.exclude || (this.exclude = false);
@@ -156,6 +157,9 @@
                     _this.popoverArray[_this.tagsArray.indexOf(tag)] = popoverContent;
                     _this.renderTags();
                     return _this;
+                };
+                this.clickHandler = function(e) {
+                    return _this.makeSuggestions(e, true);
                 };
                 this.keyDownHandler = function(e) {
                     var k, numSuggestions;
@@ -422,6 +426,9 @@
                         this.input = $(this.template("input", {
                             tagSize: this.tagSize
                         }));
+                        if (this.suggestOnClick) {
+                            this.input.click(this.clickHandler);
+                        }
                         this.input.keydown(this.keyDownHandler);
                         this.input.keyup(this.keyUpHandler);
                         this.$element.append(this.input);
