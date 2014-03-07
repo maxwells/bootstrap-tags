@@ -15,6 +15,7 @@ jQuery ->
 
     # set defaults if no option was set
     @readOnly ||= false
+    @suggestOnClick ||= false
     @suggestions ||= []
     @restrictTo = (if options.restrictTo? then options.restrictTo.concat @suggestions else false)
     @exclude ||= false
@@ -155,6 +156,9 @@ jQuery ->
     ###########################
     # User Input & Key handlers
     ###########################
+
+    @clickHandler = (e) =>
+        @makeSuggestions e, true
 
     @keyDownHandler = (e) =>
       k = (if e.keyCode? then e.keyCode else e.which)
@@ -385,6 +389,8 @@ jQuery ->
       else
         @input = $ @template "input",
           tagSize: @tagSize
+        if @suggestOnClick
+            @input.click @clickHandler
         @input.keydown @keyDownHandler
         @input.keyup @keyUpHandler
         @$element.append @input
