@@ -69,6 +69,7 @@ option | type | description | default
 `popoverTrigger` | `String` | indicates how popovers should be triggered. Acceptable values are 'click', 'hover', 'hoverShowClickHide' | `hover`
 `tagClass` | `String` | which class the tag div will have for styling | `btn-info`
 `promptText` | `String` | placeholder string when there are no tags and nothing typed in | `Enter tags…`
+`maxNumTags` | `Integer` | Maximum number of allowable (user-added) tags. All tags that are initialized in the tagData property are retained. If set, then input is disabled when the number of tags exceeds this value. | `-1` (no limit)
 `readOnlyEmptyMessage` | `String` | text to be displayed if there are no tags in readonly mode. Can be HTML | `No tags to display...`
 `beforeAddingTag` | `function(String tag)` | anything external you'd like to do with the tag before adding it. Returning false will stop tag from being added | `null`
 `afterAddingTag` | `function(String tag)` | anything external you'd like to do with the tag after adding it | `null`

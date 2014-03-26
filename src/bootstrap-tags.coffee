@@ -26,6 +26,7 @@ jQuery ->
     @promptText ||= 'Enter tags...'
     @caseInsensitive ||= false
     @readOnlyEmptyMessage ||= 'No tags to display...'
+    @maxNumTags ||= -1
 
     # callbacks
     @beforeAddingTag ||= (tag) ->
@@ -100,7 +101,9 @@ jQuery ->
 
     # removeLastTag is called when user presses delete on empty input.
     @removeLastTag = => 
-      @removeTag @tagsArray[@tagsArray.length-1]
+      if @tagsArray.length > 0
+        @removeTag @tagsArray[@tagsArray.length-1]
+        @enableInput() if @canAddByMaxNum()
       @
 
     # removeTag removes specified tag.
@@ -113,25 +116,36 @@ jQuery ->
         @tagsArray.splice(@tagsArray.indexOf(tag), 1)
         @renderTags()
         @afterDeletingTag(tag)
+        @enableInput() if @canAddByMaxNum()
       @
+
+    @canAddByRestriction = (tag) ->
+      (@restrictTo == false or @restrictTo.indexOf(tag) != -1)
+
+    @canAddByExclusion = (tag) ->
+      (@exclude == false || @exclude.indexOf(tag) == -1) and !@excludes(tag)
+
+    @canAddByMaxNum = ->
+      @maxNumTags == -1 or @tagsArray.length < @maxNumTags
 
     # addTag adds the specified tag
     # - Helper method for keyDownHandler and suggestedClicked
     # - exposed: can be called from page javascript
-    @addTag = (tag) => 
-      if (@restrictTo == false or @restrictTo.indexOf(tag) != -1) and @tagsArray.indexOf(tag) < 0 and tag.length > 0 and (@exclude == false || @exclude.indexOf(tag) == -1) and !@excludes(tag)
+    @addTag = (tag) =>
+      if @canAddByRestriction(tag) and !@hasTag(tag) and tag.length > 0 and @canAddByExclusion(tag) and @canAddByMaxNum()
         return if @beforeAddingTag(tag) == false
         associatedContent = @definePopover(tag)
         @popoverArray.push associatedContent or null
         @tagsArray.push tag
         @afterAddingTag(tag)
         @renderTags()
+        @disableInput() unless @canAddByMaxNum()
       @
 
     # addTagWithContent adds the specified tag with associated popover content
     # It is an exposed method: can be called from page javascript
     @addTagWithContent = (tag, content) =>
-      if (@restrictTo == false or @restrictTo.indexOf(tag) != -1) and @tagsArray.indexOf(tag) < 0 and tag.length > 0
+      if @canAddByRestriction(tag) and !@hasTag(tag) and tag.length > 0
         return if @beforeAddingTag(tag) == false
         @tagsArray.push tag
         @popoverArray.push content
@@ -318,6 +332,13 @@ jQuery ->
         @initializePopoverFor(tag, @tagsArray[i], @popoverArray[i]) if @displayPopovers
         tagList.append tag
 
+
+    @disableInput = ->
+      @$('input').prop 'disabled', true
+
+    @enableInput = ->
+      @$('input').prop 'disabled', false
+
     # set up popover for a given tag to be toggled by specific action
     # - 'click': need to click a tag to show/hide popover
     # - 'hover': need to mouseover/out to show/hide popover
@@ -398,6 +419,8 @@ jQuery ->
         @$element.append @$suggestionList
         # show it
         @renderTags()
+
+        @disableInput() unless @canAddByMaxNum()
 
         @addDocumentListeners()
       

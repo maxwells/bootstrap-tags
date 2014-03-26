@@ -159,6 +159,25 @@ describe "Bootstrap Tags", ->
           tagSize: "lg"
         expect($("#tagger2 input").hasClass("input-lg")).toBeTruthy()
 
+    describe "when provided a maxNumTags option", ->
+
+      it "cannot add more tags than maxNumTags", ->
+        tags = newTagger "tagger2",
+          maxNumTags: 3
+          tagData: ["one", "two", "three"]
+        expect(tags.addTag("four").getTags()).toEqual ["one", "two", "three"]
+
+      it "can add tags when numTags is less than maxNumTags", ->
+        tags = newTagger "tagger2",
+          maxNumTags: 3
+          tagData: ["one", "two"]
+        expect(tags.addTag("three").getTags()).toEqual ["one", "two", "three"]
+
+      it "defaults to allow multiple tags", ->
+        tags = newTagger "tagger2",
+          tagData: ["one", "two", "three", "four", "five"]
+        expect(tags.addTag("six").getTags()).toEqual ["one", "two", "three", "four", "five", "six"]
+
     describe "when providing before/after adding/deleting callbacks", ->
 
       describe "when adding tags", ->
