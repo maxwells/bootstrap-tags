@@ -30,6 +30,7 @@
                 this.promptText || (this.promptText = "Enter tags...");
                 this.caseInsensitive || (this.caseInsensitive = false);
                 this.readOnlyEmptyMessage || (this.readOnlyEmptyMessage = "No tags to display...");
+                this.maxNumTags || (this.maxNumTags = -1);
                 this.beforeAddingTag || (this.beforeAddingTag = function(tag) {});
                 this.afterAddingTag || (this.afterAddingTag = function(tag) {});
                 this.beforeDeletingTag || (this.beforeDeletingTag = function(tag) {});
@@ -107,7 +108,12 @@
                     return _this;
                 };
                 this.removeLastTag = function() {
-                    _this.removeTag(_this.tagsArray[_this.tagsArray.length - 1]);
+                    if (_this.tagsArray.length > 0) {
+                        _this.removeTag(_this.tagsArray[_this.tagsArray.length - 1]);
+                        if (_this.canAddByMaxNum()) {
+                            _this.enableInput();
+                        }
+                    }
                     return _this;
                 };
                 this.removeTag = function(tag) {
@@ -119,12 +125,24 @@
                         _this.tagsArray.splice(_this.tagsArray.indexOf(tag), 1);
                         _this.renderTags();
                         _this.afterDeletingTag(tag);
+                        if (_this.canAddByMaxNum()) {
+                            _this.enableInput();
+                        }
                     }
                     return _this;
                 };
+                this.canAddByRestriction = function(tag) {
+                    return this.restrictTo === false || this.restrictTo.indexOf(tag) !== -1;
+                };
+                this.canAddByExclusion = function(tag) {
+                    return (this.exclude === false || this.exclude.indexOf(tag) === -1) && !this.excludes(tag);
+                };
+                this.canAddByMaxNum = function() {
+                    return this.maxNumTags === -1 || this.tagsArray.length < this.maxNumTags;
+                };
                 this.addTag = function(tag) {
                     var associatedContent;
-                    if ((_this.restrictTo === false || _this.restrictTo.indexOf(tag) !== -1) && _this.tagsArray.indexOf(tag) < 0 && tag.length > 0 && (_this.exclude === false || _this.exclude.indexOf(tag) === -1) && !_this.excludes(tag)) {
+                    if (_this.canAddByRestriction(tag) && !_this.hasTag(tag) && tag.length > 0 && _this.canAddByExclusion(tag) && _this.canAddByMaxNum()) {
                         if (_this.beforeAddingTag(tag) === false) {
                             return;
                         }
@@ -133,11 +151,14 @@
                         _this.tagsArray.push(tag);
                         _this.afterAddingTag(tag);
                         _this.renderTags();
+                        if (!_this.canAddByMaxNum()) {
+                            _this.disableInput();
+                        }
                     }
                     return _this;
                 };
                 this.addTagWithContent = function(tag, content) {
-                    if ((_this.restrictTo === false || _this.restrictTo.indexOf(tag) !== -1) && _this.tagsArray.indexOf(tag) < 0 && tag.length > 0) {
+                    if (_this.canAddByRestriction(tag) && !_this.hasTag(tag) && tag.length > 0) {
                         if (_this.beforeAddingTag(tag) === false) {
                             return;
                         }
@@ -347,6 +368,12 @@
                         return tagList.append(tag);
                     });
                 };
+                this.disableInput = function() {
+                    return this.$("input").prop("disabled", true);
+                };
+                this.enableInput = function() {
+                    return this.$("input").prop("disabled", false);
+                };
                 this.initializePopoverFor = function(tag, title, content) {
                     options = {
                         title: title,
@@ -435,6 +462,9 @@
                         this.$suggestionList = $(this.template("suggestion_list"));
                         this.$element.append(this.$suggestionList);
                         this.renderTags();
+                        if (!this.canAddByMaxNum()) {
+                            this.disableInput();
+                        }
                         return this.addDocumentListeners();
                     }
                 };

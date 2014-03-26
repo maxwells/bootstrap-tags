@@ -193,6 +193,31 @@
           return expect($("#tagger2 input").hasClass("input-lg")).toBeTruthy();
         });
       });
+      describe("when provided a maxNumTags option", function() {
+        it("cannot add more tags than maxNumTags", function() {
+          var tags;
+          tags = newTagger("tagger2", {
+            maxNumTags: 3,
+            tagData: ["one", "two", "three"]
+          });
+          return expect(tags.addTag("four").getTags()).toEqual(["one", "two", "three"]);
+        });
+        it("can add tags when numTags is less than maxNumTags", function() {
+          var tags;
+          tags = newTagger("tagger2", {
+            maxNumTags: 3,
+            tagData: ["one", "two"]
+          });
+          return expect(tags.addTag("three").getTags()).toEqual(["one", "two", "three"]);
+        });
+        return it("defaults to allow multiple tags", function() {
+          var tags;
+          tags = newTagger("tagger2", {
+            tagData: ["one", "two", "three", "four", "five"]
+          });
+          return expect(tags.addTag("six").getTags()).toEqual(["one", "two", "three", "four", "five", "six"]);
+        });
+      });
       describe("when providing before/after adding/deleting callbacks", function() {
         describe("when adding tags", function() {
           it("calls beforeAddingTag before a tag is added, providing the tag as first parameter", function() {

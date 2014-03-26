@@ -7,8 +7,8 @@
       <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/css/bootstrap-combined.min.css" rel="stylesheet">
       <script src='http://code.jquery.com/jquery-1.9.1.min.js'></script>
       <script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/js/bootstrap.min.js"></script>
-      <script src='dist/bootstrap-tags.js'></script>
-      <link rel="stylesheet" type="text/css" href="css/bootstrap-tags.css" />
+      <script src='dist/js/bootstrap-tags.js'></script>
+      <link rel="stylesheet" type="text/css" href="dist/css/bootstrap-tags.css" />
    </head>
    <body>
       <div class="container">
@@ -21,6 +21,10 @@
         <div id="large"></div>
         <p>Medium</p>
         <div id="medium"></div>
+        <p>maxNumTags = 3</p>
+        <div id="maxNumTags"></div>
+        <p>suggestOnClick</p>
+        <div id="suggestOnClick"></div>
         <p>readOnly</p>
         <div id="readOnly"></div>
 
@@ -44,6 +48,17 @@
             $("#readOnly").tags({
               readOnly: true,
               tagData: ["juliett", "kilo"]
+            });
+            $("#suggestOnClick").tags({
+              restrictTo: ["alpha", "bravo", "charlie", "delta", "echo", "foxtrot", "golf", "hotel", "india"],
+              suggestions: ["alpha", "bravo", "charlie", "delta", "echo", "foxtrot", "golf", "hotel", "india"],
+              promptText: "Click here to add new tags",
+              suggestOnClick: true
+            });
+            $("#maxNumTags").tags({
+              suggestions: ["alpha", "bravo", "charlie", "delta", "echo", "foxtrot", "golf", "hotel", "india"],
+              tagData: ["alpha", "bravo", "charlie"],
+              maxNumTags: 3
             });
           });
         </script>
