@@ -252,16 +252,56 @@ describe "Bootstrap Tags", ->
 
       describe "and caseInsensitive is true", ->
 
-        it "finds suggestion regardless of case", ->
-          tags = newTagger "tagger2",
-            caseInsensitive: true
-            suggestions: ["alpha", "bravo", "charlie"]
-          expect(tags.getSuggestions("A", true)).toEqual ["alpha"]
+        describe "and tags are uppercase", ->
+
+          it "should find suggestions for lowercase input", ->
+            tags = newTagger "tagger2",
+              caseInsensitive: true
+              suggestions: ["Alpha", "Bravo", "Charlie"]
+            expect(tags.getSuggestions("a", true)).toEqual ["Alpha"]
+
+          it "should find suggestions for uppercase input", ->
+            tags = newTagger "tagger2",
+              caseInsensitive: true
+              suggestions: ["Alpha", "Bravo", "Charlie"]
+            expect(tags.getSuggestions("A", true)).toEqual ["Alpha"]
+
+        describe "and tags are lowercase", ->
+
+          it "should find suggestions for lowercase input", ->
+            tags = newTagger "tagger2",
+              caseInsensitive: true
+              suggestions: ["alpha", "bravo", "charlie"]
+            expect(tags.getSuggestions("a", true)).toEqual ["alpha"]
+
+          it "should find suggestions for uppercase input", ->
+            tags = newTagger "tagger2",
+              caseInsensitive: true
+              suggestions: ["alpha", "bravo", "charlie"]
+            expect(tags.getSuggestions("A", true)).toEqual ["alpha"]
 
       describe "and caseInsensitive is false", ->
 
-        it "only finds suggestions that match case", ->
-          tags = newTagger "tagger2",
-            suggestions: ["alpha", "bravo", "charlie"]
-          expect(tags.getSuggestions("A", true)).toEqual []
-          expect(tags.getSuggestions("b", true)).toEqual ["bravo"]
+        describe "and tags are uppercase", ->
+
+          it "should not find suggestions for lowercase input", ->
+            tags = newTagger "tagger2",
+              suggestions: ["Alpha", "Bravo", "Charlie"]
+            expect(tags.getSuggestions("a", true)).toEqual []
+
+          it "should find suggestions for uppercase input", ->
+            tags = newTagger "tagger2",
+              suggestions: ["Alpha", "Bravo", "Charlie"]
+            expect(tags.getSuggestions("A", true)).toEqual ["Alpha"]
+
+        describe "and tags are lowercase", ->
+
+          it "should find suggestions for lowercase input", ->
+            tags = newTagger "tagger2",
+              suggestions: ["alpha", "bravo", "charlie"]
+            expect(tags.getSuggestions("a", true)).toEqual ["alpha"]
+
+          it "should not find suggestions for uppercase input", ->
+            tags = newTagger "tagger2",
+              suggestions: ["alpha", "bravo", "charlie"]
+            expect(tags.getSuggestions("A", true)).toEqual []
