@@ -26,8 +26,13 @@ or
 - Uses bootstrap button-[type] class styling (customizing your bootstrap will change tag styles accordingly)
 - Extensible with custom functions (eg, before/after tag addition/deletion, key presses, exclusions)
 
-## Implementation
-	<div id="my-tag-list" class="tag-list"><div class="tags"></div></div>
+## Usage
+
+	<!-- include bootstrap tags js, css files -->
+	<script src='path/to/bootstrap-tags/dist/js/bootstrap-tags.min.js'></script>
+	<link rel="stylesheet" type="text/css" href="path/to/bootstrap-tags/dist/css/bootstrap-tags.css" />
+
+	<div id="my-tag-list" class="tag-list"></div>
 	<script>
 		$(function() {
 			// If using Bootstrap 2, be sure to include:
