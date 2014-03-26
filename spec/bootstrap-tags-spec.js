@@ -311,23 +311,75 @@
       });
       return describe("when auto-suggesting", function() {
         describe("and caseInsensitive is true", function() {
-          return it("finds suggestion regardless of case", function() {
-            var tags;
-            tags = newTagger("tagger2", {
-              caseInsensitive: true,
-              suggestions: ["alpha", "bravo", "charlie"]
+          describe("and tags are uppercase", function() {
+            it("should find suggestions for lowercase input", function() {
+              var tags;
+              tags = newTagger("tagger2", {
+                caseInsensitive: true,
+                suggestions: ["Alpha", "Bravo", "Charlie"]
+              });
+              return expect(tags.getSuggestions("a", true)).toEqual(["Alpha"]);
             });
-            return expect(tags.getSuggestions("A", true)).toEqual(["alpha"]);
+            return it("should find suggestions for uppercase input", function() {
+              var tags;
+              tags = newTagger("tagger2", {
+                caseInsensitive: true,
+                suggestions: ["Alpha", "Bravo", "Charlie"]
+              });
+              return expect(tags.getSuggestions("A", true)).toEqual(["Alpha"]);
+            });
+          });
+          return describe("and tags are lowercase", function() {
+            it("should find suggestions for lowercase input", function() {
+              var tags;
+              tags = newTagger("tagger2", {
+                caseInsensitive: true,
+                suggestions: ["alpha", "bravo", "charlie"]
+              });
+              return expect(tags.getSuggestions("a", true)).toEqual(["alpha"]);
+            });
+            return it("should find suggestions for uppercase input", function() {
+              var tags;
+              tags = newTagger("tagger2", {
+                caseInsensitive: true,
+                suggestions: ["alpha", "bravo", "charlie"]
+              });
+              return expect(tags.getSuggestions("A", true)).toEqual(["alpha"]);
+            });
           });
         });
         return describe("and caseInsensitive is false", function() {
-          return it("only finds suggestions that match case", function() {
-            var tags;
-            tags = newTagger("tagger2", {
-              suggestions: ["alpha", "bravo", "charlie"]
+          describe("and tags are uppercase", function() {
+            it("should not find suggestions for lowercase input", function() {
+              var tags;
+              tags = newTagger("tagger2", {
+                suggestions: ["Alpha", "Bravo", "Charlie"]
+              });
+              return expect(tags.getSuggestions("a", true)).toEqual([]);
             });
-            expect(tags.getSuggestions("A", true)).toEqual([]);
-            return expect(tags.getSuggestions("b", true)).toEqual(["bravo"]);
+            return it("should find suggestions for uppercase input", function() {
+              var tags;
+              tags = newTagger("tagger2", {
+                suggestions: ["Alpha", "Bravo", "Charlie"]
+              });
+              return expect(tags.getSuggestions("A", true)).toEqual(["Alpha"]);
+            });
+          });
+          return describe("and tags are lowercase", function() {
+            it("should find suggestions for lowercase input", function() {
+              var tags;
+              tags = newTagger("tagger2", {
+                suggestions: ["alpha", "bravo", "charlie"]
+              });
+              return expect(tags.getSuggestions("a", true)).toEqual(["alpha"]);
+            });
+            return it("should not find suggestions for uppercase input", function() {
+              var tags;
+              tags = newTagger("tagger2", {
+                suggestions: ["alpha", "bravo", "charlie"]
+              });
+              return expect(tags.getSuggestions("A", true)).toEqual([]);
+            });
           });
         });
       });

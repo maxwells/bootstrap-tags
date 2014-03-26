@@ -230,7 +230,7 @@
                     this.suggestionList = [];
                     $.each(this.suggestions, function(i, suggestion) {
                         var suggestionVal;
-                        suggestionVal = _this.caseInsensitive ? suggestion.substring(0, str.length) : suggestion.substring(0, str.length).toLowerCase();
+                        suggestionVal = _this.caseInsensitive ? suggestion.substring(0, str.length).toLowerCase() : suggestion.substring(0, str.length);
                         if (_this.tagsArray.indexOf(suggestion) < 0 && suggestionVal === str && (str.length > 0 || overrideLengthCheck)) {
                             return _this.suggestionList.push(suggestion);
                         }

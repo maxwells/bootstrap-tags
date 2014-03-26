@@ -205,7 +205,7 @@ jQuery ->
       str = str.toLowerCase() if @caseInsensitive
       @suggestionList = []
       $.each @suggestions, (i, suggestion) =>
-        suggestionVal = if @caseInsensitive then suggestion.substring(0, str.length) else suggestion.substring(0, str.length).toLowerCase()
+        suggestionVal = if @caseInsensitive then suggestion.substring(0, str.length).toLowerCase() else suggestion.substring(0, str.length)
         if @tagsArray.indexOf(suggestion) < 0 and suggestionVal == str and (str.length > 0 or overrideLengthCheck)
           @suggestionList.push suggestion
       @suggestionList
