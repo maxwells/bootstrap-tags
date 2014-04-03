@@ -25,6 +25,8 @@
         <div id="maxNumTags"></div>
         <p>suggestOnClick</p>
         <div id="suggestOnClick"></div>
+        <p>caseInsensitive</p>
+        <div id="caseInsensitive"></div>
         <p>readOnly</p>
         <div id="readOnly"></div>
 
@@ -54,6 +56,11 @@
               suggestions: ["alpha", "bravo", "charlie", "delta", "echo", "foxtrot", "golf", "hotel", "india"],
               promptText: "Click here to add new tags",
               suggestOnClick: true
+            });
+            $("#caseInsensitive").tags({
+              suggestions: ["Alpha", "Bravo", "Charlie", "Delta", "Echo", "Foxtrot", "Golf", "Hotel", "India"],
+              tagData: ["india", "juliett"],
+              caseInsensitive: true
             });
             $("#maxNumTags").tags({
               suggestions: ["alpha", "bravo", "charlie", "delta", "echo", "foxtrot", "golf", "hotel", "india"],

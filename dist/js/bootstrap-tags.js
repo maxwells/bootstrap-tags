@@ -245,10 +245,10 @@
                 };
                 this.getSuggestions = function(str, overrideLengthCheck) {
                     var _this = this;
+                    this.suggestionList = [];
                     if (this.caseInsensitive) {
                         str = str.toLowerCase();
                     }
-                    this.suggestionList = [];
                     $.each(this.suggestions, function(i, suggestion) {
                         var suggestionVal;
                         suggestionVal = _this.caseInsensitive ? suggestion.substring(0, str.length).toLowerCase() : suggestion.substring(0, str.length);
@@ -258,9 +258,10 @@
                     });
                     return this.suggestionList;
                 };
-                this.makeSuggestions = function(e, overrideLengthCheck) {
-                    var val;
-                    val = e.target.value != null ? e.target.value : e.target.textContent;
+                this.makeSuggestions = function(e, overrideLengthCheck, val) {
+                    if (val == null) {
+                        val = e.target.value != null ? e.target.value : e.target.textContent;
+                    }
                     _this.suggestedIndex = -1;
                     _this.$suggestionList.html("");
                     $.each(_this.getSuggestions(val, overrideLengthCheck), function(i, suggestion) {
@@ -283,7 +284,7 @@
                     }
                     _this.addTag(tag);
                     _this.input.val("");
-                    _this.makeSuggestions(e, false);
+                    _this.makeSuggestions(e, false, "");
                     _this.input.focus();
                     return _this.hideSuggestions();
                 };
