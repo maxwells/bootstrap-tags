@@ -187,6 +187,7 @@
                     k = e.keyCode != null ? e.keyCode : e.which;
                     switch (k) {
                       case 13:
+                        e.preventDefault();
                         _this.pressedReturn(e);
                         tag = e.target.value;
                         if (_this.suggestedIndex !== -1) {
