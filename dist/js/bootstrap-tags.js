@@ -1,5 +1,5 @@
 /*!
- * bootstrap-tags 1.1.0
+ * bootstrap-tags 1.1.5
  * https://github.com/maxwells/bootstrap-tags
  * Copyright 2013 Max Lahey; Licensed MIT
  */
@@ -9,7 +9,7 @@
         window.Tags || (window.Tags = {});
         jQuery(function() {
             $.tags = function(element, options) {
-                var key, tag, tagData, value, _i, _len, _ref, _this = this;
+                var key, tag, tagData, value, _i, _len, _ref;
                 if (options == null) {
                     options = {};
                 }
@@ -63,74 +63,92 @@
                         this.popoverArray.push(null);
                     }
                 }
-                this.getTags = function() {
-                    return _this.tagsArray;
-                };
-                this.getTagsContent = function() {
-                    return _this.popoverArray;
-                };
-                this.getTagsWithContent = function() {
-                    var combined, i, _j, _ref1;
-                    combined = [];
-                    for (i = _j = 0, _ref1 = _this.tagsArray.length - 1; 0 <= _ref1 ? _j <= _ref1 : _j >= _ref1; i = 0 <= _ref1 ? ++_j : --_j) {
-                        combined.push({
-                            tag: _this.tagsArray[i],
-                            content: _this.popoverArray[i]
-                        });
-                    }
-                    return combined;
-                };
-                this.getTag = function(tag) {
-                    var index;
-                    index = _this.tagsArray.indexOf(tag);
-                    if (index > -1) {
-                        return _this.tagsArray[index];
-                    } else {
-                        return null;
-                    }
-                };
-                this.getTagWithContent = function(tag) {
-                    var index;
-                    index = _this.tagsArray.indexOf(tag);
-                    return {
-                        tag: _this.tagsArray[index],
-                        content: _this.popoverArray[index]
+                this.getTags = function(_this) {
+                    return function() {
+                        return _this.tagsArray;
                     };
-                };
-                this.hasTag = function(tag) {
-                    return _this.tagsArray.indexOf(tag) > -1;
-                };
-                this.removeTagClicked = function(e) {
-                    if (e.currentTarget.tagName === "A") {
-                        _this.removeTag($("span", e.currentTarget.parentElement).html());
-                        $(e.currentTarget.parentNode).remove();
-                    }
-                    return _this;
-                };
-                this.removeLastTag = function() {
-                    if (_this.tagsArray.length > 0) {
-                        _this.removeTag(_this.tagsArray[_this.tagsArray.length - 1]);
-                        if (_this.canAddByMaxNum()) {
-                            _this.enableInput();
+                }(this);
+                this.getTagsContent = function(_this) {
+                    return function() {
+                        return _this.popoverArray;
+                    };
+                }(this);
+                this.getTagsWithContent = function(_this) {
+                    return function() {
+                        var combined, i, _j, _ref1;
+                        combined = [];
+                        for (i = _j = 0, _ref1 = _this.tagsArray.length - 1; 0 <= _ref1 ? _j <= _ref1 : _j >= _ref1; i = 0 <= _ref1 ? ++_j : --_j) {
+                            combined.push({
+                                tag: _this.tagsArray[i],
+                                content: _this.popoverArray[i]
+                            });
                         }
-                    }
-                    return _this;
-                };
-                this.removeTag = function(tag) {
-                    if (_this.tagsArray.indexOf(tag) > -1) {
-                        if (_this.beforeDeletingTag(tag) === false) {
-                            return;
+                        return combined;
+                    };
+                }(this);
+                this.getTag = function(_this) {
+                    return function(tag) {
+                        var index;
+                        index = _this.tagsArray.indexOf(tag);
+                        if (index > -1) {
+                            return _this.tagsArray[index];
+                        } else {
+                            return null;
                         }
-                        _this.popoverArray.splice(_this.tagsArray.indexOf(tag), 1);
-                        _this.tagsArray.splice(_this.tagsArray.indexOf(tag), 1);
-                        _this.renderTags();
-                        _this.afterDeletingTag(tag);
-                        if (_this.canAddByMaxNum()) {
-                            _this.enableInput();
+                    };
+                }(this);
+                this.getTagWithContent = function(_this) {
+                    return function(tag) {
+                        var index;
+                        index = _this.tagsArray.indexOf(tag);
+                        return {
+                            tag: _this.tagsArray[index],
+                            content: _this.popoverArray[index]
+                        };
+                    };
+                }(this);
+                this.hasTag = function(_this) {
+                    return function(tag) {
+                        return _this.tagsArray.indexOf(tag) > -1;
+                    };
+                }(this);
+                this.removeTagClicked = function(_this) {
+                    return function(e) {
+                        if (e.currentTarget.tagName === "A") {
+                            _this.removeTag($("span", e.currentTarget.parentElement).html());
+                            $(e.currentTarget.parentNode).remove();
                         }
-                    }
-                    return _this;
-                };
+                        return _this;
+                    };
+                }(this);
+                this.removeLastTag = function(_this) {
+                    return function() {
+                        if (_this.tagsArray.length > 0) {
+                            _this.removeTag(_this.tagsArray[_this.tagsArray.length - 1]);
+                            if (_this.canAddByMaxNum()) {
+                                _this.enableInput();
+                            }
+                        }
+                        return _this;
+                    };
+                }(this);
+                this.removeTag = function(_this) {
+                    return function(tag) {
+                        if (_this.tagsArray.indexOf(tag) > -1) {
+                            if (_this.beforeDeletingTag(tag) === false) {
+                                return;
+                            }
+                            _this.popoverArray.splice(_this.tagsArray.indexOf(tag), 1);
+                            _this.tagsArray.splice(_this.tagsArray.indexOf(tag), 1);
+                            _this.renderTags();
+                            _this.afterDeletingTag(tag);
+                            if (_this.canAddByMaxNum()) {
+                                _this.enableInput();
+                            }
+                        }
+                        return _this;
+                    };
+                }(this);
                 this.canAddByRestriction = function(tag) {
                     return this.restrictTo === false || this.restrictTo.indexOf(tag) !== -1;
                 };
@@ -140,261 +158,300 @@
                 this.canAddByMaxNum = function() {
                     return this.maxNumTags === -1 || this.tagsArray.length < this.maxNumTags;
                 };
-                this.addTag = function(tag) {
-                    var associatedContent;
-                    if (_this.canAddByRestriction(tag) && !_this.hasTag(tag) && tag.length > 0 && _this.canAddByExclusion(tag) && _this.canAddByMaxNum()) {
-                        if (_this.beforeAddingTag(tag) === false) {
-                            return;
+                this.addTag = function(_this) {
+                    return function(tag) {
+                        var associatedContent;
+                        if (_this.canAddByRestriction(tag) && !_this.hasTag(tag) && tag.length > 0 && _this.canAddByExclusion(tag) && _this.canAddByMaxNum()) {
+                            if (_this.beforeAddingTag(tag) === false) {
+                                return;
+                            }
+                            associatedContent = _this.definePopover(tag);
+                            _this.popoverArray.push(associatedContent || null);
+                            _this.tagsArray.push(tag);
+                            _this.afterAddingTag(tag);
+                            _this.renderTags();
+                            if (!_this.canAddByMaxNum()) {
+                                _this.disableInput();
+                            }
                         }
-                        associatedContent = _this.definePopover(tag);
-                        _this.popoverArray.push(associatedContent || null);
-                        _this.tagsArray.push(tag);
-                        _this.afterAddingTag(tag);
+                        return _this;
+                    };
+                }(this);
+                this.addTagWithContent = function(_this) {
+                    return function(tag, content) {
+                        if (_this.canAddByRestriction(tag) && !_this.hasTag(tag) && tag.length > 0) {
+                            if (_this.beforeAddingTag(tag) === false) {
+                                return;
+                            }
+                            _this.tagsArray.push(tag);
+                            _this.popoverArray.push(content);
+                            _this.afterAddingTag(tag);
+                            _this.renderTags();
+                        }
+                        return _this;
+                    };
+                }(this);
+                this.renameTag = function(_this) {
+                    return function(name, newName) {
+                        _this.tagsArray[_this.tagsArray.indexOf(name)] = newName;
                         _this.renderTags();
-                        if (!_this.canAddByMaxNum()) {
-                            _this.disableInput();
-                        }
-                    }
-                    return _this;
-                };
-                this.addTagWithContent = function(tag, content) {
-                    if (_this.canAddByRestriction(tag) && !_this.hasTag(tag) && tag.length > 0) {
-                        if (_this.beforeAddingTag(tag) === false) {
-                            return;
-                        }
-                        _this.tagsArray.push(tag);
-                        _this.popoverArray.push(content);
-                        _this.afterAddingTag(tag);
+                        return _this;
+                    };
+                }(this);
+                this.setPopover = function(_this) {
+                    return function(tag, popoverContent) {
+                        _this.popoverArray[_this.tagsArray.indexOf(tag)] = popoverContent;
                         _this.renderTags();
-                    }
-                    return _this;
-                };
-                this.renameTag = function(name, newName) {
-                    _this.tagsArray[_this.tagsArray.indexOf(name)] = newName;
-                    _this.renderTags();
-                    return _this;
-                };
-                this.setPopover = function(tag, popoverContent) {
-                    _this.popoverArray[_this.tagsArray.indexOf(tag)] = popoverContent;
-                    _this.renderTags();
-                    return _this;
-                };
-                this.clickHandler = function(e) {
-                    return _this.makeSuggestions(e, true);
-                };
-                this.keyDownHandler = function(e) {
-                    var k, numSuggestions;
-                    k = e.keyCode != null ? e.keyCode : e.which;
-                    switch (k) {
-                      case 13:
-                        e.preventDefault();
-                        _this.pressedReturn(e);
-                        tag = e.target.value;
-                        if (_this.suggestedIndex !== -1) {
-                            tag = _this.suggestionList[_this.suggestedIndex];
-                        }
-                        _this.addTag(tag);
-                        e.target.value = "";
-                        _this.renderTags();
-                        return _this.hideSuggestions();
-
-                      case 46:
-                      case 8:
-                        _this.pressedDelete(e);
-                        if (e.target.value === "") {
-                            _this.removeLastTag();
-                        }
-                        if (e.target.value.length === 1) {
+                        return _this;
+                    };
+                }(this);
+                this.clickHandler = function(_this) {
+                    return function(e) {
+                        return _this.makeSuggestions(e, true);
+                    };
+                }(this);
+                this.keyDownHandler = function(_this) {
+                    return function(e) {
+                        var k, numSuggestions;
+                        k = e.keyCode != null ? e.keyCode : e.which;
+                        switch (k) {
+                          case 13:
+                            e.preventDefault();
+                            _this.pressedReturn(e);
+                            tag = e.target.value;
+                            if (_this.suggestedIndex !== -1) {
+                                tag = _this.suggestionList[_this.suggestedIndex];
+                            }
+                            _this.addTag(tag);
+                            e.target.value = "";
+                            _this.renderTags();
                             return _this.hideSuggestions();
-                        }
-                        break;
 
-                      case 40:
-                        _this.pressedDown(e);
-                        if (_this.input.val() === "" && (_this.suggestedIndex === -1 || _this.suggestedIndex == null)) {
-                            _this.makeSuggestions(e, true);
-                        }
-                        numSuggestions = _this.suggestionList.length;
-                        _this.suggestedIndex = _this.suggestedIndex < numSuggestions - 1 ? _this.suggestedIndex + 1 : numSuggestions - 1;
-                        _this.selectSuggested(_this.suggestedIndex);
-                        if (_this.suggestedIndex >= 0) {
-                            return _this.scrollSuggested(_this.suggestedIndex);
-                        }
-                        break;
+                          case 46:
+                          case 8:
+                            _this.pressedDelete(e);
+                            if (e.target.value === "") {
+                                _this.removeLastTag();
+                            }
+                            if (e.target.value.length === 1) {
+                                return _this.hideSuggestions();
+                            }
+                            break;
 
-                      case 38:
-                        _this.pressedUp(e);
-                        _this.suggestedIndex = _this.suggestedIndex > 0 ? _this.suggestedIndex - 1 : 0;
-                        _this.selectSuggested(_this.suggestedIndex);
-                        if (_this.suggestedIndex >= 0) {
-                            return _this.scrollSuggested(_this.suggestedIndex);
-                        }
-                        break;
+                          case 40:
+                            _this.pressedDown(e);
+                            if (_this.input.val() === "" && (_this.suggestedIndex === -1 || _this.suggestedIndex == null)) {
+                                _this.makeSuggestions(e, true);
+                            }
+                            numSuggestions = _this.suggestionList.length;
+                            _this.suggestedIndex = _this.suggestedIndex < numSuggestions - 1 ? _this.suggestedIndex + 1 : numSuggestions - 1;
+                            _this.selectSuggested(_this.suggestedIndex);
+                            if (_this.suggestedIndex >= 0) {
+                                return _this.scrollSuggested(_this.suggestedIndex);
+                            }
+                            break;
 
-                      case 9:
-                      case 27:
-                        _this.hideSuggestions();
-                        return _this.suggestedIndex = -1;
-                    }
-                };
-                this.keyUpHandler = function(e) {
-                    var k;
-                    k = e.keyCode != null ? e.keyCode : e.which;
-                    if (k !== 40 && k !== 38 && k !== 27) {
-                        return _this.makeSuggestions(e, false);
-                    }
-                };
+                          case 38:
+                            _this.pressedUp(e);
+                            _this.suggestedIndex = _this.suggestedIndex > 0 ? _this.suggestedIndex - 1 : 0;
+                            _this.selectSuggested(_this.suggestedIndex);
+                            if (_this.suggestedIndex >= 0) {
+                                return _this.scrollSuggested(_this.suggestedIndex);
+                            }
+                            break;
+
+                          case 9:
+                          case 27:
+                            _this.hideSuggestions();
+                            return _this.suggestedIndex = -1;
+                        }
+                    };
+                }(this);
+                this.keyUpHandler = function(_this) {
+                    return function(e) {
+                        var k;
+                        k = e.keyCode != null ? e.keyCode : e.which;
+                        if (k !== 40 && k !== 38 && k !== 27) {
+                            return _this.makeSuggestions(e, false);
+                        }
+                    };
+                }(this);
                 this.getSuggestions = function(str, overrideLengthCheck) {
-                    var _this = this;
                     this.suggestionList = [];
                     if (this.caseInsensitive) {
                         str = str.toLowerCase();
                     }
-                    $.each(this.suggestions, function(i, suggestion) {
-                        var suggestionVal;
-                        suggestionVal = _this.caseInsensitive ? suggestion.substring(0, str.length).toLowerCase() : suggestion.substring(0, str.length);
-                        if (_this.tagsArray.indexOf(suggestion) < 0 && suggestionVal === str && (str.length > 0 || overrideLengthCheck)) {
-                            return _this.suggestionList.push(suggestion);
-                        }
-                    });
+                    $.each(this.suggestions, function(_this) {
+                        return function(i, suggestion) {
+                            var suggestionVal;
+                            suggestionVal = _this.caseInsensitive ? suggestion.substring(0, str.length).toLowerCase() : suggestion.substring(0, str.length);
+                            if (_this.tagsArray.indexOf(suggestion) < 0 && suggestionVal === str && (str.length > 0 || overrideLengthCheck)) {
+                                return _this.suggestionList.push(suggestion);
+                            }
+                        };
+                    }(this));
                     return this.suggestionList;
                 };
-                this.makeSuggestions = function(e, overrideLengthCheck, val) {
-                    if (val == null) {
-                        val = e.target.value != null ? e.target.value : e.target.textContent;
-                    }
-                    _this.suggestedIndex = -1;
-                    _this.$suggestionList.html("");
-                    $.each(_this.getSuggestions(val, overrideLengthCheck), function(i, suggestion) {
-                        return _this.$suggestionList.append(_this.template("tags_suggestion", {
-                            suggestion: suggestion
-                        }));
-                    });
-                    _this.$(".tags-suggestion").mouseover(_this.selectSuggestedMouseOver);
-                    _this.$(".tags-suggestion").click(_this.suggestedClicked);
-                    if (_this.suggestionList.length > 0) {
-                        return _this.showSuggestions();
-                    } else {
+                this.makeSuggestions = function(_this) {
+                    return function(e, overrideLengthCheck, val) {
+                        if (val == null) {
+                            val = e.target.value != null ? e.target.value : e.target.textContent;
+                        }
+                        _this.suggestedIndex = -1;
+                        _this.$suggestionList.html("");
+                        $.each(_this.getSuggestions(val, overrideLengthCheck), function(i, suggestion) {
+                            return _this.$suggestionList.append(_this.template("tags_suggestion", {
+                                suggestion: suggestion
+                            }));
+                        });
+                        _this.$(".tags-suggestion").mouseover(_this.selectSuggestedMouseOver);
+                        _this.$(".tags-suggestion").click(_this.suggestedClicked);
+                        if (_this.suggestionList.length > 0) {
+                            return _this.showSuggestions();
+                        } else {
+                            return _this.hideSuggestions();
+                        }
+                    };
+                }(this);
+                this.suggestedClicked = function(_this) {
+                    return function(e) {
+                        tag = e.target.textContent;
+                        if (_this.suggestedIndex !== -1) {
+                            tag = _this.suggestionList[_this.suggestedIndex];
+                        }
+                        _this.addTag(tag);
+                        _this.input.val("");
+                        _this.makeSuggestions(e, false, "");
+                        _this.input.focus();
                         return _this.hideSuggestions();
-                    }
-                };
-                this.suggestedClicked = function(e) {
-                    tag = e.target.textContent;
-                    if (_this.suggestedIndex !== -1) {
-                        tag = _this.suggestionList[_this.suggestedIndex];
-                    }
-                    _this.addTag(tag);
-                    _this.input.val("");
-                    _this.makeSuggestions(e, false, "");
-                    _this.input.focus();
-                    return _this.hideSuggestions();
-                };
-                this.hideSuggestions = function() {
-                    return _this.$(".tags-suggestion-list").css({
-                        display: "none"
-                    });
-                };
-                this.showSuggestions = function() {
-                    return _this.$(".tags-suggestion-list").css({
-                        display: "block"
-                    });
-                };
-                this.selectSuggestedMouseOver = function(e) {
-                    $(".tags-suggestion").removeClass("tags-suggestion-highlighted");
-                    $(e.target).addClass("tags-suggestion-highlighted");
-                    $(e.target).mouseout(_this.selectSuggestedMousedOut);
-                    return _this.suggestedIndex = _this.$(".tags-suggestion").index($(e.target));
-                };
-                this.selectSuggestedMousedOut = function(e) {
-                    return $(e.target).removeClass("tags-suggestion-highlighted");
-                };
-                this.selectSuggested = function(i) {
-                    var tagElement;
-                    $(".tags-suggestion").removeClass("tags-suggestion-highlighted");
-                    tagElement = _this.$(".tags-suggestion").eq(i);
-                    return tagElement.addClass("tags-suggestion-highlighted");
-                };
-                this.scrollSuggested = function(i) {
-                    var pos, tagElement, topElement, topPos;
-                    tagElement = _this.$(".tags-suggestion").eq(i);
-                    topElement = _this.$(".tags-suggestion").eq(0);
-                    pos = tagElement.position();
-                    topPos = topElement.position();
-                    if (pos != null) {
-                        return _this.$(".tags-suggestion-list").scrollTop(pos.top - topPos.top);
-                    }
-                };
-                this.adjustInputPosition = function() {
-                    var pBottom, pLeft, pTop, pWidth, tagElement, tagPosition;
-                    tagElement = _this.$(".tag").last();
-                    tagPosition = tagElement.position();
-                    pLeft = tagPosition != null ? tagPosition.left + tagElement.outerWidth(true) : 0;
-                    pTop = tagPosition != null ? tagPosition.top : 0;
-                    pWidth = _this.$element.width() - pLeft;
-                    $(".tags-input", _this.$element).css({
-                        paddingLeft: Math.max(pLeft, 0),
-                        paddingTop: Math.max(pTop, 0),
-                        width: pWidth
-                    });
-                    pBottom = tagPosition != null ? tagPosition.top + tagElement.outerHeight(true) : 22;
-                    return _this.$element.css({
-                        paddingBottom: pBottom - _this.$element.height()
-                    });
-                };
-                this.renderTags = function() {
-                    var tagList;
-                    tagList = _this.$(".tags");
-                    tagList.html("");
-                    _this.input.attr("placeholder", _this.tagsArray.length === 0 ? _this.promptText : "");
-                    $.each(_this.tagsArray, function(i, tag) {
-                        tag = $(_this.formatTag(i, tag));
-                        $("a", tag).click(_this.removeTagClicked);
-                        $("a", tag).mouseover(_this.toggleCloseColor);
-                        $("a", tag).mouseout(_this.toggleCloseColor);
-                        if (_this.displayPopovers) {
-                            _this.initializePopoverFor(tag, _this.tagsArray[i], _this.popoverArray[i]);
+                    };
+                }(this);
+                this.hideSuggestions = function(_this) {
+                    return function() {
+                        return _this.$(".tags-suggestion-list").css({
+                            display: "none"
+                        });
+                    };
+                }(this);
+                this.showSuggestions = function(_this) {
+                    return function() {
+                        return _this.$(".tags-suggestion-list").css({
+                            display: "block"
+                        });
+                    };
+                }(this);
+                this.selectSuggestedMouseOver = function(_this) {
+                    return function(e) {
+                        $(".tags-suggestion").removeClass("tags-suggestion-highlighted");
+                        $(e.target).addClass("tags-suggestion-highlighted");
+                        $(e.target).mouseout(_this.selectSuggestedMousedOut);
+                        return _this.suggestedIndex = _this.$(".tags-suggestion").index($(e.target));
+                    };
+                }(this);
+                this.selectSuggestedMousedOut = function(_this) {
+                    return function(e) {
+                        return $(e.target).removeClass("tags-suggestion-highlighted");
+                    };
+                }(this);
+                this.selectSuggested = function(_this) {
+                    return function(i) {
+                        var tagElement;
+                        $(".tags-suggestion").removeClass("tags-suggestion-highlighted");
+                        tagElement = _this.$(".tags-suggestion").eq(i);
+                        return tagElement.addClass("tags-suggestion-highlighted");
+                    };
+                }(this);
+                this.scrollSuggested = function(_this) {
+                    return function(i) {
+                        var pos, tagElement, topElement, topPos;
+                        tagElement = _this.$(".tags-suggestion").eq(i);
+                        topElement = _this.$(".tags-suggestion").eq(0);
+                        pos = tagElement.position();
+                        topPos = topElement.position();
+                        if (pos != null) {
+                            return _this.$(".tags-suggestion-list").scrollTop(pos.top - topPos.top);
                         }
-                        return tagList.append(tag);
-                    });
-                    return _this.adjustInputPosition();
-                };
-                this.renderReadOnly = function() {
-                    var tagList;
-                    tagList = _this.$(".tags");
-                    tagList.html(_this.tagsArray.length === 0 ? _this.readOnlyEmptyMessage : "");
-                    return $.each(_this.tagsArray, function(i, tag) {
-                        tag = $(_this.formatTag(i, tag, true));
-                        if (_this.displayPopovers) {
-                            _this.initializePopoverFor(tag, _this.tagsArray[i], _this.popoverArray[i]);
-                        }
-                        return tagList.append(tag);
-                    });
-                };
+                    };
+                }(this);
+                this.adjustInputPosition = function(_this) {
+                    return function() {
+                        var pBottom, pLeft, pTop, pWidth, tagElement, tagPosition;
+                        tagElement = _this.$(".tag").last();
+                        tagPosition = tagElement.position();
+                        pLeft = tagPosition != null ? tagPosition.left + tagElement.outerWidth(true) : 0;
+                        pTop = tagPosition != null ? tagPosition.top : 0;
+                        pWidth = _this.$element.width() - pLeft;
+                        $(".tags-input", _this.$element).css({
+                            paddingLeft: Math.max(pLeft, 0),
+                            paddingTop: Math.max(pTop, 0),
+                            width: pWidth
+                        });
+                        pBottom = tagPosition != null ? tagPosition.top + tagElement.outerHeight(true) : 22;
+                        return _this.$element.css({
+                            paddingBottom: pBottom - _this.$element.height()
+                        });
+                    };
+                }(this);
+                this.renderTags = function(_this) {
+                    return function() {
+                        var tagList;
+                        tagList = _this.$(".tags");
+                        tagList.html("");
+                        _this.input.attr("placeholder", _this.tagsArray.length === 0 ? _this.promptText : "");
+                        $.each(_this.tagsArray, function(i, tag) {
+                            tag = $(_this.formatTag(i, tag));
+                            $("a", tag).click(_this.removeTagClicked);
+                            $("a", tag).mouseover(_this.toggleCloseColor);
+                            $("a", tag).mouseout(_this.toggleCloseColor);
+                            if (_this.displayPopovers) {
+                                _this.initializePopoverFor(tag, _this.tagsArray[i], _this.popoverArray[i]);
+                            }
+                            return tagList.append(tag);
+                        });
+                        return _this.adjustInputPosition();
+                    };
+                }(this);
+                this.renderReadOnly = function(_this) {
+                    return function() {
+                        var tagList;
+                        tagList = _this.$(".tags");
+                        tagList.html(_this.tagsArray.length === 0 ? _this.readOnlyEmptyMessage : "");
+                        return $.each(_this.tagsArray, function(i, tag) {
+                            tag = $(_this.formatTag(i, tag, true));
+                            if (_this.displayPopovers) {
+                                _this.initializePopoverFor(tag, _this.tagsArray[i], _this.popoverArray[i]);
+                            }
+                            return tagList.append(tag);
+                        });
+                    };
+                }(this);
                 this.disableInput = function() {
                     return this.$("input").prop("disabled", true);
                 };
                 this.enableInput = function() {
                     return this.$("input").prop("disabled", false);
                 };
-                this.initializePopoverFor = function(tag, title, content) {
-                    options = {
-                        title: title,
-                        content: content,
-                        placement: "bottom"
+                this.initializePopoverFor = function(_this) {
+                    return function(tag, title, content) {
+                        options = {
+                            title: title,
+                            content: content,
+                            placement: "bottom"
+                        };
+                        if (_this.popoverTrigger === "hoverShowClickHide") {
+                            $(tag).mouseover(function() {
+                                $(tag).popover("show");
+                                return $(".tag").not(tag).popover("hide");
+                            });
+                            $(document).click(function() {
+                                return $(tag).popover("hide");
+                            });
+                        } else {
+                            options.trigger = _this.popoverTrigger;
+                        }
+                        return $(tag).popover(options);
                     };
-                    if (_this.popoverTrigger === "hoverShowClickHide") {
-                        $(tag).mouseover(function() {
-                            $(tag).popover("show");
-                            return $(".tag").not(tag).popover("hide");
-                        });
-                        $(document).click(function() {
-                            return $(tag).popover("hide");
-                        });
-                    } else {
-                        options.trigger = _this.popoverTrigger;
-                    }
-                    return $(tag).popover(options);
-                };
+                }(this);
                 this.toggleCloseColor = function(e) {
                     var opacity, tagAnchor;
                     tagAnchor = $(e.currentTarget);
@@ -404,29 +461,33 @@
                         opacity: opacity
                     });
                 };
-                this.formatTag = function(i, tag, isReadOnly) {
-                    var escapedTag;
-                    if (isReadOnly == null) {
-                        isReadOnly = false;
-                    }
-                    escapedTag = tag.replace("<", "&lt;").replace(">", "&gt;");
-                    return _this.template("tag", {
-                        tag: escapedTag,
-                        tagClass: _this.tagClass,
-                        isPopover: _this.displayPopovers,
-                        isReadOnly: isReadOnly,
-                        tagSize: _this.tagSize
-                    });
-                };
-                this.addDocumentListeners = function() {
-                    return $(document).mouseup(function(e) {
-                        var container;
-                        container = _this.$(".tags-suggestion-list");
-                        if (container.has(e.target).length === 0) {
-                            return _this.hideSuggestions();
+                this.formatTag = function(_this) {
+                    return function(i, tag, isReadOnly) {
+                        var escapedTag;
+                        if (isReadOnly == null) {
+                            isReadOnly = false;
                         }
-                    });
-                };
+                        escapedTag = tag.replace("<", "&lt;").replace(">", "&gt;");
+                        return _this.template("tag", {
+                            tag: escapedTag,
+                            tagClass: _this.tagClass,
+                            isPopover: _this.displayPopovers,
+                            isReadOnly: isReadOnly,
+                            tagSize: _this.tagSize
+                        });
+                    };
+                }(this);
+                this.addDocumentListeners = function(_this) {
+                    return function() {
+                        return $(document).mouseup(function(e) {
+                            var container;
+                            container = _this.$(".tags-suggestion-list");
+                            if (container.has(e.target).length === 0) {
+                                return _this.hideSuggestions();
+                            }
+                        });
+                    };
+                }(this);
                 this.template = function(name, options) {
                     return Tags.Templates.Template(this.getBootstrapVersion(), name, options);
                 };
@@ -544,7 +605,7 @@
             if (options == null) {
                 options = {};
             }
-            return "<div class='tag label " + options.tagClass + " " + options.tagSize + "' " + (options.isPopover ? "rel='popover'" : "") + ">    <span>" + Tags.Helpers.addPadding(options.tag, 2, options.isReadOnly) + "</span>    " + (options.isReadOnly ? "" : "<a><i class='remove icon-remove-sign icon-white' /></a>") + "  </div>";
+            return "<div class='tag label " + options.tagClass + " " + options.tagSize + "' " + (options.isPopover ? "rel='popover'" : "") + "> <span>" + Tags.Helpers.addPadding(options.tag, 2, options.isReadOnly) + "</span> " + (options.isReadOnly ? "" : "<a><i class='remove icon-remove-sign icon-white' /></a>") + " </div>";
         };
     }).call(this);
     (function() {
@@ -568,7 +629,7 @@
             if (options == null) {
                 options = {};
             }
-            return "<div class='tag label " + options.tagClass + " " + options.tagSize + "' " + (options.isPopover ? "rel='popover'" : "") + ">    <span>" + Tags.Helpers.addPadding(options.tag, 2, options.isReadOnly) + "</span>    " + (options.isReadOnly ? "" : "<a><i class='remove glyphicon glyphicon-remove-sign glyphicon-white' /></a>") + "  </div>";
+            return "<div class='tag label " + options.tagClass + " " + options.tagSize + "' " + (options.isPopover ? "rel='popover'" : "") + "> <span>" + Tags.Helpers.addPadding(options.tag, 2, options.isReadOnly) + "</span> " + (options.isReadOnly ? "" : "<a><i class='remove glyphicon glyphicon-remove-sign glyphicon-white' /></a>") + " </div>";
         };
     }).call(this);
     (function() {
