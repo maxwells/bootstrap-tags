@@ -1,5 +1,5 @@
 /*!
- * bootstrap-tags 1.1.5
+ * bootstrap-tags 1.2.0
  * https://github.com/maxwells/bootstrap-tags
  * Copyright 2013 Max Lahey; Licensed MIT
  */
