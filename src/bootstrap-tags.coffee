@@ -30,12 +30,12 @@ jQuery ->
 
     # callbacks
     @beforeAddingTag ||= (tag) ->
-    @afterAddingTag ||= (tag) -> 
+    @afterAddingTag ||= (tag) ->
     @beforeDeletingTag ||= (tag) ->
     @afterDeletingTag ||= (tag) ->
 
     # override-able functions
-    @definePopover ||= (tag) -> "associated content for \""+tag+"\"" 
+    @definePopover ||= (tag) -> "associated content for \""+tag+"\""
     @excludes ||= -> false
     @tagRemoved ||= (tag) ->
 
@@ -61,6 +61,13 @@ jQuery ->
     else
       @popoverArray = []
       @popoverArray.push null for tag in @tagsArray
+
+    # initialize associated content array
+    if options.href
+      @href = options.href
+    else
+      @href = []
+      @href.push null for tag in @tagsArray
 
     # returns list of tags
     @getTags = =>
@@ -93,14 +100,14 @@ jQuery ->
     ####################
 
     # removeTagClicked is called when user clicks remove tag anchor (x)
-    @removeTagClicked = (e) => # 
+    @removeTagClicked = (e) => #
       if e.currentTarget.tagName == "A"
         @removeTag $("span", e.currentTarget.parentElement).html()
         $(e.currentTarget.parentNode).remove()
       @
 
     # removeLastTag is called when user presses delete on empty input.
-    @removeLastTag = => 
+    @removeLastTag = =>
       if @tagsArray.length > 0
         @removeTag @tagsArray[@tagsArray.length-1]
         @enableInput() if @canAddByMaxNum()
@@ -109,7 +116,7 @@ jQuery ->
     # removeTag removes specified tag.
     # - Helper method for removeTagClicked and removeLast Tag
     # - also an exposed method (can be called from page javascript)
-    @removeTag = (tag) => # removes specified tag 
+    @removeTag = (tag) => # removes specified tag
       if @tagsArray.indexOf(tag) > -1
         return if @beforeDeletingTag(tag) == false
         @popoverArray.splice(@tagsArray.indexOf(tag),1)
@@ -164,8 +171,8 @@ jQuery ->
     # It is an exposed method: can be called from page javascript
     @setPopover = (tag, popoverContent) =>
       @popoverArray[@tagsArray.indexOf tag] = popoverContent
-      @renderTags()     
-      @ 
+      @renderTags()
+      @
 
     ###########################
     # User Input & Key handlers
@@ -308,7 +315,7 @@ jQuery ->
         paddingLeft : Math.max pLeft, 0
         paddingTop  : Math.max pTop, 0
         width       : pWidth
-      pBottom = if tagPosition? then tagPosition.top + tagElement.outerHeight(true) else 22  
+      pBottom = if tagPosition? then tagPosition.top + tagElement.outerHeight(true) else 22
       @$element.css paddingBottom : pBottom - @$element.height()
 
     # renderTags renders tags...
@@ -318,7 +325,7 @@ jQuery ->
       @input.attr 'placeholder', (if @tagsArray.length == 0 then @promptText else '')
       $.each @tagsArray, (i, tag) =>
         tag = $(@formatTag i, tag)
-        $('a', tag).click @removeTagClicked
+        $('a.remove', tag).click @removeTagClicked
         $('a', tag).mouseover @toggleCloseColor
         $('a', tag).mouseout @toggleCloseColor
         @initializePopoverFor(tag, @tagsArray[i], @popoverArray[i]) if @displayPopovers
@@ -358,14 +365,14 @@ jQuery ->
       else
         options.trigger = @popoverTrigger
       $(tag).popover options
-          
+
 
     # toggles remove button opacity for a tag when moused over or out
     @toggleCloseColor = (e) ->
       tagAnchor = $ e.currentTarget
       opacity = tagAnchor.css('opacity')
       opacity = (if opacity < 0.8 then 1.0 else 0.6)
-      tagAnchor.css opacity:opacity 
+      tagAnchor.css opacity:opacity
 
     # formatTag spits out the html for a tag (with or without it's popovers)
     @formatTag = (i, tag, isReadOnly = false) =>
@@ -373,6 +380,7 @@ jQuery ->
       @template "tag",
         tag: escapedTag
         tagClass: @tagClass
+        href: @href[i]
         isPopover: @displayPopovers
         isReadOnly: isReadOnly
         tagSize: @tagSize
@@ -424,7 +432,7 @@ jQuery ->
         @disableInput() unless @canAddByMaxNum()
 
         @addDocumentListeners()
-      
+
     @init()
 
     @
