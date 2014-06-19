@@ -9,7 +9,7 @@
         window.Tags || (window.Tags = {});
         jQuery(function() {
             $.tags = function(element, options) {
-                var key, tag, tagData, value, _i, _len, _ref, _this = this;
+                var key, tag, tagData, value, _i, _j, _len, _len1, _ref, _ref1, _this = this;
                 if (options == null) {
                     options = {};
                 }
@@ -63,6 +63,16 @@
                         this.popoverArray.push(null);
                     }
                 }
+                if (options.href) {
+                    this.href = options.href;
+                } else {
+                    this.href = [];
+                    _ref1 = this.tagsArray;
+                    for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+                        tag = _ref1[_j];
+                        this.href.push(null);
+                    }
+                }
                 this.getTags = function() {
                     return _this.tagsArray;
                 };
@@ -70,9 +80,9 @@
                     return _this.popoverArray;
                 };
                 this.getTagsWithContent = function() {
-                    var combined, i, _j, _ref1;
+                    var combined, i, _k, _ref2;
                     combined = [];
-                    for (i = _j = 0, _ref1 = _this.tagsArray.length - 1; 0 <= _ref1 ? _j <= _ref1 : _j >= _ref1; i = 0 <= _ref1 ? ++_j : --_j) {
+                    for (i = _k = 0, _ref2 = _this.tagsArray.length - 1; 0 <= _ref2 ? _k <= _ref2 : _k >= _ref2; i = 0 <= _ref2 ? ++_k : --_k) {
                         combined.push({
                             tag: _this.tagsArray[i],
                             content: _this.popoverArray[i]
@@ -348,7 +358,7 @@
                     _this.input.attr("placeholder", _this.tagsArray.length === 0 ? _this.promptText : "");
                     $.each(_this.tagsArray, function(i, tag) {
                         tag = $(_this.formatTag(i, tag));
-                        $("a", tag).click(_this.removeTagClicked);
+                        $("a.remove", tag).click(_this.removeTagClicked);
                         $("a", tag).mouseover(_this.toggleCloseColor);
                         $("a", tag).mouseout(_this.toggleCloseColor);
                         if (_this.displayPopovers) {
@@ -413,6 +423,7 @@
                     return _this.template("tag", {
                         tag: escapedTag,
                         tagClass: _this.tagClass,
+                        href: _this.href[i],
                         isPopover: _this.displayPopovers,
                         isReadOnly: isReadOnly,
                         tagSize: _this.tagSize
@@ -544,7 +555,7 @@
             if (options == null) {
                 options = {};
             }
-            return "<div class='tag label " + options.tagClass + " " + options.tagSize + "' " + (options.isPopover ? "rel='popover'" : "") + ">    <span>" + Tags.Helpers.addPadding(options.tag, 2, options.isReadOnly) + "</span>    " + (options.isReadOnly ? "" : "<a><i class='remove icon-remove-sign icon-white' /></a>") + "  </div>";
+            return "<div class='tag label " + options.tagClass + " " + options.tagSize + "' " + (options.isPopover ? "rel='popover'" : "") + ">    <span>      " + (options.href != null ? "<a href='" + options.href + "'>" : "") + "        " + Tags.Helpers.addPadding(options.tag, 2, options.isReadOnly) + "      " + (options.href != null ? "</a>" : "") + "    </span>    " + (options.isReadOnly ? "" : "<a><i class='remove icon-remove-sign icon-white' /></a>") + "  </div>";
         };
     }).call(this);
     (function() {
@@ -568,7 +579,7 @@
             if (options == null) {
                 options = {};
             }
-            return "<div class='tag label " + options.tagClass + " " + options.tagSize + "' " + (options.isPopover ? "rel='popover'" : "") + ">    <span>" + Tags.Helpers.addPadding(options.tag, 2, options.isReadOnly) + "</span>    " + (options.isReadOnly ? "" : "<a><i class='remove glyphicon glyphicon-remove-sign glyphicon-white' /></a>") + "  </div>";
+            return "<div class='tag label " + options.tagClass + " " + options.tagSize + "' " + (options.isPopover ? "rel='popover'" : "") + ">    <span>      " + (options.href != null ? "<a href='" + options.href + "'>" : "") + "        " + Tags.Helpers.addPadding(options.tag, 2, options.isReadOnly) + "      " + (options.href != null ? "</a>" : "") + "    </span>    " + (options.isReadOnly ? "" : "<a class='remove'><i class='remove glyphicon glyphicon-remove-sign glyphicon-white' /></a>") + "  </div>";
         };
     }).call(this);
     (function() {
