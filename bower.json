@@ -6,7 +6,7 @@
   "authors": [
     "Max Lahey <maxwellslahey@gmail.com>"
   ],
-  "description": "Boostrap-themed jquery tag interface",
+  "description": "Bootstrap-themed jquery tag interface",
   "main": [
     "dist/js/bootstrap-tags.js",
     "dist/css/bootstrap-tags.css"
