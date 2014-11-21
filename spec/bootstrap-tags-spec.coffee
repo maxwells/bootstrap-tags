@@ -66,6 +66,15 @@ describe "Bootstrap Tags", ->
           readOnly: true
         expect($('#tagger2 .tags').html()).toEqual $('#tagger2').tags().readOnlyEmptyMessage
 
+  describe "when the enter key is pressed before any text is entered", ->
+
+    beforeEach ->
+      @tags = newTagger "tagger2", {}
+      $('#tagger2 .tags-input').trigger($.Event('keydown', which: 13))
+
+    it "does not add any tags", ->
+      expect(@tags.getTags()).toEqual []
+
   describe "when normally operating", ->
 
     beforeEach ->
