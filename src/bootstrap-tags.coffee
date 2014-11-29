@@ -181,7 +181,7 @@ jQuery ->
           e.preventDefault()
           @pressedReturn(e)
           tag = e.target.value
-          if @suggestedIndex != -1
+          if @suggestedIndex? && @suggestedIndex != -1
             tag = @suggestionList[@suggestedIndex]
           @addTag tag
           e.target.value = ''
