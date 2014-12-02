@@ -95,7 +95,7 @@ jQuery ->
     # removeTagClicked is called when user clicks remove tag anchor (x)
     @removeTagClicked = (e) => # 
       if e.currentTarget.tagName == "A"
-        @removeTag $("span", e.currentTarget.parentElement).html()
+        @removeTag $("span", e.currentTarget.parentElement).text()
         $(e.currentTarget.parentNode).remove()
       @
 
