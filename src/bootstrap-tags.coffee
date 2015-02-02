@@ -177,7 +177,7 @@ jQuery ->
     @keyDownHandler = (e) =>
       k = (if e.keyCode? then e.keyCode else e.which)
       switch k
-        when 13 # enter (submit tag or selected suggestion)
+        when 13, 188 # enter (submit tag or selected suggestion)
           e.preventDefault()
           @pressedReturn(e)
           tag = e.target.value
