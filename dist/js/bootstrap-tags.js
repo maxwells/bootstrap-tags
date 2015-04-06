@@ -102,7 +102,7 @@
                 };
                 this.removeTagClicked = function(e) {
                     if (e.currentTarget.tagName === "A") {
-                        _this.removeTag($("span", e.currentTarget.parentElement).html());
+                        _this.removeTag($("span", e.currentTarget.parentElement).text());
                         $(e.currentTarget.parentNode).remove();
                     }
                     return _this;
@@ -131,6 +131,20 @@
                     }
                     return _this;
                 };
+                this.getAuthoratative = function(tag) {
+                    var t, tags, _j, _len1, _ref1;
+                    if (this.restrictTo && this.caseInsensitive) {
+                        tags = {};
+                        _ref1 = this.restrictTo;
+                        for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+                            t = _ref1[_j];
+                            tags[t.toLowerCase()] = t;
+                        }
+                        return tags[tag.toLowerCase()];
+                    } else {
+                        return tag;
+                    }
+                };
                 this.canAddByRestriction = function(tag) {
                     return this.restrictTo === false || this.restrictTo.indexOf(tag) !== -1;
                 };
@@ -142,6 +156,7 @@
                 };
                 this.addTag = function(tag) {
                     var associatedContent;
+                    tag = _this.getAuthoratative(tag);
                     if (_this.canAddByRestriction(tag) && !_this.hasTag(tag) && tag.length > 0 && _this.canAddByExclusion(tag) && _this.canAddByMaxNum()) {
                         if (_this.beforeAddingTag(tag) === false) {
                             return;
@@ -190,7 +205,7 @@
                         e.preventDefault();
                         _this.pressedReturn(e);
                         tag = e.target.value;
-                        if (_this.suggestedIndex !== -1) {
+                        if (_this.suggestedIndex != null && _this.suggestedIndex !== -1) {
                             tag = _this.suggestionList[_this.suggestedIndex];
                         }
                         _this.addTag(tag);
