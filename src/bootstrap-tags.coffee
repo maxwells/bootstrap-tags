@@ -27,6 +27,7 @@ jQuery ->
     @caseInsensitive ||= false
     @readOnlyEmptyMessage ||= 'No tags to display...'
     @maxNumTags ||= -1
+    @allowDuplicates ||= false
 
     # callbacks
     @beforeAddingTag ||= (tag) ->
@@ -86,7 +87,7 @@ jQuery ->
       tag: @tagsArray[index], content: @popoverArray[index]
 
     @hasTag = (tag) =>
-      @tagsArray.indexOf(tag) > -1
+      if @allowDuplicates true then false else @tagsArray.indexOf(tag) > -1
 
     ####################
     # add/remove methods
