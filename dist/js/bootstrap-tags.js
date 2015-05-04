@@ -99,9 +99,7 @@
                     };
                 };
                 this.hasTag = function(tag) {
-                    if (_this.allowDuplicates === true) {
-                        return false;
-                    } else {
+                    if (!_this.allowDuplicates) {
                         return _this.tagsArray.indexOf(tag) > -1;
                     }
                 };
@@ -258,8 +256,10 @@
                     $.each(this.suggestions, function(i, suggestion) {
                         var suggestionVal;
                         suggestionVal = _this.caseInsensitive ? suggestion.substring(0, str.length).toLowerCase() : suggestion.substring(0, str.length);
-                        if (_this.tagsArray.indexOf(suggestion) < 0 && suggestionVal === str && (str.length > 0 || overrideLengthCheck)) {
-                            return _this.suggestionList.push(suggestion);
+                        if (_this.allowDuplicates || _this.tagsArray.indexOf(suggestion) < 0) {
+                            if (suggestionVal === str && (str.length > 0 || overrideLengthCheck)) {
+                                return _this.suggestionList.push(suggestion);
+                            }
                         }
                     });
                     return this.suggestionList;
