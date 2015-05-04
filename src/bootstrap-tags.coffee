@@ -87,7 +87,7 @@ jQuery ->
       tag: @tagsArray[index], content: @popoverArray[index]
 
     @hasTag = (tag) =>
-      if @allowDuplicates true then false else @tagsArray.indexOf(tag) > -1
+      if @allowDuplicates == true then false else @tagsArray.indexOf(tag) > -1
 
     ####################
     # add/remove methods

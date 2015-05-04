@@ -99,7 +99,7 @@
                     };
                 };
                 this.hasTag = function(tag) {
-                    if (_this.allowDuplicates(true)) {
+                    if (_this.allowDuplicates === true) {
                         return false;
                     } else {
                         return _this.tagsArray.indexOf(tag) > -1;
