@@ -1,4 +1,4 @@
-(function() {
+﻿(function() {
   var newTagger;
 
   newTagger = function(id, options) {
@@ -81,6 +81,17 @@
           });
           return expect($('#tagger2 .tags').html()).toEqual($('#tagger2').tags().readOnlyEmptyMessage);
         });
+      });
+    });
+    describe("when the enter key is pressed before any text is entered", function() {
+      beforeEach(function() {
+        this.tags = newTagger("tagger2", {});
+        return $('#tagger2 .tags-input').trigger($.Event('keydown', {
+          which: 13
+        }));
+      });
+      return it("does not add any tags", function() {
+        return expect(this.tags.getTags()).toEqual([]);
       });
     });
     return describe("when normally operating", function() {
@@ -412,3 +423,5 @@
   });
 
 }).call(this);
+
+//# sourceMappingURL=bootstrap-tags-spec.js.map
