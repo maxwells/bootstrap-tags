@@ -10,7 +10,7 @@ Bootstrap Tags is a jQuery plugin meant to extend Twitter Bootstrap to include t
 ## Installation
 
 	$ bower install bootstrap-tags
-	
+
 or
 
 	$ git clone https://github.com/maxwells/bootstrap-tags.git
@@ -64,8 +64,9 @@ option | type | description | default
 `bootstrapVersion` | `String` | specify which version of bootstrap to format generated HTML for. Acceptable values are "2", "3" | `3`
 `tagData` | `Array` | a list of tags to initialize the tagging interface with | `[]`
 `tagSize` | `String` | describes what size input to use. Acceptable values are "lg", "md", or "sm" | `md`
-`readOnly` | `boolean` | whether or not to disable user input | `false`
-`suggestions` | `Array` | a list of terms that will populate the autosuggest feature when a user types in the first character. | `[]`
+`readOnly` | `Boolean` | whether or not to disable user input | `false`
+`suggestions` | `Array` | a list of terms that will populate the autosuggest feature when a user types in the first character | `[]`
+`suggestOnClick` | `Boolean` | whether or not the autosuggest feature is triggered on click | `false`
 `caseInsensitive` | `Boolean` | whether or not autosuggest should ignore case sensitivity | `false`
 `restrictTo` | `Array` | a list of allowed tags (will be combined with suggestions, if provided). User inputted tags that aren't included in this list will be ignored | `[]`
 `exclude` | `Array` | a list of case insensitive disallowed tags. Supports wildcarding (eg. `['*offensive*']` will ignore any word that has `offensive` in it) | `[]`
@@ -74,7 +75,7 @@ option | type | description | default
 `popoverTrigger` | `String` | indicates how popovers should be triggered. Acceptable values are 'click', 'hover', 'hoverShowClickHide' | `hover`
 `tagClass` | `String` | which class the tag div will have for styling | `btn-info`
 `promptText` | `String` | placeholder string when there are no tags and nothing typed in | `Enter tags…`
-`maxNumTags` | `Integer` | Maximum number of allowable (user-added) tags. All tags that are initialized in the tagData property are retained. If set, then input is disabled when the number of tags exceeds this value. | `-1` (no limit)
+`maxNumTags` | `Integer` | Maximum number of allowable (user-added) tags. All tags that are initialized in the tagData property are retained. If set, then input is disabled when the number of tags exceeds this value | `-1` (no limit)
 `readOnlyEmptyMessage` | `String` | text to be displayed if there are no tags in readonly mode. Can be HTML | `No tags to display...`
 `beforeAddingTag` | `function(String tag)` | anything external you'd like to do with the tag before adding it. Returning false will stop tag from being added | `null`
 `afterAddingTag` | `function(String tag)` | anything external you'd like to do with the tag after adding it | `null`
@@ -122,9 +123,9 @@ For a one off:
 	$ grunt build
 
 _To build continuously_:
-	
+
 	$ grunt watch
-	
+
 ### Testing
 
 	$ grunt test
