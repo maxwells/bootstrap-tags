@@ -64,9 +64,9 @@ option | type | description | default
 `bootstrapVersion` | `String` | specify which version of bootstrap to format generated HTML for. Acceptable values are "2", "3" | `3`
 `tagData` | `Array` | a list of tags to initialize the tagging interface with | `[]`
 `tagSize` | `String` | describes what size input to use. Acceptable values are "lg", "md", or "sm" | `md`
-`readOnly` | `boolean` | whether or not to disable user input | `false`
+`readOnly` | `Boolean` | whether or not to disable user input | `false`
 `suggestions` | `Array` | a list of terms that will populate the autosuggest feature when a user types in the first character | `[]`
-`suggestOnClick` | `boolean` | whether or not the autosuggest feature is triggered on click | `false`
+`suggestOnClick` | `Boolean` | whether or not the autosuggest feature is triggered on click | `false`
 `caseInsensitive` | `Boolean` | whether or not autosuggest should ignore case sensitivity | `false`
 `restrictTo` | `Array` | a list of allowed tags (will be combined with suggestions, if provided). User inputted tags that aren't included in this list will be ignored | `[]`
 `exclude` | `Array` | a list of case insensitive disallowed tags. Supports wildcarding (eg. `['*offensive*']` will ignore any word that has `offensive` in it) | `[]`
