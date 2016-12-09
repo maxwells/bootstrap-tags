@@ -6,7 +6,7 @@ Bootstrap Tags is a jQuery plugin meant to extend Twitter Bootstrap to include t
 
 ## Call for Maintainers
 
-If you find this project useful and are interested in contributing or taking over, please add yourself to [https://github.com/maxwells/bootstrap-tags/issues/70](this list).
+If you find this project useful and are interested in contributing or taking over, please add yourself to [https://github.com/maxwells/bootstrap-tags/issues/70](https://github.com/maxwells/bootstrap-tags/issues/70).
 
 ## Demo
 [http://maxwells.github.com/bootstrap-tags.html](http://maxwells.github.com/bootstrap-tags.html)
