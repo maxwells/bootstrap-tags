@@ -119,6 +119,16 @@ jQuery ->
         @enableInput() if @canAddByMaxNum()
       @
 
+    # when restrictTo and caseInsensitive, return the matching
+    # restrictTo version of the tag
+    @getAuthoratative = (tag) ->
+      if @restrictTo and @caseInsensitive
+        tags = {}
+        tags[t.toLowerCase()] = t for t in @restrictTo
+        return tags[tag.toLowerCase()]
+      else
+        return tag
+
     @canAddByRestriction = (tag) ->
       (@restrictTo == false or @restrictTo.indexOf(tag) != -1)
 
@@ -132,6 +142,7 @@ jQuery ->
     # - Helper method for keyDownHandler and suggestedClicked
     # - exposed: can be called from page javascript
     @addTag = (tag) =>
+      tag = @getAuthoratative(tag)
       if @canAddByRestriction(tag) and !@hasTag(tag) and tag.length > 0 and @canAddByExclusion(tag) and @canAddByMaxNum()
         return if @beforeAddingTag(tag) == false
         associatedContent = @definePopover(tag)
