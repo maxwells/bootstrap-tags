@@ -27,6 +27,7 @@ jQuery ->
     @caseInsensitive ||= false
     @readOnlyEmptyMessage ||= 'No tags to display...'
     @maxNumTags ||= -1
+    @allowDuplicates ||= false
 
     # callbacks
     @beforeAddingTag ||= (tag) ->
@@ -86,7 +87,7 @@ jQuery ->
       tag: @tagsArray[index], content: @popoverArray[index]
 
     @hasTag = (tag) =>
-      @tagsArray.indexOf(tag) > -1
+      if !@allowDuplicates then @tagsArray.indexOf(tag) > -1
 
     ####################
     # add/remove methods
@@ -221,8 +222,9 @@ jQuery ->
       str = str.toLowerCase() if @caseInsensitive
       $.each @suggestions, (i, suggestion) =>
         suggestionVal = if @caseInsensitive then suggestion.substring(0, str.length).toLowerCase() else suggestion.substring(0, str.length)
-        if @tagsArray.indexOf(suggestion) < 0 and suggestionVal == str and (str.length > 0 or overrideLengthCheck)
-          @suggestionList.push suggestion
+        if @allowDuplicates or @tagsArray.indexOf(suggestion) < 0
+          if suggestionVal == str and (str.length > 0 or overrideLengthCheck)
+            @suggestionList.push suggestion
       @suggestionList
 
     # makeSuggestions creates auto suggestions that match the value in the input

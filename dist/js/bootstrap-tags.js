@@ -31,6 +31,7 @@
                 this.caseInsensitive || (this.caseInsensitive = false);
                 this.readOnlyEmptyMessage || (this.readOnlyEmptyMessage = "No tags to display...");
                 this.maxNumTags || (this.maxNumTags = -1);
+                this.allowDuplicates || (this.allowDuplicates = false);
                 this.beforeAddingTag || (this.beforeAddingTag = function(tag) {});
                 this.afterAddingTag || (this.afterAddingTag = function(tag) {});
                 this.beforeDeletingTag || (this.beforeDeletingTag = function(tag) {});
@@ -98,11 +99,13 @@
                     };
                 };
                 this.hasTag = function(tag) {
-                    return _this.tagsArray.indexOf(tag) > -1;
+                    if (!_this.allowDuplicates) {
+                        return _this.tagsArray.indexOf(tag) > -1;
+                    }
                 };
                 this.removeTagClicked = function(e) {
                     if (e.currentTarget.tagName === "A") {
-                        _this.removeTag($("span", e.currentTarget.parentElement).html());
+                        _this.removeTag($("span", e.currentTarget.parentElement).text());
                         $(e.currentTarget.parentNode).remove();
                     }
                     return _this;
@@ -190,7 +193,7 @@
                         e.preventDefault();
                         _this.pressedReturn(e);
                         tag = e.target.value;
-                        if (_this.suggestedIndex !== -1) {
+                        if (_this.suggestedIndex != null && _this.suggestedIndex !== -1) {
                             tag = _this.suggestionList[_this.suggestedIndex];
                         }
                         _this.addTag(tag);
@@ -253,8 +256,10 @@
                     $.each(this.suggestions, function(i, suggestion) {
                         var suggestionVal;
                         suggestionVal = _this.caseInsensitive ? suggestion.substring(0, str.length).toLowerCase() : suggestion.substring(0, str.length);
-                        if (_this.tagsArray.indexOf(suggestion) < 0 && suggestionVal === str && (str.length > 0 || overrideLengthCheck)) {
-                            return _this.suggestionList.push(suggestion);
+                        if (_this.allowDuplicates || _this.tagsArray.indexOf(suggestion) < 0) {
+                            if (suggestionVal === str && (str.length > 0 || overrideLengthCheck)) {
+                                return _this.suggestionList.push(suggestion);
+                            }
                         }
                     });
                     return this.suggestionList;
