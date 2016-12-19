@@ -24,6 +24,7 @@ or
 - Support for Bootstrap 2.3.2 and 3+
 - Autosuggest (for typing or activated by pressing the down key when empty)
 - Bootstrap Popovers (for extended information on a tag)
+- Link tags
 - Exclusions (denial of a specified list)
 - Filters (allowance of only a specified list)
 - Placeholder prompts
@@ -75,6 +76,7 @@ option | type | description | default
 `restrictTo` | `Array` | a list of allowed tags (will be combined with suggestions, if provided). User inputted tags that aren't included in this list will be ignored | `[]`
 `exclude` | `Array` | a list of case insensitive disallowed tags. Supports wildcarding (eg. `['*offensive*']` will ignore any word that has `offensive` in it) | `[]`
 `popoverData` | `Array` | a list of popover data. The index of each element should match the index of corresponding tag in `tagData` array | `null`
+`href` | `Array` | a list of hrefs. The index of each element should match the index of corresponding tag in `tagData` array | `null`
 `popovers` | `Boolean` | whether or not to enable bootstrap popovers on tag mouseover | whether `popoverData` was provided
 `popoverTrigger` | `String` | indicates how popovers should be triggered. Acceptable values are 'click', 'hover', 'hoverShowClickHide' | `hover`
 `tagClass` | `String` | which class the tag div will have for styling | `btn-info`

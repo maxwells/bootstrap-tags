@@ -1,9 +1,12 @@
 /* bootstrap-tags styles */
 .bootstrap-tags.bootstrap-3 .tag a {
-  margin: 0 0 0 .3em; }
+  margin: 0 0 0 .3em;
+  color: #fff; }
 .bootstrap-tags.bootstrap-3 .glyphicon-white {
   color: #fff; }
 
+.bootstrap-tags.bootstrap-2 .tag a {
+  color: #fff; }
 .bootstrap-tags.bootstrap-2 .tag.md {
   padding: .3em .4em .4em; }
 .bootstrap-tags.bootstrap-2 .tag.lg {
@@ -47,7 +50,7 @@
     font-size: 18px;
     padding: .4em .4em .4em;
     margin: 0 .2em .2em 0; }
-  .bootstrap-tags .tag a {
+  .bootstrap-tags .tag a.remove {
     color: #bbb;
     cursor: pointer;
     opacity: .5; }
