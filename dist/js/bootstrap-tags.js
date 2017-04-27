@@ -102,7 +102,7 @@
                 };
                 this.removeTagClicked = function(e) {
                     if (e.currentTarget.tagName === "A") {
-                        _this.removeTag($("span", e.currentTarget.parentElement).html());
+                        _this.removeTag($("span", e.currentTarget.parentElement).text());
                         $(e.currentTarget.parentNode).remove();
                     }
                     return _this;
@@ -110,6 +110,16 @@
                 this.removeLastTag = function() {
                     if (_this.tagsArray.length > 0) {
                         _this.removeTag(_this.tagsArray[_this.tagsArray.length - 1]);
+                        if (_this.canAddByMaxNum()) {
+                            _this.enableInput();
+                        }
+                    }
+                    return _this;
+                };
+                this.removeAllTags = function() {
+                    if (_this.tagsArray.length > 0) {
+                        _this.tagsArray = [];
+                        _this.renderTags();
                         if (_this.canAddByMaxNum()) {
                             _this.enableInput();
                         }
@@ -190,7 +200,7 @@
                         e.preventDefault();
                         _this.pressedReturn(e);
                         tag = e.target.value;
-                        if (_this.suggestedIndex !== -1) {
+                        if (_this.suggestedIndex != null && _this.suggestedIndex !== -1) {
                             tag = _this.suggestionList[_this.suggestedIndex];
                         }
                         _this.addTag(tag);
@@ -447,6 +457,7 @@
                         this.removeTag = function() {};
                         this.removeTagClicked = function() {};
                         this.removeLastTag = function() {};
+                        this.removeAllTags = function() {};
                         this.addTag = function() {};
                         this.addTagWithContent = function() {};
                         this.renameTag = function() {};

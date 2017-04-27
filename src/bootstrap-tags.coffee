@@ -106,6 +106,14 @@ jQuery ->
         @enableInput() if @canAddByMaxNum()
       @
 
+    # removeAllTags removes All tags.
+    @removeAllTags = => 
+      if @tagsArray.length > 0
+        @tagsArray = []
+        @renderTags()
+        @enableInput() if @canAddByMaxNum()
+      @
+
     # removeTag removes specified tag.
     # - Helper method for removeTagClicked and removeLast Tag
     # - also an exposed method (can be called from page javascript)
@@ -404,6 +412,7 @@ jQuery ->
         @removeTag = ->
         @removeTagClicked = ->
         @removeLastTag = ->
+        @removeAllTags = ->
         @addTag = ->
         @addTagWithContent = ->
         @renameTag = ->
