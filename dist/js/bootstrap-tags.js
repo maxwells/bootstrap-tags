@@ -116,6 +116,17 @@
                     }
                     return _this;
                 };
+                this.removeAllTag = function() {
+                    if (_this.tagsArray.length > 0) {
+                        var arrayLength = _this.tagsArray.length
+                        _this.tagsArray = [];
+                        _this.renderTags();
+                        if (_this.canAddByMaxNum()) {
+                            _this.enableInput();
+                        }
+                    }
+                    return _this;
+                };
                 this.removeTag = function(tag) {
                     if (_this.tagsArray.indexOf(tag) > -1) {
                         if (_this.beforeDeletingTag(tag) === false) {
@@ -447,6 +458,7 @@
                         this.removeTag = function() {};
                         this.removeTagClicked = function() {};
                         this.removeLastTag = function() {};
+                        this.removeAllTag = function() {};
                         this.addTag = function() {};
                         this.addTagWithContent = function() {};
                         this.renameTag = function() {};

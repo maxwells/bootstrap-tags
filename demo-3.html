@@ -16,7 +16,9 @@
         <h3>Bootstrap 3.0.3</h3>
 
         <p>Small</p>
-        <div id="small"></div>
+        <div id="small">
+          <button id="removeAllTags" class="btn btn-sm btn-danger">Remove All Tags</button>
+        </div>
         <p>Large</p>
         <div id="large"></div>
         <p>Medium</p>
@@ -32,12 +34,17 @@
 
 
         <script>
+          function initializeTags(){
+              this.smallTags = $("#small").tags({
+                tagSize: "sm",
+                suggestions: ["alpha", "bravo", "charlie", "delta", "echo", "foxtrot", "golf", "hotel", "india"],
+                tagData: ["juliett", "kilo"]
+              });
+          }
           $(function(){
-            $("#small").tags({
-              tagSize: "sm",
-              suggestions: ["alpha", "bravo", "charlie", "delta", "echo", "foxtrot", "golf", "hotel", "india"],
-              tagData: ["juliett", "kilo"]
-            });
+            initializeTags();
+            var newTagsInialized = new initializeTags();
+            
             $("#large").tags({
               tagSize: "lg",
               suggestions: ["alpha", "bravo", "charlie", "delta", "echo", "foxtrot", "golf", "hotel", "india"],
@@ -66,6 +73,10 @@
               suggestions: ["alpha", "bravo", "charlie", "delta", "echo", "foxtrot", "golf", "hotel", "india"],
               tagData: ["alpha", "bravo", "charlie"],
               maxNumTags: 3
+            });
+
+            $('#removeAllTags').click(function(){
+              newTagsInialized.smallTags.removeAllTag();
             });
           });
         </script>
