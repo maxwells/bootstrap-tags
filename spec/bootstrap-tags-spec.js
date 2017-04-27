@@ -83,6 +83,17 @@
         });
       });
     });
+    describe("when the enter key is pressed before any text is entered", function() {
+      beforeEach(function() {
+        this.tags = newTagger("tagger2", {});
+        return $('#tagger2 .tags-input').trigger($.Event('keydown', {
+          which: 13
+        }));
+      });
+      return it("does not add any tags", function() {
+        return expect(this.tags.getTags()).toEqual([]);
+      });
+    });
     return describe("when normally operating", function() {
       beforeEach(function() {
         this.initTagData = ['one', 'two', 'three'];

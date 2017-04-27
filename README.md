@@ -101,6 +101,7 @@ function | return type | description
 `addTag(tag:string)` | `Tagger` | add a tag
 `renameTag(tag:string, newTag:string)` | `Tagger` | rename one tag to another value
 `removeLastTag()` | `Tagger` | removes last tag if it exists
+`removeAllTags()` | `Tagger` | removes all tags
 `removeTag(tag:string)` | `Tagger` | removes tag specified by string if it exists
 `addTagWithContent(tag:string, popoverContent:string)` | `Tagger` | Add a tag with associated popover content
 `setPopover(tag:string, popoverContent:string)` | `Tagger` | update a tag's associated popover content, if that tag exists
